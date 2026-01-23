@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HYPER WAVE: FIXED SHOP</title>
+    <title>HYPER WAVE: CUSTOM AUDIO</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&display=swap');
 
@@ -276,6 +276,19 @@
         
         .pulse-bg { animation: pulse 0.4s ease-out; }
         @keyframes pulse { 0% { background-color: #1a1a2e; } 100% { background-color: #050508; } }
+
+        /* CUSTOM FILE INPUT */
+        .file-input-wrapper {
+            position: relative; overflow: hidden; display: inline-block;
+        }
+        .file-input-wrapper input[type=file] {
+            font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer;
+        }
+        .btn-upload {
+            background: rgba(255,255,255,0.1); border: 1px solid #aaa; color: #fff; 
+            padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; display: inline-block;
+        }
+        .btn-upload:hover { background: var(--primary); color: #000; border-color: var(--primary); }
     </style>
 </head>
 <body>
@@ -377,6 +390,15 @@
             <div class="setting-item"><span class="setting-label">PULSE EFFECTS</span><div class="setting-toggle on" id="tog-pulse" onclick="toggleSet(this, 'pulse')"></div></div>
             <div class="setting-item"><span class="setting-label">BACKGROUND STARS</span><div class="setting-toggle on" id="tog-bgStars" onclick="toggleSet(this, 'bgStars')"></div></div>
             <div class="setting-item"><span class="setting-label">FPS COUNTER</span><div class="setting-toggle" onclick="toggleSet(this, 'fps')"></div></div>
+            
+            <div class="setting-item" style="grid-column: span 2; display: flex; justify-content: center; background: rgba(0,242,255,0.05); border: 1px dashed var(--primary);">
+                <div class="file-input-wrapper">
+                    <button class="btn-upload">📂 LOAD MP3 FILE</button>
+                    <input type="file" id="custom-music-input" accept="audio/mp3,audio/wav,audio/mpeg">
+                </div>
+                <div id="music-status" style="margin-left:10px; font-size:0.7rem; color:#aaa; align-self:center;">NO FILE LOADED</div>
+            </div>
+
         </div>
         <button class="close-btn" onclick="toggleSettings()">CLOSE</button>
     </div>
@@ -469,6 +491,7 @@
 
         // --- GLOBALS ---
         let frames = 0; 
+        let customTrack = null; // HOLDS CUSTOM MP3
 
         // --- FIREBASE CONFIG ---
         const firebaseConfig = {
@@ -647,6 +670,18 @@
             particles: true, shake: true, pulse: true, bgStars: true,
             progBar: true, fps: false, optimize: false
         };
+
+        // --- CUSTOM AUDIO HANDLER ---
+        document.getElementById('custom-music-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            customTrack = new Audio(url);
+            customTrack.loop = true;
+            document.getElementById('music-status').innerText = file.name.toUpperCase().substring(0, 15) + "...";
+            document.getElementById('music-status').style.color = "#00ff00";
+            notify('CUSTOM TRACK LOADED');
+        });
 
         const CFG = {
             easy:   { spd: 7, gap: 300, noise: 30, color: '#00ff88', name:'Cycles' },
@@ -866,8 +901,14 @@
             if(currentBgm) { currentBgm.pause(); currentBgm=null; }
 
             if(SETTINGS.music) {
-                if(d === 'easy' || d === 'medium') MusicSys.start(d);
-                else { currentBgm = tracks[d]; currentBgm.currentTime=0; currentBgm.play().catch(()=>{}); }
+                if(customTrack) {
+                    currentBgm = customTrack;
+                    currentBgm.currentTime = 0;
+                    currentBgm.play().catch(e=>console.log(e));
+                } else {
+                    if(d === 'easy' || d === 'medium') MusicSys.start(d);
+                    else { currentBgm = tracks[d]; currentBgm.currentTime=0; currentBgm.play().catch(()=>{}); }
+                }
             }
 
             document.getElementById('menu').classList.add('hidden');
