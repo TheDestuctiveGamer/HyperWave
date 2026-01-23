@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HYPER WAVE: FIXED SHOP</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&display=swap');
+
+        :root {
+            --primary: #00f2ff;
+            --p2-color: #ffaa00;
+            --danger: #ff0055;
+            --gold: #ffd700;
+            --glass: rgba(10, 15, 25, 0.96);
+            --border: rgba(255, 255, 255, 0.15);
+            --font-main: 'Exo 2', sans-serif;
+        }
+
+        body {
+            margin: 0; overflow: hidden; background-color: #050508;
+            font-family: var(--font-main); color: white; user-select: none;
+            touch-action: none;
+        }
+
+        /* --- LOADING SPINNER --- */
+        #loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 9999; display: none;
+            justify-content: center; align-items: center; flex-direction: column;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 5px solid var(--border);
+            border-top: 5px solid var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* EFFECTS */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        .glitch-effect { animation: glitch 0.2s linear; filter: drop-shadow(-2px 0 red) drop-shadow(2px 0 blue); }
+
+        /* ERROR LOG */
+        #error-log {
+            position: fixed; top: 0; left: 0; width: 100%; background: rgba(50,0,0,0.9);
+            color: #ffaaaa; font-family: monospace; padding: 10px; z-index: 9999;
+            display: none; border-bottom: 2px solid red; pointer-events: none; font-size: 12px;
+        }
+
+        #ui-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10; display: flex; justify-content: center; align-items: center;
+            pointer-events: none;
+        }
+        .glass-panel, button, input, .tab-btn, .skin-card, .trail-card, .setting-toggle, .icon-btn, .friend-card, .btn-accept { pointer-events: auto; }
+
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            border-top: 1px solid rgba(255,255,255,0.4);
+            border-radius: 20px; padding: 25px; text-align: center;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+            transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 800px; width: 95%;
+            display: flex; flex-direction: column; gap: 12px;
+            position: relative;
+        }
+        .hidden { transform: scale(0.9); opacity: 0; pointer-events: none; display: none; }
+
+        /* ICONS & BUTTONS */
+        .icon-btn {
+            position: absolute; top: 20px;
+            font-size: 20px; cursor: pointer; color: #aaa;
+            transition: 0.2s; z-index: 100;
+            background: rgba(0,0,0,0.6); padding: 0; border-radius: 12px;
+            width: 45px; height: 45px; display: flex; justify-content: center; align-items: center;
+            border: 1px solid var(--border);
+        }
+        .icon-btn:hover { color: var(--primary); border-color: var(--primary); background: rgba(0,242,255,0.1); }
+        
+        #settings-btn { right: 20px; }
+        #help-btn { left: 20px; font-weight: bold; }
+        #friends-btn { left: 75px; font-size: 1.2rem; }
+        #logout-btn { left: 130px; font-size: 0.7rem; font-weight: bold; width: auto; padding: 0 10px; }
+        #pause-btn { right: 20px; display: none; } 
+
+        /* OVERLAYS */
+        .overlay-panel {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 10, 0.98); z-index: 200;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            pointer-events: auto; overflow-y: auto;
+        }
+
+        /* FRIENDS */
+        .friend-card {
+            display: flex; flex-direction: column; gap: 5px;
+            background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px;
+            border: 1px solid transparent;
+        }
+        .friend-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .f-online { width: 10px; height: 10px; background: #444; border-radius: 50%; display: inline-block; margin-right: 5px; border: 1px solid #000; }
+        .is-online { background: #00ff88; box-shadow: 0 0 5px #00ff88; }
+        .f-stats-row { display: flex; justify-content: space-between; font-size: 0.65rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px; }
+        
+        #invite-popup {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 50, 20, 0.95); border: 1px solid #0f0;
+            padding: 15px 25px; border-radius: 15px; z-index: 500;
+            display: none; flex-direction: column; gap: 10px; align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5); width: 300px;
+        }
+        
+        #challenge-modal { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:600; display:none; flex-direction:column; justify-content:center; align-items:center; }
+
+        /* LOGIN SCREEN */
+        #login-panel { z-index: 300; display: flex; }
+        .input-group { text-align: left; width: 100%; }
+        input[type="text"], input[type="password"] {
+            width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.1);
+            border: 1px solid var(--border); padding: 12px; color: white; border-radius: 8px;
+            font-family: var(--font-main); font-size: 1rem; margin-bottom: 10px;
+        }
+        input:focus { outline: none; border-color: var(--primary); background: rgba(0,242,255,0.05); }
+        
+        /* SETTINGS GRID */
+        .settings-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            max-width: 600px; width: 90%; margin-top: 20px;
+        }
+        .setting-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 8px;
+            border: 1px solid transparent;
+        }
+        .setting-item:hover { border-color: rgba(255,255,255,0.2); }
+        .setting-label { font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; }
+        .setting-toggle {
+            width: 40px; height: 20px; background: #333; border-radius: 10px;
+            position: relative; cursor: pointer; transition: 0.3s;
+        }
+        .setting-toggle::after {
+            content:''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
+            background: #fff; border-radius: 50%; transition: 0.3s;
+        }
+        .setting-toggle.on { background: var(--primary); }
+        .setting-toggle.on::after { left: 22px; }
+
+        /* HELP CONTENT */
+        .help-content { max-width: 600px; width: 90%; text-align: left; display: grid; gap: 15px; }
+        .help-section {
+            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+        .help-title { font-weight: 900; color: var(--primary); margin-bottom: 5px; font-size: 0.9rem; }
+        .help-text { font-size: 0.8rem; color: #ccc; line-height: 1.4; }
+        .key-badge {
+            background: #222; padding: 2px 6px; border-radius: 4px; font-family: monospace; 
+            border: 1px solid #444; color: #fff; display: inline-block; font-size: 0.7rem;
+        }
+
+        /* PREVIEW BOX */
+        .preview-wrapper {
+            background: #000; border-radius: 12px;
+            border: 1px solid var(--primary);
+            box-shadow: inset 0 0 40px rgba(0, 242, 255, 0.15);
+            margin: 0 auto; width: 100%; height: 110px;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; position: relative;
+        }
+        #preview-canvas { width: 100%; height: 100%; }
+
+        /* GARAGE/SHOP */
+        .garage-container {
+            background: rgba(255,255,255,0.02); border-radius: 12px;
+            border: 1px solid var(--border); overflow: hidden;
+            display: flex; flex-direction: column; height: 240px;
+        }
+        .tabs { display: flex; background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--border); }
+        .tab-btn {
+            flex: 1; padding: 10px; cursor: pointer; font-weight: 800; color: #666; font-size: 0.8rem;
+            transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .tab-btn.active { color: var(--primary); background: rgba(0, 242, 255, 0.1); box-shadow: inset 0 -2px 0 var(--primary); }
+
+        .garage-content { padding: 8px; overflow-y: auto; height: 100%; }
+        .garage-content::-webkit-scrollbar { width: 4px; }
+        .garage-content::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+        .skin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; }
+        .trail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+
+        .skin-card, .trail-card {
+            background: rgba(255,255,255,0.05); border-radius: 6px; border: 1px solid transparent;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; transition: 0.2s; position: relative; padding: 8px;
+        }
+        .skin-card { aspect-ratio: 1; }
+        .trail-card { height: 50px; font-size: 0.7rem; font-weight: 700; }
+
+        .skin-card:hover, .trail-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); border-color: #fff; }
+        .active-item { border-color: var(--primary) !important; background: rgba(0,242,255,0.1); box-shadow: 0 0 10px rgba(0,242,255,0.3); }
+        
+        /* SHOP STYLES */
+        .price-tag { 
+            position: absolute; bottom: 2px; width: 100%; text-align: center; 
+            font-size: 0.6rem; color: #ffd700; background: rgba(0,0,0,0.8);
+            border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;
+        }
+        .owned-tag { color: #0f0; font-size: 0.6rem; margin-top: 5px; }
+
+        /* CONTROLS ROW */
+        .meta-row { display: flex; justify-content: space-between; align-items: center; padding: 0 5px; }
+        .color-picker-wrap { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 20px; }
+        input[type="color"] { border: none; width: 24px; height: 24px; background: none; cursor: pointer; }
+        .stat-badge { font-size: 0.75rem; color: #ffd700; font-weight: bold; letter-spacing: 0.5px; }
+
+        /* PLAY BUTTONS */
+        .btn-row { display: flex; gap: 8px; width: 100%; margin-top: 5px; }
+        button {
+            flex: 1; background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)); 
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff; padding: 12px; font-weight: 800; cursor: pointer;
+            text-transform: uppercase; border-radius: 8px; transition: 0.2s; font-size: 0.9rem;
+        }
+        button:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); border-color: var(--primary); }
+        .btn-demon { border-color: var(--danger); color: var(--danger); background: rgba(255, 0, 85, 0.05); }
+        .btn-demon:hover { background: var(--danger); color: white; box-shadow: 0 0 25px var(--danger); }
+        .btn-2p { border-color: #ffaa00; color: #ffaa00; flex: 100%; margin-top: 5px; background: rgba(255, 170, 0, 0.05); }
+        .btn-2p:hover { background: #ffaa00; color: black; box-shadow: 0 0 20px #ffaa00; }
+        
+        .mode-sub { display: block; font-size: 0.55rem; opacity: 0.7; font-weight: 400; text-transform: none; margin-top: 2px; }
+        .close-btn { margin-top: 20px; width: 150px; background: var(--primary); color: #000; border: none; font-weight: 900; }
+
+        /* HUD */
+        #hud { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: 0.3s; }
+        .progress-container {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            width: 30%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;
+        }
+        #p-bar { height: 100%; width: 0%; background: var(--primary); box-shadow: 0 0 10px var(--primary); }
+        #score-display { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        #orb-hud { position: absolute; top: 20px; right: 20px; font-size: 1.2rem; color: #ffd700; font-weight: 900; text-shadow: 0 0 10px #ffd700; }
+        #fps-hud { position: absolute; top: 5px; left: 5px; font-size: 0.7rem; color: lime; font-family: monospace; opacity: 0.7; }
+        
+        /* PAUSE MENU */
+        #paused-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+            z-index: 150; display: none; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .pause-title { font-size: 3rem; font-weight: 900; color: white; letter-spacing: 5px; margin-bottom: 20px; }
+
+        /* NOTIFICATIONS */
+        #notify-area {
+            position: absolute; top: 100px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; gap: 10px; align-items: center; z-index: 300; pointer-events: none;
+        }
+        .notify-box {
+            background: rgba(0, 30, 60, 0.95); border: 1px solid #00ff88;
+            padding: 10px 25px; border-radius: 30px; color: #fff; font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4); text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;
+            animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-in 3s forwards;
+        }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
+        
+        .pulse-bg { animation: pulse 0.4s ease-out; }
+        @keyframes pulse { 0% { background-color: #1a1a2e; } 100% { background-color: #050508; } }
+    </style>
+</head>
+<body>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <div style="font-weight:bold; letter-spacing:2px;">CONNECTING...</div>
+    </div>
+
+    <div id="error-log"></div>
+    <div id="notify-area"></div>
+
+    <div id="invite-popup">
+        <div style="font-size:0.8rem; color:#aaa; font-weight:bold;">GAME REQUEST</div>
+        <div id="inv-msg" style="font-size:1rem; font-weight:bold; margin:5px 0 10px;">PLAYER WANTS TO PLAY</div>
+        <div class="btn-row">
+            <button class="btn-accept" onclick="AccSys.acceptInvite()" style="border-color:#0f0; color:#0f0;">ACCEPT</button>
+            <button onclick="AccSys.rejectInvite()" style="border-color:#f55; color:#f55;">IGNORE</button>
+        </div>
+    </div>
+
+    <div id="challenge-modal">
+        <div class="glass-panel" style="max-width:300px;">
+            <h2 id="chal-target" style="margin:0; color:var(--primary)">CHALLENGE</h2>
+            <div style="font-size:0.7rem; color:#aaa; margin-bottom:10px;">SELECT MODE</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; width:100%;">
+                <button onclick="AccSys.sendChallenge('easy')">EASY</button>
+                <button onclick="AccSys.sendChallenge('medium')">NORMAL</button>
+                <button onclick="AccSys.sendChallenge('hard')">HARD</button>
+                <button onclick="AccSys.sendChallenge('demon')" style="color:var(--danger); border-color:var(--danger)">DEMON</button>
+            </div>
+            <button onclick="document.getElementById('challenge-modal').style.display='none'" style="margin-top:10px; background:transparent; border:none; font-size:0.7rem; color:#888;">CANCEL</button>
+        </div>
+    </div>
+
+    <div id="login-panel" class="overlay-panel" style="display:flex;">
+        <div class="glass-panel" style="max-width:400px;">
+            <h1 style="margin:0; font-style:italic;">HYPER WAVE</h1>
+            <div style="font-size:0.8rem; color:#888; margin-bottom:20px;">ONLINE MULTIPLAYER</div>
+            
+            <div class="input-group">
+                <input type="text" id="u_name" placeholder="USERNAME" maxlength="12">
+                <input type="password" id="u_pass" placeholder="PASSWORD" maxlength="12">
+            </div>
+
+            <div class="btn-row">
+                <button onclick="AccSys.login()" style="border-color:var(--primary); color:var(--primary); background:rgba(0,242,255,0.1)">LOGIN</button>
+                <button onclick="AccSys.register()">REGISTER</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="paused-overlay">
+        <div class="pause-title">PAUSED</div>
+        <div style="display:flex; gap:10px;">
+            <button onclick="togglePause()" style="width:120px; border-color:var(--primary)">RESUME</button>
+            <button onclick="showMenu()" style="width:120px; background:rgba(255,0,0,0.1); border-color:#f55; color:#f55">QUIT</button>
+        </div>
+    </div>
+
+    <div id="help-panel" class="overlay-panel">
+        <h1 style="margin-bottom:20px;">HOW TO PLAY</h1>
+        <div class="help-content">
+            <div class="help-section">
+                <div class="help-title">Controls</div>
+                <div class="help-text"><span class="key-badge">SPACE</span> / <span class="key-badge">CLICK</span> to fly.</div>
+            </div>
+            <div class="help-section">
+                <div class="help-title">Portals</div>
+                <div class="help-text">Blue: Speed, Pink: Mini, Orange: Gravity</div>
+            </div>
+        </div>
+        <button class="close-btn" onclick="toggleHelp()">GOT IT</button>
+    </div>
+
+    <div id="friends-panel" class="overlay-panel">
+        <h1 style="margin-bottom:20px; color:var(--primary)">SOCIAL HUB</h1>
+        <div class="glass-panel" style="max-width:600px;">
+            <div style="display:flex; gap:10px; width:100%;">
+                <input type="text" id="friend-in" placeholder="FRIEND'S USERNAME..." style="margin:0;">
+                <button onclick="AccSys.addFriend()" style="flex:0.4; border-color:var(--primary); color:var(--primary)">ADD</button>
+            </div>
+            <div style="text-align:left; font-size:0.7rem; color:#666; margin:10px 0 5px;">YOUR FRIENDS</div>
+            <div id="friend-list-container" style="max-height:400px; overflow-y:auto; width:100%;"></div>
+        </div>
+        <button class="close-btn" onclick="toggleFriends()">CLOSE</button>
+    </div>
+
+    <div id="settings-panel" class="overlay-panel">
+        <h1 style="margin-bottom:20px;">SETTINGS</h1>
+        <div class="settings-grid">
+            <div class="setting-item"><span class="setting-label" style="color:var(--primary)">FPS OPTIMIZER</span><div class="setting-toggle" onclick="toggleSet(this, 'optimize')"></div></div>
+            <div class="setting-item"><span class="setting-label">MUSIC</span><div class="setting-toggle on" onclick="toggleSet(this, 'music')"></div></div>
+            <div class="setting-item"><span class="setting-label">SFX</span><div class="setting-toggle on" onclick="toggleSet(this, 'sfx')"></div></div>
+            <div class="setting-item"><span class="setting-label">SHOW ORBS</span><div class="setting-toggle on" onclick="toggleSet(this, 'showOrbs')"></div></div>
+            <div class="setting-item"><span class="setting-label">AUTO-RETRY</span><div class="setting-toggle" onclick="toggleSet(this, 'autoRetry')"></div></div>
+            <div class="setting-item"><span class="setting-label">PARTICLES</span><div class="setting-toggle on" id="tog-particles" onclick="toggleSet(this, 'particles')"></div></div>
+            <div class="setting-item"><span class="setting-label">SHAKE EFFECTS</span><div class="setting-toggle on" onclick="toggleSet(this, 'shake')"></div></div>
+            <div class="setting-item"><span class="setting-label">PULSE EFFECTS</span><div class="setting-toggle on" id="tog-pulse" onclick="toggleSet(this, 'pulse')"></div></div>
+            <div class="setting-item"><span class="setting-label">BACKGROUND STARS</span><div class="setting-toggle on" id="tog-bgStars" onclick="toggleSet(this, 'bgStars')"></div></div>
+            <div class="setting-item"><span class="setting-label">FPS COUNTER</span><div class="setting-toggle" onclick="toggleSet(this, 'fps')"></div></div>
+        </div>
+        <button class="close-btn" onclick="toggleSettings()">CLOSE</button>
+    </div>
+
+    <div id="ui-layer">
+        <div id="settings-btn" class="icon-btn" onclick="toggleSettings()">⚙</div>
+        <div id="help-btn" class="icon-btn" onclick="toggleHelp()">?</div>
+        <div id="friends-btn" class="icon-btn" onclick="toggleFriends()">👥</div>
+        <div id="logout-btn" class="icon-btn" onclick="location.reload()">LOGOUT</div>
+        <div id="pause-btn" class="icon-btn" onclick="togglePause()">||</div>
+
+        <div id="menu" class="glass-panel hidden">
+            <div class="preview-wrapper">
+                <canvas id="preview-canvas"></canvas>
+                <div style="position:absolute; bottom:5px; left:10px; font-size:0.6rem; color:#666; font-weight:bold;">LIVE PREVIEW</div>
+                <div style="position:absolute; top:10px; right:15px; text-align:right;">
+                    <h1 style="margin:0; font-size:2.2rem; line-height:1; font-style:italic;">HYPER WAVE</h1>
+                    <div style="font-size:0.6rem; letter-spacing:3px; color:#888; font-weight:bold;">AERO EDITION</div>
+                    <div id="user-display" style="font-size:0.8rem; color:var(--primary); margin-top:2px;"></div>
+                </div>
+            </div>
+
+            <div class="garage-container">
+                <div class="tabs">
+                    <div class="tab-btn active" onclick="setTab('icons', this)">SHOP: ICONS</div>
+                    <div class="tab-btn" onclick="setTab('trails', this)">SHOP: TRAILS</div>
+                </div>
+                <div class="garage-content" id="tab-icons"><div class="skin-grid" id="skin-list"></div></div>
+                <div class="garage-content" id="tab-trails" style="display:none;"><div class="trail-grid" id="trail-list"></div></div>
+            </div>
+
+            <div class="meta-row">
+                <div class="color-picker-wrap">
+                    <span style="font-size:0.7rem; font-weight:bold; color:#aaa;">COLOR</span>
+                    <input type="color" id="pColor" value="#00f2ff">
+                </div>
+                <div class="stat-badge" id="orb-total">🟡 0</div>
+                <div class="stat-badge" id="unlock-total" style="color:#aaa"></div>
+            </div>
+
+            <div class="btn-row">
+                <button onclick="initGame('easy')">EASY<span class="mode-sub" id="score-easy">0%</span></button>
+                <button onclick="initGame('medium')">NORMAL<span class="mode-sub" id="score-medium">0%</span></button>
+                <button onclick="initGame('hard')">HARD<span class="mode-sub" id="score-hard">0%</span></button>
+                <button class="btn-demon" onclick="initGame('demon')">DEMON<span class="mode-sub" id="score-demon">0%</span></button>
+            </div>
+            <button class="btn-2p" onclick="initGame('medium', true, false)">LOCAL 2-PLAYER (SPLIT)</button>
+        </div>
+
+        <div id="dead" class="glass-panel hidden">
+            <h1 style="color:var(--danger); font-size:3rem; margin:0; -webkit-text-fill-color:var(--danger);">CRASHED</h1>
+            <h2 id="death-pct" style="font-size:4rem; margin:10px 0;">0%</h2>
+            <div style="color:#aaa; font-size:0.8rem; margin-bottom:15px; letter-spacing:1px;">PRESS SPACE TO RESTART</div>
+            <div class="btn-row">
+                <button onclick="showMenu()">MENU</button>
+                <button onclick="restart()" style="border-color:var(--primary); background:rgba(0,242,255,0.1);">RETRY</button>
+            </div>
+        </div>
+
+        <div id="win" class="glass-panel hidden">
+            <h1 style="color:#0f0; font-size:3rem; margin:0; -webkit-text-fill-color:#0f0;">LEVEL COMPLETE</h1>
+            <div class="btn-row"><button onclick="showMenu()">CONTINUE</button></div>
+        </div>
+    </div>
+
+    <div id="hud">
+        <div class="progress-container"><div id="p-bar"></div></div>
+        <div id="score-display">0%</div>
+        <div id="orb-hud">🟡 0</div>
+        <div id="fps-hud"></div>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // --- 1. ERROR TRAP ---
+        window.onerror = function(msg, source, line) {
+            const el = document.getElementById('error-log'); el.style.display = 'block';
+            el.innerHTML += `ERR: ${msg} (L${line})<br>`; return false;
+        };
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const pCvs = document.getElementById('preview-canvas');
+        const pCtx = pCvs.getContext('2d');
+        const loader = document.getElementById('loading-overlay');
+
+        // --- GLOBALS ---
+        let frames = 0; 
+
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDLQG54xeTsUgxK5EU6yEFa5ljyO2cuDOM",
+            authDomain: "hyperwave-2c332.firebaseapp.com",
+            projectId: "hyperwave-2c332",
+            storageBucket: "hyperwave-2c332.firebasestorage.app",
+            messagingSenderId: "358999453382",
+            appId: "1:358999453382:web:5b66b5bae6ee81ca7fb1c7",
+            measurementId: "G-J70WBQB6RZ"
+        };
+
+        let db;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            console.log("Cloud Connected");
+        } catch(e) { console.error("Config Error", e); }
+
+        // --- CLOUD ACCOUNT SYSTEM ---
+        let currentUser = null;
+        // Default Data
+        let data = { orbs: 0, unlocks: ['wave','box','solid'], best: { easy:0, medium:0, hard:0, demon:0 }, activeSkin: 'wave', activeTrail: 'solid', friends:[] };
+        
+        // Multi Globals
+        let activeMatchId = null;
+        let isOnlineMulti = false;
+        let currentInvite = null;
+        let ghostData = { y: 0, rot: 0, skin:'wave', color:'#fff', dead: false, active: false };
+        let targetFriend = null;
+
+        const AccSys = {
+            async login() {
+                const u = document.getElementById('u_name').value.toLowerCase().trim();
+                const p = document.getElementById('u_pass').value.trim();
+                if(!u || !p) { notify('ENTER CREDENTIALS'); return; }
+                loader.style.display='flex';
+                try {
+                    const doc = await db.collection('users').doc(u).get();
+                    if(doc.exists && doc.data().pass === p) {
+                        currentUser = u;
+                        data = doc.data().data;
+                        if(!data.friends) data.friends = [];
+                        this.startSession();
+                    } else { notify('INVALID LOGIN'); }
+                } catch(e) { notify('CONNECTION ERROR'); console.log(e); }
+                loader.style.display='none';
+            },
+            async register() {
+                const u = document.getElementById('u_name').value.toLowerCase().trim();
+                const p = document.getElementById('u_pass').value.trim();
+                if(!u || !p) { notify('ENTER INFO'); return; }
+                loader.style.display='flex';
+                try {
+                    const doc = await db.collection('users').doc(u).get();
+                    if(doc.exists) { notify('USERNAME TAKEN'); } else {
+                        const newData = { pass: p, data: { orbs: 0, unlocks: ['wave','box','solid'], best: { easy:0, medium:0, hard:0, demon:0 }, activeSkin: 'wave', activeTrail: 'solid', friends:[] }, lastSeen: Date.now() };
+                        await db.collection('users').doc(u).set(newData);
+                        currentUser = u; data = newData.data;
+                        notify('CREATED ACCOUNT'); this.startSession();
+                    }
+                } catch(e) { notify('ERROR'); console.log(e); }
+                loader.style.display='none';
+            },
+            startSession() {
+                document.getElementById('login-panel').style.display='none';
+                document.getElementById('menu').classList.remove('hidden');
+                document.getElementById('settings-btn').style.display='flex';
+                document.getElementById('help-btn').style.display='flex';
+                document.getElementById('logout-btn').style.display='flex';
+                document.getElementById('friends-btn').style.display='flex';
+                document.getElementById('user-display').innerText = 'PILOT: ' + currentUser.toUpperCase();
+                document.getElementById('pColor').value = data.color || '#00f2ff';
+                updateMenu();
+                // Heartbeat
+                setInterval(() => { db.collection('users').doc(currentUser).update({ lastSeen: Date.now() }); }, 60000);
+                db.collection('users').doc(currentUser).update({ lastSeen: Date.now() });
+                this.listenForInvites();
+            },
+            logout() { location.reload(); },
+            async saveData() {
+                if(!currentUser) return;
+                data.color = document.getElementById('pColor').value;
+                await db.collection('users').doc(currentUser).update({ data: data });
+            },
+            // Friend Logic
+            async addFriend() {
+                const f = document.getElementById('friend-in').value.toLowerCase().trim();
+                if(!f || f===currentUser) return notify('INVALID');
+                if(data.friends.includes(f)) return notify('ALREADY ADDED');
+                loader.style.display='flex';
+                try {
+                    const doc = await db.collection('users').doc(f).get();
+                    if(doc.exists) { data.friends.push(f); await this.saveData(); this.renderFriends(); notify('ADDED'); }
+                    else { notify('NOT FOUND'); }
+                } catch(e){ notify('ERROR'); }
+                loader.style.display='none';
+            },
+            async renderFriends() {
+                const l = document.getElementById('friend-list-container'); l.innerHTML='LOADING...';
+                try {
+                    l.innerHTML='';
+                    for(let f of data.friends) {
+                        const d = await db.collection('users').doc(f).get();
+                        if(d.exists) {
+                            const raw = d.data();
+                            const stats = raw.data.best;
+                            const online = (Date.now() - (raw.lastSeen||0)) < 120000;
+                            const div = document.createElement('div'); div.className='friend-card';
+                            div.innerHTML = `
+                                <div class="friend-header">
+                                    <div style="font-weight:bold;"><span class="f-online ${online?'is-online':''}"></span>${f.toUpperCase()}</div>
+                                    <button onclick="AccSys.prepChallenge('${f}')" style="flex:0; padding:5px; font-size:0.6rem; border-color:orange; color:orange;">VS</button>
+                                </div>
+                                <div class="f-stats-row"><span>EZ:${stats.easy}%</span><span>NM:${stats.medium}%</span><span>HD:${stats.hard}%</span><span>DM:${stats.demon}%</span></div>
+                            `;
+                            l.appendChild(div);
+                        }
+                    }
+                } catch(e){ l.innerHTML='ERROR LOADING'; }
+            },
+            // Challenges
+            prepChallenge(f) { targetFriend = f; document.getElementById('chal-target').innerText="VS "+f.toUpperCase(); document.getElementById('challenge-modal').style.display='flex'; },
+            async sendChallenge(m) {
+                document.getElementById('challenge-modal').style.display='none';
+                notify(`CHALLENGING ${targetFriend.toUpperCase()}...`);
+                try { await db.collection('invites').add({ from: currentUser, to: targetFriend, mode: m, timestamp: Date.now(), status: 'pending' }); notify('SENT!'); } catch(e){ notify('FAIL'); }
+            },
+            listenForInvites() {
+                db.collection('invites').where('to','==',currentUser).where('status','==','pending').onSnapshot(snap=>{
+                    snap.docChanges().forEach(c=>{ if(c.type==='added' && Date.now()-c.doc.data().timestamp < 60000) {
+                        currentInvite = { id: c.doc.id, ...c.doc.data() };
+                        document.getElementById('inv-msg').innerText = `${currentInvite.from.toUpperCase()} WANTS TO PLAY ${currentInvite.mode}`;
+                        document.getElementById('invite-popup').style.display='flex';
+                    }});
+                });
+                db.collection('invites').where('from','==',currentUser).where('status','==','accepted').onSnapshot(snap=>{
+                    snap.docChanges().forEach(c=>{ if(c.type==='added' && Date.now()-c.doc.data().timestamp < 60000) {
+                        notify('ACCEPTED!'); this.startOnline(c.doc.id, c.doc.data().mode, 'host');
+                    }});
+                });
+            },
+            async acceptInvite() {
+                document.getElementById('invite-popup').style.display='none';
+                if(!currentInvite) return;
+                await db.collection('invites').doc(currentInvite.id).update({ status: 'accepted' });
+                this.startOnline(currentInvite.id, currentInvite.mode, 'client');
+            },
+            rejectInvite() { document.getElementById('invite-popup').style.display='none'; },
+            startOnline(mid, mode, role) {
+                activeMatchId = mid; document.getElementById('friends-panel').style.display='none';
+                initGame(mode, false, true); ghostData.active=true;
+                this.gameSync(role);
+            },
+            gameSync(role) {
+                const myKey = role==='host'?'hostData':'clientData';
+                const oppKey = role==='host'?'clientData':'hostData';
+                const ref = db.collection('matches').doc(activeMatchId);
+                const int = setInterval(()=>{
+                    if(state!=='PLAY' || !activeMatchId) { clearInterval(int); return; }
+                    const p = players[0];
+                    ref.set({ [myKey]: { y:Math.round(p.y), rot:Math.round(p.rotation), skin:data.activeSkin, color:p.color, dead:(state==='OVER') } }, {merge:true});
+                }, 150);
+                ref.onSnapshot(doc=>{
+                    if(doc.exists && doc.data()[oppKey]) {
+                        const o = doc.data()[oppKey];
+                        ghostData.y = o.y; ghostData.rot = o.rot; ghostData.skin=o.skin; ghostData.color=o.color; ghostData.dead=o.dead;
+                    }
+                });
+            }
+        };
+
+        // --- SETTINGS ---
+        const SETTINGS = {
+            music: true, sfx: true, showOrbs: true, autoRetry: false,
+            particles: true, shake: true, pulse: true, bgStars: true,
+            progBar: true, fps: false, optimize: false
+        };
+
+        const CFG = {
+            easy:   { spd: 7, gap: 300, noise: 30, color: '#00ff88', name:'Cycles' },
+            medium: { spd: 9, gap: 240, noise: 60, color: '#d000ff', name:'Theory' },
+            hard:   { spd: 10, gap: 210, noise: 75, color: '#ffaa00', name:'Power' }, 
+            demon:  { spd: 10.8, gap: 180, noise: 100, color: '#ff0044', name:'Dominator' } // NERFED FROM 12.0
+        };
+
+        // --- SKINS & TRAILS (UPDATED FOR SHOP) ---
+        const skins = [
+            { id:'wave', name:'Classic', price:0, type:'free', desc:'Default', draw:(c,s)=>{ c.moveTo(s,0); c.lineTo(-s,s); c.lineTo(-s/2,0); c.lineTo(-s,-s); } },
+            { id:'box', name:'Cube', price:0, type:'free', desc:'Default', draw:(c,s)=>{ c.rect(-s/1.5,-s/1.5, s*1.3, s*1.3); } },
+            { id:'shard', name:'Shard', price:100, type:'shop', desc:'100 Orbs', draw:(c,s)=>{ c.moveTo(s,0); c.lineTo(-s,s/1.5); c.lineTo(-s,-s/1.5); } },
+            { id:'diamond', name:'Gem', price:250, type:'shop', desc:'250 Orbs', draw:(c,s)=>{ c.moveTo(s,0); c.lineTo(0,s); c.lineTo(-s,0); c.lineTo(0,-s); } },
+            { id:'star', name:'Star', price:500, type:'shop', desc:'500 Orbs', draw:(c,s)=>{ for(let i=0;i<5;i++){ c.lineTo(Math.cos((18+i*72)*0.0174)*s, -Math.sin((18+i*72)*0.0174)*s); c.lineTo(Math.cos((54+i*72)*0.0174)*s/2, -Math.sin((54+i*72)*0.0174)*s/2); } c.closePath(); } },
+            { id:'dart', name:'Dart', price:150, type:'shop', desc:'150 Orbs', draw:(c,s)=>{ c.moveTo(s,0); c.lineTo(-s,s/2); c.lineTo(-s*0.8,0); c.lineTo(-s,-s/2); } },
+            { id:'arrow', name:'Arrow', price:300, type:'shop', desc:'300 Orbs', draw:(c,s)=>{ c.moveTo(s*0.8,0); c.lineTo(-s,s); c.lineTo(-s*0.5,0); c.lineTo(-s,-s); } },
+            { id:'ufo', name:'UFO', price:600, type:'shop', desc:'600 Orbs', draw:(c,s)=>{ c.arc(0,-s/4,s/1.5,Math.PI,0); c.rect(-s,-s/4,s*2,s/2); c.moveTo(-s/2,s/4); c.lineTo(-s/1.5,s); c.moveTo(s/2,s/4); c.lineTo(s/1.5,s); } },
+            { id:'shield', name:'Shield', price:400, type:'shop', desc:'400 Orbs', draw:(c,s)=>{ c.moveTo(-s*0.8,-s*0.8); c.lineTo(s*0.8,-s*0.8); c.lineTo(s*0.8,0); c.quadraticCurveTo(0,s*1.2,-s*0.8,0); } },
+            { id:'shuriken', name:'Ninja', price:750, type:'shop', desc:'750 Orbs', draw:(c,s)=>{ c.moveTo(0,-s); c.lineTo(s*0.3,-s*0.3); c.lineTo(s,0); c.lineTo(s*0.3,s*0.3); c.lineTo(0,s); c.lineTo(-s*0.3,s*0.3); c.lineTo(-s,0); c.lineTo(-s*0.3,-s*0.3); } },
+            { id:'saw', name:'Saw', price:800, type:'shop', desc:'800 Orbs', draw:(c,s)=>{ c.arc(0,0,s/1.5,0,Math.PI*2); for(let i=0;i<8;i++){ let a=i*Math.PI/4; c.moveTo(Math.cos(a)*s, Math.sin(a)*s); c.lineTo(Math.cos(a+0.2)*s*0.5, Math.sin(a+0.2)*s*0.5); } } },
+            { id:'bat', name:'Bat', price:1000, type:'shop', desc:'1000 Orbs', draw:(c,s)=>{ c.moveTo(0,s/2); c.quadraticCurveTo(s,-s/2,s*1.2,-s); c.lineTo(0,-s/2); c.lineTo(-s*1.2,-s); c.quadraticCurveTo(-s,-s/2,0,s/2); } },
+            { id:'flame', name:'Flame', price:1200, type:'shop', desc:'1200 Orbs', draw:(c,s)=>{ c.rotate(Math.PI/2); c.arc(0,s/3,s/1.5,0,Math.PI); c.quadraticCurveTo(s,-s,0,-s); c.quadraticCurveTo(-s,-s,-s/1.5,s/3); } },
+            { id:'robot', name:'Bot', price:1500, type:'shop', desc:'1500 Orbs', draw:(c,s)=>{ c.rotate(Math.PI/2); c.rect(-s/1.5,-s/1.5,s*1.3,s*1.3); c.rect(-s,0,s/3,s/2); c.rect(s/1.5,0,s/3,s/2); } },
+            { id:'god', name:'GOD', price:5000, type:'shop', desc:'5000 Orbs', draw:(c,s)=>{ c.arc(0,0,s/3,0,Math.PI*2); c.moveTo(0,-s); c.lineTo(0,s); c.moveTo(-s,0); c.lineTo(s,0); c.arc(0,0,s,0,Math.PI*2); } },
+            { id:'cross', name:'Cross', price:2000, type:'shop', desc:'2000 Orbs', draw:(c,s)=>{ c.rotate(Math.PI/2); c.rect(-s/3,-s,s/1.5,s*2); c.rect(-s,-s/3,s*2,s/1.5); } },
+        ];
+
+        const trails = [
+            { id:'solid', name:'Solid', price:0, desc:'Free' },
+            { id:'dash', name:'Dash', price:150, desc:'150 Orbs' },
+            { id:'particle', name:'Particles', price:300, desc:'300 Orbs' },
+            { id:'plasma', name:'Plasma', price:600, desc:'600 Orbs' },
+            { id:'ghost', name:'Ghost', price:1000, desc:'1000 Orbs' }, 
+            { id:'rainbow', name:'Rainbow', price:2500, desc:'2500 Orbs' }
+        ];
+
+        // --- GAME OBJECTS ---
+        let players=[]; let isMulti=false;
+        let walls=[], portals=[], particles=[], orbs=[], edgeFlashes=[];
+        let state='MENU', diff='medium', camX=0, speedMult=1, godMode=0, runOrbs=0;
+        let beatTimer=0, previewTick=0, fpsTime=0;
+        let bgStars = []; for(let i=0;i<60;i++) bgStars.push({x:Math.random()*2000, y:Math.random()*1000, s:Math.random()*2, sp:Math.random()*2});
+        let previewTrailPts = [];
+
+        // --- UNIFIED AUDIO SYSTEM ---
+        const MusicSys = {
+            ctx: null, isPlaying: false, timer: null,
+            init(){ 
+                if(!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                if(this.ctx.state === 'suspended') this.ctx.resume();
+            },
+            start(mode){
+                if(this.isPlaying) return;
+                this.isPlaying = true;
+                this.schedule(mode);
+            },
+            stop(){
+                this.isPlaying = false;
+                if(this.timer) clearTimeout(this.timer);
+            },
+            schedule(mode){
+                if(!this.isPlaying) return;
+                const d = this.playNote(mode);
+                let interval = (mode==='demon') ? 150 : (mode==='hard') ? 300 : (1000 + Math.random()*2000);
+                this.timer = setTimeout(() => this.schedule(mode), interval);
+            },
+            playNote(mode){
+                if(!this.ctx || !SETTINGS.music) return;
+                const osc = this.ctx.createOscillator();
+                const g = this.ctx.createGain();
+                const C_Maj = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
+                const C_Min = [261.63, 293.66, 311.13, 349.23, 392.00, 415.30, 466.16, 523.25];
+                const Chaos = [130.81, 146.83, 155.56, 164.81, 196.00, 220.00];
+                let freq, type, dur;
+                if(mode==='demon'){ freq = Chaos[Math.floor(Math.random()*Chaos.length)]; if(Math.random()<0.3) freq *= 2; type = 'sawtooth'; dur = 0.1; } 
+                else if(mode==='hard'){ freq = C_Min[Math.floor(Math.random()*C_Min.length)]; type = 'triangle'; dur = 0.3; } 
+                else { freq = C_Maj[Math.floor(Math.random()*C_Maj.length)]; type = 'sine'; dur = 2.0; }
+                osc.type = type; osc.frequency.value = freq;
+                g.gain.setValueAtTime(0, this.ctx.currentTime);
+                g.gain.linearRampToValueAtTime(mode==='demon'?0.05:0.1, this.ctx.currentTime + 0.05);
+                g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + dur);
+                osc.connect(g); g.connect(this.ctx.destination);
+                osc.start(); osc.stop(this.ctx.currentTime + dur);
+                return dur*1000;
+            },
+            playFX(type) {
+                if(!this.ctx || !SETTINGS.sfx) return;
+                const o = this.ctx.createOscillator(); const g = this.ctx.createGain();
+                if(type==='coin') {
+                    o.frequency.setValueAtTime(1200, this.ctx.currentTime); o.frequency.exponentialRampToValueAtTime(2000, this.ctx.currentTime+0.1);
+                    g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.linearRampToValueAtTime(0, this.ctx.currentTime+0.1);
+                    o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime+0.1);
+                } else if(type==='portal') {
+                    o.type='sine'; o.frequency.value=800;
+                    g.gain.setValueAtTime(0.08, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime+0.12);
+                    o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime+0.12);
+                } else if(type==='miss') {
+                    o.type='sawtooth'; o.frequency.value=150;
+                    g.gain.setValueAtTime(0.05, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime+0.1);
+                    o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime+0.1);
+                }
+            }
+        };
+
+        const tracks = { hard: new Audio('2-06. Power Trip.mp3'), demon: new Audio('5-03. Geometrical Dominator.mp3') };
+        for(let k in tracks) tracks[k].loop=true;
+        const deathSfx = new Audio('geometry-dash-death-sound-effect.mp3');
+        let currentBgm = null;
+
+        // --- UI & LOGIC ---
+        function toggleSettings(){ const p=document.getElementById('settings-panel'); p.style.display=p.style.display==='flex'?'none':'flex'; document.getElementById('help-panel').style.display='none'; document.getElementById('friends-panel').style.display='none'; }
+        function toggleHelp(){ const p=document.getElementById('help-panel'); p.style.display=p.style.display==='flex'?'none':'flex'; document.getElementById('settings-panel').style.display='none'; document.getElementById('friends-panel').style.display='none'; }
+        function toggleFriends(){ const p=document.getElementById('friends-panel'); p.style.display=p.style.display==='flex'?'none':'flex'; document.getElementById('settings-panel').style.display='none'; document.getElementById('help-panel').style.display='none'; AccSys.renderFriends(); }
+        
+        function togglePause(){
+            if(state==='PLAY') { state='PAUSE'; document.getElementById('paused-overlay').style.display='flex'; if(currentBgm) currentBgm.pause(); MusicSys.stop(); }
+            else if(state==='PAUSE') { state='PLAY'; document.getElementById('paused-overlay').style.display='none'; if(SETTINGS.music){ if(currentBgm) currentBgm.play(); else MusicSys.start(diff); } }
+        }
+
+        function toggleSet(el, k) {
+            SETTINGS[k] = !SETTINGS[k]; el.className='setting-toggle '+(SETTINGS[k]?'on':'');
+            if(k==='optimize') { 
+                SETTINGS.particles=!SETTINGS.optimize; SETTINGS.bgStars=!SETTINGS.optimize; SETTINGS.pulse=!SETTINGS.optimize; 
+                document.getElementById('tog-particles').className='setting-toggle '+(SETTINGS.particles?'on':'');
+                document.getElementById('tog-bgStars').className='setting-toggle '+(SETTINGS.bgStars?'on':'');
+                document.getElementById('tog-pulse').className='setting-toggle '+(SETTINGS.pulse?'on':'');
+            }
+            if(k==='music'){ 
+                if(!SETTINGS.music){ if(currentBgm)currentBgm.pause(); MusicSys.stop(); } 
+                else if(state==='PLAY'){ if(currentBgm)currentBgm.play(); else MusicSys.start(diff); } 
+            }
+            if(k==='fps') document.getElementById('fps-hud').style.display=SETTINGS.fps?'block':'none';
+            if(k==='progBar') document.querySelector('.progress-container').style.display=SETTINGS.progBar?'block':'none';
+        }
+
+        function setTab(t, el){ 
+            document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+            document.querySelectorAll('.garage-content').forEach(c=>c.style.display='none');
+            document.getElementById('tab-'+t).style.display='block'; el.classList.add('active'); 
+        }
+
+        // --- NEW SHOP LOGIC ---
+        function updateMenu() {
+            document.getElementById('score-easy').innerText=data.best.easy+'%';
+            document.getElementById('score-medium').innerText=data.best.medium+'%';
+            document.getElementById('score-hard').innerText=data.best.hard+'%';
+            document.getElementById('score-demon').innerText=data.best.demon+'%';
+            document.getElementById('orb-total').innerText='🟡 '+data.orbs;
+            document.getElementById('unlock-total').innerText='🔓 '+data.unlocks.length+'/'+(skins.length+trails.length);
+
+            const sg=document.getElementById('skin-list'); sg.innerHTML='';
+            skins.forEach(s=>{
+                const unlk=data.unlocks.includes(s.id);
+                const d=document.createElement('div');
+                d.className='skin-card '+(data.activeSkin===s.id?'active-item':'');
+                if(unlk){
+                    // FIXED: Text first, then Canvas to prevent overwriting
+                    d.innerHTML = `<div class="owned-tag">OWNED</div>`;
+                    const c=document.createElement('canvas'); c.width=28; c.height=28;
+                    const x=c.getContext('2d'); x.translate(14,14); x.fillStyle='white'; x.beginPath(); s.draw(x,8); x.fill(); 
+                    d.appendChild(c);
+                } else {
+                    d.innerHTML=`<div style="font-size:1.5rem; opacity:0.3">🔒</div><div class="price-tag">🟡${s.price}</div>`;
+                }
+                d.onclick=()=>{ 
+                    if(unlk){ data.activeSkin=s.id; AccSys.saveData(); updateMenu(); }
+                    else { attemptBuy(s); }
+                };
+                sg.appendChild(d);
+            });
+
+            const tg=document.getElementById('trail-list'); tg.innerHTML='';
+            trails.forEach(t=>{
+                const unlk=data.unlocks.includes(t.id);
+                const d=document.createElement('div');
+                d.className='trail-card '+(data.activeTrail===t.id?'active-item':'');
+                if(unlk) {
+                    d.innerHTML=`<span>${t.name}</span><div class="owned-tag">OWNED</div>`;
+                } else {
+                    d.innerHTML=`<span style="opacity:0.5">${t.name}</span><div class="price-tag">🟡${t.price}</div>`;
+                }
+                d.onclick=()=>{ 
+                    if(unlk){ data.activeTrail=t.id; AccSys.saveData(); updateMenu(); }
+                    else { attemptBuy(t); }
+                };
+                tg.appendChild(d);
+            });
+        }
+
+        function attemptBuy(item) {
+            if(data.orbs >= item.price) {
+                if(confirm(`Buy ${item.name} for ${item.price} Orbs?`)) {
+                    data.orbs -= item.price;
+                    data.unlocks.push(item.id);
+                    AccSys.saveData();
+                    updateMenu();
+                    notify("PURCHASE SUCCESSFUL");
+                    MusicSys.playFX('coin');
+                }
+            } else {
+                notify("INSUFFICIENT ORBS");
+                MusicSys.playFX('miss');
+            }
+        }
+
+        function notify(msg) {
+            const n=document.createElement('div'); n.className='notify-box'; n.innerText=msg;
+            document.getElementById('notify-area').appendChild(n); setTimeout(()=>n.remove(),4000);
+        }
+
+        // --- GAME CORE ---
+        function initGame(d, multi=false, online=false) {
+            diff=d; isMulti=multi; isOnlineMulti=online;
+            MusicSys.init();
+            MusicSys.stop();
+            if(currentBgm) { currentBgm.pause(); currentBgm=null; }
+
+            if(SETTINGS.music) {
+                if(d === 'easy' || d === 'medium') MusicSys.start(d);
+                else { currentBgm = tracks[d]; currentBgm.currentTime=0; currentBgm.play().catch(()=>{}); }
+            }
+
+            document.getElementById('menu').classList.add('hidden');
+            document.getElementById('dead').classList.add('hidden');
+            document.getElementById('win').classList.add('hidden');
+            document.getElementById('hud').style.opacity=1;
+            document.getElementById('settings-btn').style.display='none';
+            document.getElementById('help-btn').style.display='none';
+            document.getElementById('logout-btn').style.display='none';
+            document.getElementById('friends-btn').style.display='none';
+            document.getElementById('pause-btn').style.display='flex';
+
+            state='PLAY';
+            players=[{
+                x:200, y:canvas.height/2, vy:CFG[d].spd, size:20, 
+                inv:false, mini:false, trail:[], rotation:0, 
+                skin:data.activeSkin, trailType:data.activeTrail,
+                color:document.getElementById('pColor').value, holding:false
+            }];
+            if(isMulti) {
+                players.push({
+                    x:200, y:canvas.height/2+40, vy:CFG[d].spd, size:20, 
+                    inv:false, mini:false, trail:[], rotation:0,
+                    skin:data.activeSkin, trailType:data.activeTrail,
+                    color:'#ffaa00', holding:false
+                });
+            }
+
+            walls=[]; portals=[]; particles=[]; orbs=[]; edgeFlashes=[]; 
+            camX=0; speedMult=1; godMode=60; runOrbs=0;
+            let cy=canvas.height/2; for(let i=0; i<60; i++) cy=addWall(i*20, cy);
+            
+            // RESET LOOP TIME
+            lastTime = 0; accumulator = 0;
+            requestAnimationFrame(gameLoop);
+        }
+
+        function restart(){ initGame(diff, isMulti, isOnlineMulti); }
+        function showMenu(){ 
+            state='MENU'; activeMatchId = null; ghostData.active = false;
+            if(currentBgm)currentBgm.pause(); 
+            MusicSys.stop();
+            updateMenu();
+            document.getElementById('menu').classList.remove('hidden');
+            document.getElementById('dead').classList.add('hidden');
+            document.getElementById('win').classList.add('hidden');
+            document.getElementById('hud').style.opacity=0;
+            document.getElementById('paused-overlay').style.display='none';
+            document.getElementById('settings-btn').style.display='flex';
+            document.getElementById('help-btn').style.display='flex';
+            document.getElementById('logout-btn').style.display='flex';
+            document.getElementById('friends-btn').style.display='flex';
+            document.getElementById('pause-btn').style.display='none';
+            walls=[];
+        }
+
+        function addWall(x,cy) {
+            const c=CFG[diff]; let ny=cy+(Math.random()-0.5)*c.noise;
+            if(ny<50+c.gap/2)ny=50+c.gap/2; if(ny>canvas.height-50-c.gap/2)ny=canvas.height-50-c.gap/2;
+            walls.push({x:x, y:ny, w:20, gap:c.gap});
+            
+            if(x>2000) {
+                if(diff!=='easy' && Math.random()<0.012) {
+                    const t = diff==='medium' ? (Math.random()<0.5?'spd':'mini') : ['spd','mini','inv'][Math.floor(Math.random()*3)];
+                    portals.push({x:x, y:ny, type:t, active:true});
+                }
+                if(diff!=='easy' && SETTINGS.showOrbs && Math.random()<0.08) {
+                    let oy = ny + (Math.random()-0.5)*(c.gap*0.6);
+                    orbs.push({x:x, y:oy, c:false});
+                }
+            }
+            return ny;
+        }
+
+        function crash() {
+            if(godMode>0) return;
+            state='OVER'; 
+            if(currentBgm) currentBgm.pause();
+            MusicSys.stop();
+
+            if(SETTINGS.sfx) { deathSfx.currentTime=0; deathSfx.play().catch(()=>{}); }
+            
+            document.body.classList.add('glitch-effect');
+            setTimeout(()=>document.body.classList.remove('glitch-effect'), 200);
+
+            data.orbs+=runOrbs; let pct=Math.floor(players[0].x/500);
+            if(!isMulti && pct>data.best[diff]) data.best[diff]=pct;
+            AccSys.saveData();
+
+            if(SETTINGS.particles) {
+                players.forEach(p=>{ for(let i=0;i<30;i++) particles.push({x:p.x, y:p.y, vx:(Math.random()-0.5)*15, vy:(Math.random()-0.5)*15, l:1, c:p.color}); });
+            }
+            
+            document.getElementById('death-pct').innerText=pct+'%';
+            document.getElementById('dead').classList.remove('hidden');
+            document.getElementById('hud').style.opacity=0;
+            document.getElementById('pause-btn').style.display='none';
+            
+            if(SETTINGS.autoRetry) setTimeout(restart, 800);
+        }
+
+        // --- INPUT ---
+        const handleDown = (pId) => { if(state==='OVER')restart(); if(players[pId]) players[pId].holding=true; };
+        const handleUp = (pId) => { if(players[pId]) players[pId].holding=false; };
+
+        window.addEventListener('mousedown', ()=>{ if(state==='PLAY') handleDown(0); });
+        window.addEventListener('mouseup', ()=>{ handleUp(0); });
+        
+        window.addEventListener('touchstart', (e)=>{
+            if(e.target.tagName!=='BUTTON' && e.target.tagName!=='INPUT' && !e.target.classList.contains('skin-card') && !e.target.classList.contains('trail-card')) {
+                e.preventDefault();
+                if(state==='OVER') restart();
+                if(state==='PLAY') {
+                    for(let i=0; i<e.touches.length; i++){
+                        if(isMulti) {
+                            if(e.touches[i].clientY > window.innerHeight/2) handleDown(1); // Bot = P2
+                            else handleDown(0); // Top = P1
+                        } else handleDown(0);
+                    }
+                }
+            }
+        }, {passive:false});
+        
+        window.addEventListener('touchend', ()=>{ handleUp(0); handleUp(1); });
+
+        window.addEventListener('keydown', (e)=>{
+            if(e.code==='Space') handleDown(0);
+            if(isMulti && (e.code==='ArrowUp'||e.code==='KeyW')) handleDown(1);
+            if(e.code==='Escape') togglePause();
+        });
+        window.addEventListener('keyup', (e)=>{
+            if(e.code==='Space') handleUp(0);
+            if(isMulti && (e.code==='ArrowUp'||e.code==='KeyW')) handleUp(1);
+        });
+
+        window.onresize=()=>{ canvas.width=window.innerWidth; canvas.height=window.innerHeight; pCvs.width=pCvs.offsetWidth; pCvs.height=pCvs.offsetHeight; };
+        window.onresize();
+
+        // --- NEW OPTIMIZED LOOP ---
+        const TIME_STEP = 1000/60;
+        let lastTime = 0;
+        let accumulator = 0;
+
+        function updatePhysics() {
+            if(SETTINGS.fps) { let now=performance.now(); let fps=Math.round(1000/(now-fpsTime)); fpsTime=now; document.getElementById('fps-hud').innerText="FPS: "+fps; }
+            
+            beatTimer++;
+            if(SETTINGS.pulse && beatTimer>25 && state==='PLAY') { 
+                beatTimer=0; document.body.classList.remove('pulse-bg'); void document.body.offsetWidth; document.body.classList.add('pulse-bg'); 
+            }
+
+            if(state!=='PLAY') return;
+            if(godMode>0) godMode--;
+            speedMult+=0.0002; const spd=CFG[diff].spd*speedMult; camX=players[0].x-200;
+
+            // Player Physics
+            players.forEach(p=>{
+                p.x+=spd;
+                let dir=p.holding?-1:1; if(p.inv)dir*=-1;
+                p.vy=(spd*0.9)*dir; p.y+=p.vy;
+                let tr=p.holding?-45:45; if(p.inv)tr*=-1; p.rotation+=(tr-p.rotation)*0.15;
+                if(Math.floor(p.x)%2===0) { p.trail.push({x:p.x, y:p.y, r:p.rotation}); if(p.trail.length>(isMulti?15:30))p.trail.shift(); }
+            });
+
+            // Gen
+            let last=walls[walls.length-1]; if(players[0].x+canvas.width>last.x) addWall(last.x+20, last.y);
+            if(walls[0].x<camX-100)walls.shift(); if(portals.length>0&&portals[0].x<camX-100)portals.shift();
+
+            // Collision
+            for(let w of walls) {
+                let top=w.y-w.gap/2, bot=w.y+w.gap/2;
+                players.forEach(p=>{
+                    const hSize = (p.size||20)*0.5;
+                    if(p.x+hSize > w.x && p.x-hSize < w.x+w.w) {
+                        if(p.y-hSize < top || p.y+hSize > bot) crash();
+                        else if(SETTINGS.shake && (Math.abs((p.y-hSize)-top)<30 || Math.abs((p.y+hSize)-bot)<30)) { 
+                            if(Math.random()<0.15) { MusicSys.playFX('miss'); edgeFlashes.push({x:w.x, y:top, t:10}); } 
+                        }
+                    }
+                });
+            }
+
+            // Portals & Orbs
+            portals.forEach(pt=>{
+                if(pt.active) {
+                    players.forEach(p=>{
+                        if(Math.abs(p.x-pt.x)<30 && Math.abs(p.y-pt.y)<50) {
+                            pt.active=false; MusicSys.playFX('portal');
+                            if(pt.type==='inv') players.forEach(pl=>pl.inv=!pl.inv);
+                            if(pt.type==='spd') speedMult+=0.2;
+                            if(pt.type==='mini') players.forEach(pl=>{ pl.mini=!pl.mini; pl.size=pl.mini?12:20; });
+                        }
+                    });
+                }
+            });
+            orbs.forEach(o=>{
+                if(!o.c) {
+                    players.forEach(p=>{
+                        if(Math.abs(p.x-o.x)<30 && Math.abs(p.y-o.y)<30) { 
+                            o.c=true; runOrbs++; document.getElementById('orb-hud').innerText='🟡 '+runOrbs; MusicSys.playFX('coin'); 
+                        }
+                    });
+                }
+            });
+
+            // --- FIXED 100% COMPLETION LOGIC ---
+            let pct=Math.floor(players[0].x/500); 
+            document.getElementById('p-bar').style.width=Math.min(100,pct)+'%'; document.getElementById('score-display').innerText=pct+'%';
+            
+            if(pct>=100){ 
+                state='WIN'; 
+                data.orbs += runOrbs; // Save orbs
+                data.best[diff] = 100; // Force 100% save
+                AccSys.saveData(); // Commit to DB
+                document.getElementById('win').classList.remove('hidden'); 
+                document.getElementById('hud').style.opacity=0; 
+                document.getElementById('pause-btn').style.display='none';
+            }
+        }
+
+        // --- PREVIEW LOOP (Runs when menu is open) ---
+        function previewLoop() {
+            if(state!=='MENU') return;
+            previewTick+=0.05;
+            pCtx.fillStyle="#000"; pCtx.fillRect(0,0,pCvs.width,pCvs.height);
+            let simY=pCvs.height/2+Math.sin(previewTick)*25; let simRot=Math.cos(previewTick)*40;
+            
+            pCtx.strokeStyle="rgba(0,242,255,0.1)"; pCtx.lineWidth=1;
+            let off=(Date.now()/20)%20; pCtx.beginPath(); for(let i=0;i<pCvs.width+20;i+=20){ pCtx.moveTo(i-off,0); pCtx.lineTo(i-off,pCvs.height); } pCtx.stroke();
+            
+            let pCol = document.getElementById('pColor').value;
+            previewTrailPts.push({x: pCvs.width/2, y: simY, r: simRot});
+            if(previewTrailPts.length > 20) previewTrailPts.shift();
+
+            let renderPts = previewTrailPts.map((p, i) => ({
+                x: p.x - (previewTrailPts.length - 1 - i) * 5,
+                y: p.y, r: p.r
+            }));
+
+            if(data.activeTrail==='solid'||data.activeTrail==='rainbow') {
+                pCtx.beginPath(); pCtx.lineWidth=4;
+                pCtx.strokeStyle = data.activeTrail==='rainbow' ? `hsl(${frames*10},100%,50%)` : pCol;
+                if(renderPts.length) { pCtx.moveTo(renderPts[0].x, renderPts[0].y); renderPts.forEach(t=>pCtx.lineTo(t.x,t.y)); pCtx.stroke(); }
+            } else if(data.activeTrail==='plasma') {
+                pCtx.shadowBlur=10; pCtx.shadowColor=pCol; pCtx.strokeStyle="white"; pCtx.lineWidth=4;
+                pCtx.beginPath(); if(renderPts.length){ pCtx.moveTo(renderPts[0].x, renderPts[0].y); renderPts.forEach(t=>pCtx.lineTo(t.x,t.y)); pCtx.stroke(); }
+                pCtx.shadowBlur=0;
+            } else if(data.activeTrail==='ghost') {
+                let sDraw=skins.find(s=>s.id===data.activeSkin)||skins[0];
+                for(let i=0; i<renderPts.length; i+=2) {
+                    let t = renderPts[i];
+                    pCtx.save(); pCtx.translate(t.x, t.y); pCtx.rotate((t.r||0)*Math.PI/180);
+                    pCtx.globalAlpha = 0.3 * (i/renderPts.length);
+                    pCtx.beginPath(); sDraw.draw(pCtx, 14); pCtx.fillStyle = pCol; pCtx.fill(); pCtx.restore();
+                }
+            } else {
+                pCtx.fillStyle=pCol; renderPts.forEach(t=>{ pCtx.beginPath(); pCtx.arc(t.x,t.y,3,0,Math.PI*2); pCtx.fill(); });
+            }
+
+            pCtx.globalAlpha=1;
+            pCtx.save(); pCtx.translate(pCvs.width/2, simY); pCtx.rotate(simRot*Math.PI/180);
+            let s=skins.find(k=>k.id===data.activeSkin)||skins[0]; pCtx.beginPath(); s.draw(pCtx,14); 
+            // FIXED: Set Color Explicitly
+            pCtx.fillStyle = pCol;
+            pCtx.fill();
+            pCtx.strokeStyle='white'; pCtx.lineWidth=2; pCtx.stroke(); pCtx.restore();
+        }
+
+        function draw() {
+            if(state==='MENU') { previewLoop(); requestAnimationFrame(draw); return; }
+
+            ctx.fillStyle="#050508"; ctx.fillRect(0,0,canvas.width,canvas.height);
+            
+            // Stars
+            if(SETTINGS.bgStars) {
+                bgStars.forEach(s=>{ 
+                    s.x -= s.sp*speedMult*1.5; if(s.x<0)s.x=canvas.width; 
+                    ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.fillRect(s.x, s.y, s.s, s.s); 
+                });
+            }
+
+            if(walls.length===0){ requestAnimationFrame(draw); return; }
+            ctx.save();
+            if(state==='OVER'&&SETTINGS.shake) ctx.translate((Math.random()-0.5)*10, (Math.random()-0.5)*10);
+            
+            if(!isMulti) ctx.translate(-Math.floor(camX), 0);
+
+            const drawWorld = (viewOffset) => {
+                let wc = CFG[diff].color;
+                ctx.shadowBlur = 15; ctx.shadowColor = wc;
+                ctx.beginPath(); walls.forEach((w,i)=>{ let y=w.y-w.gap/2; if(i===0)ctx.moveTo(w.x,y); else ctx.lineTo(w.x,y); });
+                ctx.lineTo(walls[walls.length-1].x,-200); ctx.lineTo(walls[0].x,-200); 
+                ctx.fillStyle='#0a0a15'; ctx.fill(); ctx.lineWidth=4; ctx.strokeStyle=wc; ctx.stroke();
+                
+                ctx.beginPath(); walls.forEach((w,i)=>{ let y=w.y+w.gap/2; if(i===0)ctx.moveTo(w.x,y); else ctx.lineTo(w.x,y); });
+                ctx.lineTo(walls[walls.length-1].x,canvas.height+200); ctx.lineTo(walls[0].x,canvas.height+200); 
+                ctx.fill(); ctx.stroke();
+                ctx.shadowBlur=0;
+
+                if(SETTINGS.particles) {
+                    edgeFlashes.forEach((f,i)=>{
+                        ctx.save(); ctx.globalAlpha=f.t/10; ctx.fillStyle='#fff'; 
+                        ctx.fillRect(f.x-2, f.y-10, 4, 20); ctx.restore(); 
+                        f.t--; if(f.t<=0) edgeFlashes.splice(i,1); 
+                    });
+                }
+
+                portals.forEach(pt=>{ if(!pt.active)return;
+                    let c=pt.type==='inv'?'#fa0':pt.type==='spd'?'#0ff':'#f0f'; let sym=pt.type==='inv'?'↕':pt.type==='spd'?'»':'•';
+                    ctx.save(); ctx.translate(pt.x,pt.y);
+                    ctx.beginPath(); ctx.ellipse(-8,0,20,45,0,0,Math.PI*2); ctx.lineWidth=2; ctx.strokeStyle=c; ctx.globalAlpha=0.5; ctx.stroke();
+                    ctx.beginPath(); ctx.arc(20,0,15,0,Math.PI*2); ctx.fillStyle=c; ctx.fill(); 
+                    ctx.fillStyle='white'; ctx.font='bold 20px Arial'; ctx.textAlign='center'; ctx.fillText(sym,20,5);
+                    ctx.beginPath(); ctx.ellipse(8,0,20,45,0,0,Math.PI*2); ctx.lineWidth=4; ctx.globalAlpha=1; ctx.stroke(); ctx.restore();
+                });
+                if(SETTINGS.showOrbs) { 
+                    orbs.forEach(o=>{ if(o.c)return; ctx.shadowBlur=15; ctx.shadowColor='gold'; ctx.fillStyle='gold'; ctx.beginPath(); ctx.arc(o.x,o.y,10,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0; }); 
+                }
+            };
+
+            if(isMulti && !isOnlineMulti) {
+                // Top Screen (P1)
+                ctx.save(); ctx.beginPath(); ctx.rect(0,0,canvas.width,canvas.height/2); ctx.clip();
+                ctx.translate(-Math.floor(players[0].x-200), 0);
+                drawWorld();
+                drawPlayers(0);
+                ctx.restore();
+
+                ctx.fillStyle='white'; ctx.fillRect(0,canvas.height/2-1,canvas.width,2);
+
+                // Bottom Screen (P2)
+                ctx.save(); ctx.beginPath(); ctx.rect(0,canvas.height/2,canvas.width,canvas.height/2); ctx.clip();
+                ctx.translate(0, canvas.height/2);
+                ctx.translate(-Math.floor(players[1].x-200), -canvas.height/2);
+                drawWorld();
+                drawPlayers(1);
+                ctx.restore();
+            } else {
+                drawWorld();
+                if(ghostData.active) {
+                    ctx.save();
+                    ctx.translate(players[0].x, ghostData.y); 
+                    ctx.rotate(ghostData.rot * Math.PI/180);
+                    ctx.globalAlpha = 0.65;
+                    let sDraw = skins.find(s=>s.id===ghostData.skin) || skins[0];
+                    ctx.beginPath(); sDraw.draw(ctx, 20);
+                    ctx.fillStyle = ghostData.dead ? '#f00' : ghostData.color; 
+                    ctx.fill(); ctx.restore();
+                }
+                drawPlayers(0);
+            }
+
+            function drawPlayers(focusIdx) {
+                if(state!=='OVER') {
+                    players.forEach((p, idx) => {
+                        if(isMulti && !isOnlineMulti && idx !== focusIdx) ctx.globalAlpha=0.3; else ctx.globalAlpha=1;
+
+                        if(p.trailType==='solid'||p.trailType==='rainbow') {
+                            ctx.beginPath(); ctx.lineWidth=p.mini?2:4;
+                            ctx.strokeStyle = p.trailType==='rainbow' ? `hsl(${frames*10},100%,50%)` : p.color;
+                            if(p.trail.length) { ctx.moveTo(p.trail[0].x, p.trail[0].y); p.trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); }
+                        } else if(p.trailType==='plasma') {
+                            ctx.shadowBlur=15; ctx.shadowColor=p.color; ctx.strokeStyle="white"; ctx.lineWidth=p.mini?3:5;
+                            ctx.beginPath(); if(p.trail.length){ ctx.moveTo(p.trail[0].x, p.trail[0].y); p.trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); }
+                            ctx.shadowBlur=0;
+                        } else if(p.trailType==='ghost') {
+                             let sDraw=skins.find(s=>s.id===p.skin)||skins[0];
+                             for(let i=0; i<p.trail.length; i+=2) {
+                                 let t = p.trail[i];
+                                 ctx.save(); ctx.translate(t.x, t.y); 
+                                 if(p.inv) ctx.scale(1,-1); 
+                                 ctx.rotate((t.r||0)*Math.PI/180);
+                                 ctx.globalAlpha = 0.3 * (i/p.trail.length);
+                                 ctx.beginPath(); sDraw.draw(ctx, p.mini?12:20);
+                                 ctx.fillStyle = p.color; ctx.fill();
+                                 ctx.restore();
+                             }
+                        } else { ctx.fillStyle=p.color; p.trail.forEach(t=>{ ctx.beginPath(); ctx.arc(t.x,t.y,3,0,Math.PI*2); ctx.fill(); }); }
+
+                        ctx.globalAlpha = 1;
+                        ctx.save(); ctx.translate(p.x,p.y); if(p.inv)ctx.scale(1,-1); ctx.rotate(p.rotation*Math.PI/180);
+                        if(godMode>0 && Math.floor(godMode/5)%2===0)ctx.globalAlpha=0.5;
+                        ctx.beginPath(); 
+                        let sDraw=skins.find(s=>s.id===p.skin)||skins[0]; sDraw.draw(ctx, p.mini?12:20);
+                        ctx.fillStyle=p.color; ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle='white'; ctx.stroke();
+                        ctx.restore();
+                    });
+                }
+            }
+
+            if(SETTINGS.particles) {
+                if(!isMulti) {
+                    particles.forEach((pa,i)=>{
+                        ctx.fillStyle=pa.c; ctx.globalAlpha=pa.l;
+                        ctx.fillRect(pa.x,pa.y,5,5); pa.x+=pa.vx; pa.y+=pa.vy; pa.l-=0.05; if(pa.l<=0)particles.splice(i,1);
+                    });
+                }
+            }
+            ctx.globalAlpha=1; ctx.restore(); frames++; requestAnimationFrame(draw);
+        }
+
+        // --- NEW MAIN LOOP ---
+        function gameLoop(timestamp) {
+            if(state !== 'PLAY') { requestAnimationFrame(gameLoop); return; }
+            if(!lastTime) lastTime = timestamp;
+            let deltaTime = timestamp - lastTime;
+            lastTime = timestamp;
+            if(deltaTime > 100) deltaTime = 100; // Cap
+            accumulator += deltaTime;
+
+            while(accumulator >= TIME_STEP) {
+                updatePhysics();
+                accumulator -= TIME_STEP;
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        requestAnimationFrame(gameLoop);
+        requestAnimationFrame(draw);
+
+    </script>
+</body>
+</html>
