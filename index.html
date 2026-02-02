@@ -1198,6 +1198,17 @@ function openHyperPass(){
             { id:'god', name:'GOD', price:5000, type:'shop', desc:'5000 Orbs', draw:(c,s)=>{ c.arc(0,0,s/3,0,Math.PI*2); c.moveTo(0,-s); c.lineTo(0,s); c.moveTo(-s,0); c.lineTo(s,0); c.arc(0,0,s,0,Math.PI*2); } },
             { id:'cross', name:'Cross', price:2000, type:'shop', desc:'2000 Orbs', draw:(c,s)=>{ c.rotate(Math.PI/2); c.rect(-s/3,-s,s/1.5,s*2); c.rect(-s,-s/3,s*2,s/1.5); } },
         
+{ id:'hex', name:'Hex', price:350, type:'shop', desc:'350 Orbs', draw:(c,s)=>{ for(let i=0;i<6;i++){ let a=i*Math.PI/3; c.lineTo(Math.cos(a)*s, Math.sin(a)*s); } c.closePath(); } },
+{ id:'ring', name:'Ring', price:450, type:'shop', desc:'450 Orbs', draw:(c,s)=>{ c.arc(0,0,s,0,Math.PI*2); } },
+{ id:'tri', name:'Tri', price:200, type:'shop', desc:'200 Orbs', draw:(c,s)=>{ c.moveTo(0,-s); c.lineTo(s, s); c.lineTo(-s, s); c.closePath(); } },
+{ id:'bolt', name:'Bolt', price:650, type:'shop', desc:'650 Orbs', draw:(c,s)=>{ c.moveTo(-s*0.2,-s); c.lineTo(s*0.15,-s*0.2); c.lineTo(-s*0.05,-s*0.2); c.lineTo(s*0.2,s); c.lineTo(-s*0.15,s*0.2); c.lineTo(s*0.05,s*0.2); c.closePath(); } },
+{ id:'heart', name:'Heart', price:700, type:'shop', desc:'700 Orbs', draw:(c,s)=>{ c.moveTo(0,s*0.9); c.bezierCurveTo(s*1.2,s*0.3,s*0.8,-s*0.8,0,-s*0.25); c.bezierCurveTo(-s*0.8,-s*0.8,-s*1.2,s*0.3,0,s*0.9); c.closePath(); } },
+{ id:'crown', name:'Crown', price:900, type:'shop', desc:'900 Orbs', draw:(c,s)=>{ c.moveTo(-s, s*0.6); c.lineTo(-s, -s*0.2); c.lineTo(-s*0.4, -s*0.6); c.lineTo(0, -s*0.1); c.lineTo(s*0.4, -s*0.6); c.lineTo(s, -s*0.2); c.lineTo(s, s*0.6); c.closePath(); } },
+{ id:'orbit', name:'Orbit', price:1100, type:'shop', desc:'1100 Orbs', draw:(c,s)=>{ c.arc(0,0,s*0.7,0,Math.PI*2); c.moveTo(-s,0); c.ellipse(0,0,s, s*0.45, Math.PI/6, 0, Math.PI*2); } },
+{ id:'mask', name:'Mask', price:1400, type:'shop', desc:'1400 Orbs', draw:(c,s)=>{ c.moveTo(-s,-s*0.6); c.quadraticCurveTo(0,-s*1.2,s,-s*0.6); c.quadraticCurveTo(s*0.9,s*0.7,0,s); c.quadraticCurveTo(-s*0.9,s*0.7,-s,-s*0.6); c.closePath(); } },
+{ id:'spike', name:'Spike', price:1600, type:'shop', desc:'1600 Orbs', draw:(c,s)=>{ for(let i=0;i<10;i++){ let a=i*Math.PI/5; let r=(i%2===0)?s:(s*0.45); c.lineTo(Math.cos(a)*r, Math.sin(a)*r); } c.closePath(); } },
+{ id:'glitch', name:'Glitch', price:2200, type:'shop', desc:'2200 Orbs', draw:(c,s)=>{ c.rect(-s,-s,s*0.9,s*0.5); c.rect(-s*0.2,-s*0.1,s*1.2,s*0.5); c.rect(-s*0.7,s*0.4,s*1.1,s*0.5); } },
+
             // HyperPass-exclusive skins (NOT purchasable)
             { id:'hp_neon',   name:'Neon',   price:0, type:'hyperpass', desc:'HyperPass', draw:(c,s)=>{ c.moveTo(s,0); c.lineTo(0,s); c.lineTo(-s,0); c.lineTo(0,-s); c.closePath(); } },
             { id:'hp_prism',  name:'Prism',  price:0, type:'hyperpass', desc:'HyperPass', draw:(c,s)=>{ c.rect(-s/1.2,-s/1.2,s*1.1,s*1.1); c.moveTo(-s,0); c.lineTo(0,s); c.lineTo(s,0); c.lineTo(0,-s); } },
@@ -1214,7 +1225,11 @@ function openHyperPass(){
             { id:'particle', name:'Particles', price:300, desc:'300 Orbs' },
             { id:'plasma', name:'Plasma', price:600, desc:'600 Orbs' },
             { id:'ghost', name:'Ghost', price:1000, desc:'1000 Orbs' },
-            { id:'rainbow', name:'Rainbow', price:2500, desc:'2500 Orbs' }
+            { id:'rainbow', name:'Rainbow', price:2500, desc:'2500 Orbs' },{ id:'strobe', name:'Strobe', price:400, desc:'400 Orbs' }
+,{ id:'zigzag', name:'ZigZag', price:600, desc:'600 Orbs' }
+,{ id:'stardust', name:'Stardust', price:800, desc:'800 Orbs' }
+,{ id:'comet', name:'Comet', price:1200, desc:'1200 Orbs' }
+,{ id:'pulse', name:'Pulse', price:1500, desc:'1500 Orbs' }
         ];
 
         // --- GAME OBJECTS ---
@@ -1498,10 +1513,14 @@ function openHyperPass(){
 
             if(x>2000) {
                 if(diff!=='easy' && Math.random()<0.012) {
-                    const t = diff==='medium' ? (Math.random()<0.5?'spd':'mini') : ['spd','mini','inv'][Math.floor(Math.random()*3)];
+                    // 20% fewer SPEED portals (same total portal rate)
+                    const r = Math.random();
+                    const t = (diff==='medium')
+                        ? (r < 0.40 ? 'spd' : 'mini') // 0.5 -> 0.4
+                        : (r < 0.2667 ? 'spd' : (r < 0.6334 ? 'mini' : 'inv')); // 1/3 -> ~0.2667
                     portals.push({x:x, y:ny, type:t, active:true});
                 }
-                if(diff!=='easy' && SETTINGS.showOrbs && Math.random()<0.08) {
+                if(diff!=='easy' && SETTINGS.showOrbs && Math.random()<0.064) { // 20% fewer orbs
                     let oy = ny + (Math.random()-0.5)*(c.gap*0.6);
                     orbs.push({x:x, y:oy, c:false});
                 }
@@ -1630,7 +1649,10 @@ function openHyperPass(){
             portals.forEach(pt=>{
                 if(pt.active) {
                     players.forEach(p=>{
-                        if(Math.abs(p.x-pt.x)<30 && Math.abs(p.y-pt.y)<50) {
+                        // 20% smaller collision window for SPEED portals
+                        const pxWin = (pt.type==='spd') ? 24 : 30;
+                        const pyWin = (pt.type==='spd') ? 40 : 50;
+                        if(Math.abs(p.x-pt.x)<pxWin && Math.abs(p.y-pt.y)<pyWin) {
                             pt.active=false; MusicSys.playFX('portal');
 
                             // Track portal hits
@@ -1641,7 +1663,7 @@ function openHyperPass(){
                             }
 
                             if(pt.type==='inv') players.forEach(pl=>pl.inv=!pl.inv);
-                            if(pt.type==='spd') speedMult+=0.2;
+                            if(pt.type==='spd') speedMult+=0.22; // +10% over original (0.2 * 1.10)
                             if(pt.type==='mini') players.forEach(pl=>{ pl.mini=!pl.mini; pl.size=pl.mini?12:20; });
                         }
                     });
@@ -1709,25 +1731,65 @@ function openHyperPass(){
                 y: p.y, r: p.r
             }));
 
-            if(data.activeTrail==='solid'||data.activeTrail==='rainbow') {
-                pCtx.beginPath(); pCtx.lineWidth=4;
-                pCtx.strokeStyle = data.activeTrail==='rainbow' ? `hsl(${frames*10},100%,50%)` : pCol;
-                if(renderPts.length) { pCtx.moveTo(renderPts[0].x, renderPts[0].y); renderPts.forEach(t=>pCtx.lineTo(t.x,t.y)); pCtx.stroke(); }
-            } else if(data.activeTrail==='plasma') {
-                pCtx.shadowBlur=10; pCtx.shadowColor=pCol; pCtx.strokeStyle="white"; pCtx.lineWidth=4;
-                pCtx.beginPath(); if(renderPts.length){ pCtx.moveTo(renderPts[0].x, renderPts[0].y); renderPts.forEach(t=>pCtx.lineTo(t.x,t.y)); pCtx.stroke(); }
-                pCtx.shadowBlur=0;
-            } else if(data.activeTrail==='ghost') {
-                let sDraw=skins.find(s=>s.id===data.activeSkin)||skins[0];
-                for(let i=0; i<renderPts.length; i+=2) {
-                    let t = renderPts[i];
-                    pCtx.save(); pCtx.translate(t.x, t.y); pCtx.rotate((t.r||0)*Math.PI/180);
-                    pCtx.globalAlpha = 0.3 * (i/renderPts.length);
-                    pCtx.beginPath(); sDraw.draw(pCtx, 14); pCtx.fillStyle = pCol; pCtx.fill(); pCtx.restore();
-                }
-            } else {
-                pCtx.fillStyle=pCol; renderPts.forEach(t=>{ pCtx.beginPath(); pCtx.arc(t.x,t.y,3,0,Math.PI*2); pCtx.fill(); });
-            }
+            if(data.activeTrail==='solid'||data.activeTrail==='rainbow'||data.activeTrail==='strobe'||data.activeTrail==='pulse') {
+    pCtx.beginPath();
+    pCtx.lineWidth = (data.activeTrail==='pulse') ? (3 + Math.sin(frames/6)*2) : 4;
+    pCtx.strokeStyle = data.activeTrail==='rainbow' ? `hsl(${frames*10},100%,50%)` : pCol;
+
+    if(data.activeTrail==='strobe') pCtx.setLineDash([10, 8]);
+    else pCtx.setLineDash([]);
+
+    if(renderPts.length) { pCtx.moveTo(renderPts[0].x, renderPts[0].y); renderPts.forEach(t=>pCtx.lineTo(t.x,t.y)); pCtx.stroke(); }
+    pCtx.setLineDash([]);
+} else if(data.activeTrail==='zigzag') {
+    pCtx.beginPath(); pCtx.lineWidth=4; pCtx.strokeStyle=pCol;
+    if(renderPts.length) {
+        pCtx.moveTo(renderPts[0].x, renderPts[0].y);
+        renderPts.forEach((t,i)=>pCtx.lineTo(t.x, t.y + (i%2===0? -6 : 6)));
+        pCtx.stroke();
+    }
+} else if(data.activeTrail==='comet') {
+    // segment fade
+    pCtx.lineWidth=5;
+    for(let i=1;i<renderPts.length;i++){
+        const a = i/renderPts.length;
+        pCtx.globalAlpha = a;
+        pCtx.shadowBlur = 12;
+        pCtx.shadowColor = pCol;
+        pCtx.strokeStyle = pCol;
+        pCtx.beginPath();
+        pCtx.moveTo(renderPts[i-1].x, renderPts[i-1].y);
+        pCtx.lineTo(renderPts[i].x, renderPts[i].y);
+        pCtx.stroke();
+    }
+    pCtx.shadowBlur=0;
+    pCtx.globalAlpha=1;
+} else if(data.activeTrail==='plasma') {
+    pCtx.shadowBlur=10; pCtx.shadowColor=pCol; pCtx.strokeStyle="white"; pCtx.lineWidth=4;
+    pCtx.beginPath(); if(renderPts.length){ pCtx.moveTo(renderPts[0].x, renderPts[0].y); renderPts.forEach(t=>pCtx.lineTo(t.x,t.y)); pCtx.stroke(); }
+    pCtx.shadowBlur=0;
+} else if(data.activeTrail==='stardust') {
+    pCtx.shadowBlur = 12; pCtx.shadowColor = pCol;
+    renderPts.forEach((t,i)=>{
+        pCtx.globalAlpha = i/renderPts.length;
+        pCtx.fillStyle = pCol;
+        pCtx.beginPath(); pCtx.arc(t.x, t.y, 2 + (i%3), 0, Math.PI*2);
+        pCtx.fill();
+    });
+    pCtx.shadowBlur=0;
+    pCtx.globalAlpha=1;
+} else if(data.activeTrail==='ghost') {
+    let sDraw=skins.find(s=>s.id===data.activeSkin)||skins[0];
+    for(let i=0; i<renderPts.length; i+=2) {
+        let t = renderPts[i];
+        pCtx.save(); pCtx.translate(t.x, t.y); pCtx.rotate((t.r||0)*Math.PI/180);
+        pCtx.globalAlpha = 0.3 * (i/renderPts.length);
+        pCtx.beginPath(); sDraw.draw(pCtx, 14); pCtx.fillStyle = pCol; pCtx.fill(); pCtx.restore();
+    }
+    pCtx.globalAlpha=1;
+} else {
+    pCtx.fillStyle=pCol; renderPts.forEach(t=>{ pCtx.beginPath(); pCtx.arc(t.x,t.y,3,0,Math.PI*2); pCtx.fill(); });
+}
 
             pCtx.globalAlpha=1;
             pCtx.save(); pCtx.translate(pCvs.width/2, simY); pCtx.rotate(simRot*Math.PI/180);
@@ -1782,10 +1844,12 @@ function openHyperPass(){
                 portals.forEach(pt=>{ if(!pt.active)return;
                     let c=pt.type==='inv'?'#fa0':pt.type==='spd'?'#0ff':'#f0f'; let sym=pt.type==='inv'?'↕':pt.type==='spd'?'»':'•';
                     ctx.save(); ctx.translate(pt.x,pt.y);
-                    ctx.beginPath(); ctx.ellipse(-8,0,20,45,0,0,Math.PI*2); ctx.lineWidth=2; ctx.strokeStyle=c; ctx.globalAlpha=0.5; ctx.stroke();
-                    ctx.beginPath(); ctx.arc(20,0,15,0,Math.PI*2); ctx.fillStyle=c; ctx.fill();
+                    // 20% smaller SPEED portal visuals
+                    const spS = (pt.type==='spd') ? 0.8 : 1.0;
+                    ctx.beginPath(); ctx.ellipse(-8*spS,0,20*spS,45*spS,0,0,Math.PI*2); ctx.lineWidth=2; ctx.strokeStyle=c; ctx.globalAlpha=0.5; ctx.stroke();
+                    ctx.beginPath(); ctx.arc(20*spS,0,15*spS,0,Math.PI*2); ctx.fillStyle=c; ctx.fill();
                     ctx.fillStyle='white'; ctx.font='bold 20px Arial'; ctx.textAlign='center'; ctx.fillText(sym,20,5);
-                    ctx.beginPath(); ctx.ellipse(8,0,20,45,0,0,Math.PI*2); ctx.lineWidth=4; ctx.globalAlpha=1; ctx.stroke(); ctx.restore();
+                    ctx.beginPath(); ctx.ellipse(8*spS,0,20*spS,45*spS,0,0,Math.PI*2); ctx.lineWidth=4; ctx.globalAlpha=1; ctx.stroke(); ctx.restore();
                 });
 
                 if(SETTINGS.showOrbs) {
@@ -1798,28 +1862,67 @@ function openHyperPass(){
                     players.forEach((p, idx) => {
                         if(isMulti && !isOnlineMulti && idx !== focusIdx) ctx.globalAlpha=0.3; else ctx.globalAlpha=1;
 
-                        if(p.trailType==='solid'||p.trailType==='rainbow') {
-                            ctx.beginPath(); ctx.lineWidth=p.mini?2:4;
-                            ctx.strokeStyle = p.trailType==='rainbow' ? `hsl(${frames*10},100%,50%)` : p.color;
-                            if(p.trail.length) { ctx.moveTo(p.trail[0].x, p.trail[0].y); p.trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); }
-                        } else if(p.trailType==='plasma') {
-                            ctx.shadowBlur=15; ctx.shadowColor=p.color; ctx.strokeStyle="white"; ctx.lineWidth=p.mini?3:5;
-                            ctx.beginPath(); if(p.trail.length){ ctx.moveTo(p.trail[0].x, p.trail[0].y); p.trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); }
-                            ctx.shadowBlur=0;
-                        } else if(p.trailType==='ghost') {
-                             let sDraw=skins.find(s=>s.id===p.skin)||skins[0];
-                             for(let i=0; i<p.trail.length; i+=2) {
-                                 let t = p.trail[i];
-                                 ctx.save(); ctx.translate(t.x, t.y);
-                                 if(p.inv) ctx.scale(1,-1);
-                                 ctx.rotate((t.r||0)*Math.PI/180);
-                                 ctx.globalAlpha = 0.3 * (i/p.trail.length);
-                                 ctx.beginPath(); sDraw.draw(ctx, p.mini?12:20);
-                                 ctx.fillStyle = p.color; ctx.fill();
-                                 ctx.restore();
-                             }
-                        } else { ctx.fillStyle=p.color; p.trail.forEach(t=>{ ctx.beginPath(); ctx.arc(t.x,t.y,3,0,Math.PI*2); ctx.fill(); }); }
+                        if(p.trailType==='solid'||p.trailType==='rainbow'||p.trailType==='strobe'||p.trailType==='pulse') {
+    ctx.beginPath();
+    ctx.lineWidth = (p.trailType==='pulse') ? ((p.mini?2:4) + Math.sin(frames/6)*2) : (p.mini?2:4);
+    ctx.strokeStyle = p.trailType==='rainbow' ? `hsl(${frames*10},100%,50%)` : p.color;
 
+    if(p.trailType==='strobe') ctx.setLineDash([10, 8]);
+    else ctx.setLineDash([]);
+
+    if(p.trail.length) { ctx.moveTo(p.trail[0].x, p.trail[0].y); p.trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); }
+    ctx.setLineDash([]);
+} else if(p.trailType==='zigzag') {
+    ctx.beginPath(); ctx.lineWidth=p.mini?2:4; ctx.strokeStyle=p.color;
+    if(p.trail.length){
+        ctx.moveTo(p.trail[0].x, p.trail[0].y);
+        p.trail.forEach((t,i)=>ctx.lineTo(t.x, t.y + (i%2===0? -6 : 6)));
+        ctx.stroke();
+    }
+} else if(p.trailType==='comet') {
+    // segment fade
+    for(let i=1;i<p.trail.length;i++){
+        const a = i/p.trail.length;
+        ctx.globalAlpha = a;
+        ctx.shadowBlur = 18;
+        ctx.shadowColor = p.color;
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = p.mini?3:6;
+        ctx.beginPath();
+        ctx.moveTo(p.trail[i-1].x, p.trail[i-1].y);
+        ctx.lineTo(p.trail[i].x, p.trail[i].y);
+        ctx.stroke();
+    }
+    ctx.shadowBlur=0;
+    ctx.globalAlpha=1;
+} else if(p.trailType==='plasma') {
+    ctx.shadowBlur=15; ctx.shadowColor=p.color; ctx.strokeStyle="white"; ctx.lineWidth=p.mini?3:5;
+    ctx.beginPath(); if(p.trail.length){ ctx.moveTo(p.trail[0].x, p.trail[0].y); p.trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); }
+    ctx.shadowBlur=0;
+} else if(p.trailType==='stardust') {
+    ctx.shadowBlur = 18; ctx.shadowColor = p.color;
+    p.trail.forEach((t,i)=>{
+        ctx.globalAlpha = i/p.trail.length;
+        ctx.fillStyle = p.color;
+        ctx.beginPath(); ctx.arc(t.x, t.y, 2 + (i%3), 0, Math.PI*2);
+        ctx.fill();
+    });
+    ctx.shadowBlur=0;
+    ctx.globalAlpha=1;
+} else if(p.trailType==='ghost') {
+     let sDraw=skins.find(s=>s.id===p.skin)||skins[0];
+     for(let i=0; i<p.trail.length; i+=2) {
+         let t = p.trail[i];
+         ctx.save(); ctx.translate(t.x, t.y);
+         if(p.inv) ctx.scale(1,-1);
+         ctx.rotate((t.r||0)*Math.PI/180);
+         ctx.globalAlpha = 0.3 * (i/p.trail.length);
+         ctx.beginPath(); sDraw.draw(ctx, p.mini?12:20);
+         ctx.fillStyle = p.color; ctx.fill();
+         ctx.restore();
+     }
+     ctx.globalAlpha=1;
+} else { ctx.fillStyle=p.color; p.trail.forEach(t=>{ ctx.beginPath(); ctx.arc(t.x,t.y,3,0,Math.PI*2); ctx.fill(); }); }
                         ctx.globalAlpha = 1;
                         ctx.save(); ctx.translate(p.x,p.y); if(p.inv)ctx.scale(1,-1); ctx.rotate(p.rotation*Math.PI/180);
                         if(godMode>0 && Math.floor(godMode/5)%2===0)ctx.globalAlpha=0.5;
