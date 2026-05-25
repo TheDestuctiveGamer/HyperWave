@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,7 +60,7 @@
             z-index: 10; display: flex; justify-content: center; align-items: center;
             pointer-events: none;
         }
-        .glass-panel, button, input, .tab-btn, .skin-card, .trail-card, .setting-toggle, .icon-btn, .friend-card, .btn-accept { pointer-events: auto; }
+        .glass-panel, button, input, .tab-btn, .skin-card, .trail-card, .setting-toggle, .icon-btn, .btn-accept { pointer-events: auto; }
 
         .glass-panel {
             background: var(--glass);
@@ -90,8 +89,6 @@
 
         #settings-btn { right: 20px; }
         #help-btn { left: 20px; font-weight: bold; }
-        #friends-btn { left: 75px; font-size: 1.2rem; }
-        #logout-btn { left: 130px; font-size: 0.7rem; font-weight: bold; width: auto; padding: 0 10px; }
         #pause-btn { right: 20px; display: none; }
 
         /* OVERLAYS */
@@ -101,37 +98,6 @@
             display: none; flex-direction: column; justify-content: center; align-items: center;
             pointer-events: auto; overflow-y: auto;
         }
-
-        /* FRIENDS */
-        .friend-card {
-            display: flex; flex-direction: column; gap: 5px;
-            background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px;
-            border: 1px solid transparent;
-        }
-        .friend-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .f-online { width: 10px; height: 10px; background: #444; border-radius: 50%; display: inline-block; margin-right: 5px; border: 1px solid #000; }
-        .is-online { background: #00ff88; box-shadow: 0 0 5px #00ff88; }
-        .f-stats-row { display: flex; justify-content: space-between; font-size: 0.65rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px; }
-
-        #invite-popup {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(0, 50, 20, 0.95); border: 1px solid #0f0;
-            padding: 15px 25px; border-radius: 15px; z-index: 500;
-            display: none; flex-direction: column; gap: 10px; align-items: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5); width: 300px;
-        }
-
-        #challenge-modal { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:600; display:none; flex-direction:column; justify-content:center; align-items:center; }
-
-        /* LOGIN SCREEN */
-        #login-panel { z-index: 300; display: flex; }
-        .input-group { text-align: left; width: 100%; }
-        input[type="text"], input[type="password"] {
-            width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.1);
-            border: 1px solid var(--border); padding: 12px; color: white; border-radius: 8px;
-            font-family: var(--font-main); font-size: 1rem; margin-bottom: 10px;
-        }
-        input:focus { outline: none; border-color: var(--primary); background: rgba(0,242,255,0.05); }
 
         /* SETTINGS GRID */
         .settings-grid {
@@ -334,51 +300,11 @@
 
     <div id="loading-overlay">
         <div class="spinner"></div>
-        <div style="font-weight:bold; letter-spacing:2px;">CONNECTING...</div>
+        <div style="font-weight:bold; letter-spacing:2px;">LOADING...</div>
     </div>
 
     <div id="error-log"></div>
     <div id="notify-area"></div>
-
-    <div id="invite-popup">
-        <div style="font-size:0.8rem; color:#aaa; font-weight:bold;">GAME REQUEST</div>
-        <div id="inv-msg" style="font-size:1rem; font-weight:bold; margin:5px 0 10px;">PLAYER WANTS TO PLAY</div>
-        <div class="btn-row">
-            <button class="btn-accept" onclick="AccSys.acceptInvite()" style="border-color:#0f0; color:#0f0;">ACCEPT</button>
-            <button onclick="AccSys.rejectInvite()" style="border-color:#f55; color:#f55;">IGNORE</button>
-        </div>
-    </div>
-
-    <div id="challenge-modal">
-        <div class="glass-panel" style="max-width:300px;">
-            <h2 id="chal-target" style="margin:0; color:var(--primary)">CHALLENGE</h2>
-            <div style="font-size:0.7rem; color:#aaa; margin-bottom:10px;">SELECT MODE</div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; width:100%;">
-                <button onclick="AccSys.sendChallenge('easy')">EASY</button>
-                <button onclick="AccSys.sendChallenge('medium')">NORMAL</button>
-                <button onclick="AccSys.sendChallenge('hard')">HARD</button>
-                <button onclick="AccSys.sendChallenge('demon')" style="color:var(--danger); border-color:var(--danger)">DEMON</button>
-            </div>
-            <button onclick="document.getElementById('challenge-modal').style.display='none'" style="margin-top:10px; background:transparent; border:none; font-size:0.7rem; color:#888;">CANCEL</button>
-        </div>
-    </div>
-
-    <div id="login-panel" class="overlay-panel" style="display:flex;">
-        <div class="glass-panel" style="max-width:400px;">
-            <h1 style="margin:0; font-style:italic;">HYPER WAVE</h1>
-            <div style="font-size:0.8rem; color:#888; margin-bottom:20px;">ONLINE MULTIPLAYER</div>
-
-            <div class="input-group">
-                <input type="text" id="u_name" placeholder="USERNAME" maxlength="12">
-                <input type="password" id="u_pass" placeholder="PASSWORD" maxlength="12">
-            </div>
-
-            <div class="btn-row">
-                <button onclick="AccSys.login()" style="border-color:var(--primary); color:var(--primary); background:rgba(0,242,255,0.1)">LOGIN</button>
-                <button onclick="AccSys.register()">REGISTER</button>
-            </div>
-        </div>
-    </div>
 
     <div id="paused-overlay">
         <div class="pause-title">PAUSED</div>
@@ -401,19 +327,6 @@
             </div>
         </div>
         <button class="close-btn" onclick="toggleHelp()">GOT IT</button>
-    </div>
-
-    <div id="friends-panel" class="overlay-panel">
-        <h1 style="margin-bottom:20px; color:var(--primary)">SOCIAL HUB</h1>
-        <div class="glass-panel" style="max-width:600px;">
-            <div style="display:flex; gap:10px; width:100%;">
-                <input type="text" id="friend-in" placeholder="FRIEND'S USERNAME..." style="margin:0;">
-                <button onclick="AccSys.addFriend()" style="flex:0.4; border-color:var(--primary); color:var(--primary)">ADD</button>
-            </div>
-            <div style="text-align:left; font-size:0.7rem; color:#666; margin:10px 0 5px;">YOUR FRIENDS</div>
-            <div id="friend-list-container" style="max-height:400px; overflow-y:auto; width:100%;"></div>
-        </div>
-        <button class="close-btn" onclick="toggleFriends()">CLOSE</button>
     </div>
 
     <div id="settings-panel" class="overlay-panel">
@@ -443,7 +356,6 @@
     </div>
 
 
-    <!-- HYPERPASS (NEW) -->
     <div id="hyperpass-panel" class="overlay-panel">
         <h1 style="margin-bottom:10px; color:var(--primary)">HYPERPASS</h1>
         <div class="glass-panel" style="max-width:700px;">
@@ -492,8 +404,6 @@
     <div id="ui-layer">
         <div id="settings-btn" class="icon-btn" onclick="toggleSettings()">⚙</div>
         <div id="help-btn" class="icon-btn" onclick="toggleHelp()">?</div>
-        <div id="friends-btn" class="icon-btn" onclick="toggleFriends()">👥</div>
-        <div id="logout-btn" class="icon-btn" onclick="location.reload()">LOGOUT</div>
         <div id="pause-btn" class="icon-btn" onclick="togglePause()">||</div>
 
         <div id="menu" class="glass-panel hidden">
@@ -507,7 +417,6 @@
                 </div>
             </div>
 
-            <!-- QUEST BOX (NEW) -->
             <div class="quest-box">
                 <div class="quest-title">QUEST BOARD</div>
                 <div id="quest-menu-list" style="margin-top:6px;">LOADING...</div>
@@ -536,6 +445,10 @@
                 <button onclick="initGame('medium')">NORMAL<span class="mode-sub" id="score-medium">0%</span></button>
                 <button onclick="initGame('hard')">HARD<span class="mode-sub" id="score-hard">0%</span></button>
                 <button class="btn-demon" onclick="initGame('demon')">DEMON<span class="mode-sub" id="score-demon">0%</span></button>
+            </div>
+            <div class="btn-row">
+                <button onclick="initGame('easy', true)">2P EASY<span class="mode-sub">LOCAL CO-OP</span></button>
+                <button onclick="initGame('medium', true)">2P NORMAL<span class="mode-sub">LOCAL CO-OP</span></button>
             </div>
             <button class="btn-2p" id="hyperpass-btn" onclick="openHyperPass()">
                 HYPERPASS<span class="mode-sub" id="hyperpass-status">LOCKED</span>
@@ -568,9 +481,6 @@
 
     <canvas id="gameCanvas"></canvas>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
     <script>
         // --- 1. ERROR TRAP ---
         window.onerror = function(msg, source, line) {
@@ -588,28 +498,7 @@
         let frames = 0;
         let customTrack = null; // HOLDS CUSTOM MP3
 
-        // --- FIREBASE CONFIG ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyDLQG54xeTsUgxK5EU6yEFa5ljyO2cuDOM",
-            authDomain: "hyperwave-2c332.firebaseapp.com",
-            projectId: "hyperwave-2c332",
-            storageBucket: "hyperwave-2c332.firebasestorage.app",
-            messagingSenderId: "358999453382",
-            appId: "1:358999453382:web:5b66b5bae6ee81ca7fb1c7",
-            measurementId: "G-J70WBQB6RZ"
-        };
-
-        let db;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
-            console.log("Cloud Connected");
-        } catch(e) { console.error("Config Error", e); }
-
-        // --- CLOUD ACCOUNT SYSTEM ---
-        let currentUser = null;
-
-        // Default Data (QUESTS ADDED)
+        // Local Data 
         let data = {
             // Economy
             orbs: 100, // Everyone starts with at least 100 Orbs
@@ -619,9 +508,7 @@
             best: { easy:0, medium:0, hard:0, demon:0 },
             activeSkin: 'wave',
             activeTrail: 'solid',
-
-            // Social
-            friends: [],
+            color: '#00f2ff',
 
             // HyperPass (NEW)
             hasHyperPass: false,
@@ -634,202 +521,46 @@
             stats: { orbsCollected: 0, portalsHit: 0 }
         };
 
-        // Multi Globals
-        let activeMatchId = null;
-        let isOnlineMulti = false;
-        let currentInvite = null;
-        let ghostData = { y: 0, rot: 0, skin:'wave', color:'#fff', dead: false, active: false };
-        let targetFriend = null;
+        function saveData() {
+            data.color = document.getElementById('pColor').value;
+            localStorage.setItem('hyperwave_save', JSON.stringify(data));
+        }
 
-        const AccSys = {
-            async login() {
-                const u = document.getElementById('u_name').value.toLowerCase().trim();
-                const p = document.getElementById('u_pass').value.trim();
-                if(!u || !p) { notify('ENTER CREDENTIALS'); return; }
-                loader.style.display='flex';
+        function loadData() {
+            const saved = localStorage.getItem('hyperwave_save');
+            if(saved) {
                 try {
-                    const doc = await db.collection('users').doc(u).get();
-                    if(doc.exists && doc.data().pass === p) {
-                        currentUser = u;
-                        data = doc.data().data;
-
-                        // Safety migrations
-                        if(!data.friends) data.friends = [];
-                        if(!data.unlocks) data.unlocks = ['wave','box','solid'];
-                        if(!data.best) data.best = { easy:0, medium:0, hard:0, demon:0 };
-
-                        // HyperPass + Quest migrations (NEW)
-                        if(!data.stats) data.stats = { orbsCollected: 0, portalsHit: 0 };
-                        if(typeof data.stats.orbsCollected !== 'number') data.stats.orbsCollected = 0;
-                        if(typeof data.stats.portalsHit !== 'number') data.stats.portalsHit = 0;
-
-                        // Everyone starts with at least 100 Orbs (do NOT cap higher balances)
-                        data.orbs = Math.max(100, Number(data.orbs || 0));
-
-                        if(typeof data.hasHyperPass !== 'boolean') data.hasHyperPass = false;
-                        if(!data.hp) data.hp = { level: 0, xp: 0, lastDaily: "", lastWeekly: "" };
-                        if(typeof data.hp.level !== 'number') data.hp.level = 0;
-                        if(typeof data.hp.xp !== 'number') data.hp.xp = 0;
-                        if(typeof data.hp.lastDaily !== 'string') data.hp.lastDaily = "";
-                        if(typeof data.hp.lastWeekly !== 'string') data.hp.lastWeekly = "";
-
-                        // Old saves used an array for quests; convert to HyperPass-gated quest log structure
-                        if(Array.isArray(data.quests)) data.quests = { daily: [], weekly: [] };
-                        if(!data.quests) data.quests = { daily: [], weekly: [] };
-                        if(!Array.isArray(data.quests.daily)) data.quests.daily = [];
-                        if(!Array.isArray(data.quests.weekly)) data.quests.weekly = [];
-
-                        this.startSession();
-                    } else { notify('INVALID LOGIN'); }
-                } catch(e) { notify('CONNECTION ERROR'); console.log(e); }
-                loader.style.display='none';
-            },
-            async register() {
-                const u = document.getElementById('u_name').value.toLowerCase().trim();
-                const p = document.getElementById('u_pass').value.trim();
-                if(!u || !p) { notify('ENTER INFO'); return; }
-                loader.style.display='flex';
-                try {
-                    const doc = await db.collection('users').doc(u).get();
-                    if(doc.exists) { notify('USERNAME TAKEN'); } else {
-                        const newData = {
-                            pass: p,
-                            data: {
-                                orbs: 100,
-                                unlocks: ['wave','box','solid'],
-                                best: { easy:0, medium:0, hard:0, demon:0 },
-                                activeSkin: 'wave',
-                                activeTrail: 'solid',
-                                friends: [],
-
-                                // HyperPass (NEW)
-                                hasHyperPass: false,
-                                hp: { level: 0, xp: 0, lastDaily: "", lastWeekly: "" },
-
-                                // HyperPass-gated Quest Log (NEW)
-                                quests: { daily: [], weekly: [] },
-
-                                stats: { orbsCollected: 0, portalsHit: 0 }
-                            },
-                            lastSeen: Date.now()
-                        };
-                        await db.collection('users').doc(u).set(newData);
-                        currentUser = u; data = newData.data;
-                        notify('CREATED ACCOUNT'); this.startSession();
-                    }
-                } catch(e) { notify('ERROR'); console.log(e); }
-                loader.style.display='none';
-            },
-            startSession() {
-                document.getElementById('login-panel').style.display='none';
-                document.getElementById('menu').classList.remove('hidden');
-                document.getElementById('settings-btn').style.display='flex';
-                document.getElementById('help-btn').style.display='flex';
-                document.getElementById('logout-btn').style.display='flex';
-                document.getElementById('friends-btn').style.display='flex';
-                document.getElementById('user-display').innerText = 'PILOT: ' + currentUser.toUpperCase();
-                document.getElementById('pColor').value = data.color || '#00f2ff';
-
-                HP.sync(); // HyperPass quest + progression refresh
-                updateMenu();
-
-                // Heartbeat
-                setInterval(() => { db.collection('users').doc(currentUser).update({ lastSeen: Date.now() }); }, 60000);
-                db.collection('users').doc(currentUser).update({ lastSeen: Date.now() });
-                this.listenForInvites();
-            },
-            logout() { location.reload(); },
-            async saveData() {
-                if(!currentUser) return;
-                data.color = document.getElementById('pColor').value;
-                await db.collection('users').doc(currentUser).update({ data: data });
-            },
-            // Friend Logic
-            async addFriend() {
-                const f = document.getElementById('friend-in').value.toLowerCase().trim();
-                if(!f || f===currentUser) return notify('INVALID');
-                if(data.friends.includes(f)) return notify('ALREADY ADDED');
-                loader.style.display='flex';
-                try {
-                    const doc = await db.collection('users').doc(f).get();
-                    if(doc.exists) { data.friends.push(f); await this.saveData(); this.renderFriends(); notify('ADDED'); }
-                    else { notify('NOT FOUND'); }
-                } catch(e){ notify('ERROR'); }
-                loader.style.display='none';
-            },
-            async renderFriends() {
-                const l = document.getElementById('friend-list-container'); l.innerHTML='LOADING...';
-                try {
-                    l.innerHTML='';
-                    for(let f of data.friends) {
-                        const d = await db.collection('users').doc(f).get();
-                        if(d.exists) {
-                            const raw = d.data();
-                            const stats = raw.data.best;
-                            const online = (Date.now() - (raw.lastSeen||0)) < 120000;
-                            const div = document.createElement('div'); div.className='friend-card';
-                            div.innerHTML = `
-                                <div class="friend-header">
-                                    <div style="font-weight:bold;"><span class="f-online ${online?'is-online':''}"></span>${f.toUpperCase()}</div>
-                                    <button onclick="AccSys.prepChallenge('${f}')" style="flex:0; padding:5px; font-size:0.6rem; border-color:orange; color:orange;">VS</button>
-                                </div>
-                                <div class="f-stats-row"><span>EZ:${stats.easy}%</span><span>NM:${stats.medium}%</span><span>HD:${stats.hard}%</span><span>DM:${stats.demon}%</span></div>
-                            `;
-                            l.appendChild(div);
-                        }
-                    }
-                } catch(e){ l.innerHTML='ERROR LOADING'; }
-            },
-            // Challenges
-            prepChallenge(f) { targetFriend = f; document.getElementById('chal-target').innerText="VS "+f.toUpperCase(); document.getElementById('challenge-modal').style.display='flex'; },
-            async sendChallenge(m) {
-                document.getElementById('challenge-modal').style.display='none';
-                notify(`CHALLENGING ${targetFriend.toUpperCase()}...`);
-                try { await db.collection('invites').add({ from: currentUser, to: targetFriend, mode: m, timestamp: Date.now(), status: 'pending' }); notify('SENT!'); } catch(e){ notify('FAIL'); }
-            },
-            listenForInvites() {
-                db.collection('invites').where('to','==',currentUser).where('status','==','pending').onSnapshot(snap=>{
-                    snap.docChanges().forEach(c=>{ if(c.type==='added' && Date.now()-c.doc.data().timestamp < 60000) {
-                        currentInvite = { id: c.doc.id, ...c.doc.data() };
-                        document.getElementById('inv-msg').innerText = `${currentInvite.from.toUpperCase()} WANTS TO PLAY ${currentInvite.mode}`;
-                        document.getElementById('invite-popup').style.display='flex';
-                    }});
-                });
-                db.collection('invites').where('from','==',currentUser).where('status','==','accepted').onSnapshot(snap=>{
-                    snap.docChanges().forEach(c=>{ if(c.type==='added' && Date.now()-c.doc.data().timestamp < 60000) {
-                        notify('ACCEPTED!'); this.startOnline(c.doc.id, c.doc.data().mode, 'host');
-                    }});
-                });
-            },
-            async acceptInvite() {
-                document.getElementById('invite-popup').style.display='none';
-                if(!currentInvite) return;
-                await db.collection('invites').doc(currentInvite.id).update({ status: 'accepted' });
-                this.startOnline(currentInvite.id, currentInvite.mode, 'client');
-            },
-            rejectInvite() { document.getElementById('invite-popup').style.display='none'; },
-            startOnline(mid, mode, role) {
-                activeMatchId = mid; document.getElementById('friends-panel').style.display='none';
-                initGame(mode, false, true); ghostData.active=true;
-                this.gameSync(role);
-            },
-            gameSync(role) {
-                const myKey = role==='host'?'hostData':'clientData';
-                const oppKey = role==='host'?'clientData':'hostData';
-                const ref = db.collection('matches').doc(activeMatchId);
-                const int = setInterval(()=>{
-                    if(state!=='PLAY' || !activeMatchId) { clearInterval(int); return; }
-                    const p = players[0];
-                    ref.set({ [myKey]: { y:Math.round(p.y), rot:Math.round(p.rotation), skin:data.activeSkin, color:p.color, dead:(state==='OVER') } }, {merge:true});
-                }, 150);
-                ref.onSnapshot(doc=>{
-                    if(doc.exists && doc.data()[oppKey]) {
-                        const o = doc.data()[oppKey];
-                        ghostData.y = o.y; ghostData.rot = o.rot; ghostData.skin=o.skin; ghostData.color=o.color; ghostData.dead=o.dead;
-                    }
-                });
+                    let parsed = JSON.parse(saved);
+                    // Merging arrays properly
+                    let unlocks = parsed.unlocks || data.unlocks;
+                    let quests = parsed.quests || data.quests;
+                    data = { ...data, ...parsed };
+                    data.unlocks = unlocks;
+                    data.quests = quests;
+                } catch(e) {}
             }
-        };
+            // Fallbacks
+            if(typeof data.orbs !== 'number') data.orbs = 100;
+            if(!data.best) data.best = { easy:0, medium:0, hard:0, demon:0 };
+            if(!data.hp) data.hp = { level: 0, xp: 0, lastDaily: "", lastWeekly: "" };
+            if(!data.quests || Array.isArray(data.quests)) data.quests = { daily: [], weekly: [] };
+            if(!Array.isArray(data.quests.daily)) data.quests.daily = [];
+            if(!Array.isArray(data.quests.weekly)) data.quests.weekly = [];
+            if(!data.stats) data.stats = { orbsCollected: 0, portalsHit: 0 };
+        }
+
+        function startSession() {
+            loadData();
+            document.getElementById('loading-overlay').style.display='none';
+            document.getElementById('menu').classList.remove('hidden');
+            document.getElementById('settings-btn').style.display='flex';
+            document.getElementById('help-btn').style.display='flex';
+            document.getElementById('user-display').innerText = 'PILOT: OFFLINE';
+            document.getElementById('pColor').value = data.color || '#00f2ff';
+
+            HP.sync(); // HyperPass quest + progression refresh
+            updateMenu();
+        }
 
         // --- SETTINGS ---
         const SETTINGS = {
@@ -858,327 +589,296 @@
         };
 
         // -----------------------------
+        // HYPERPASS + QUEST SYSTEM
         // -----------------------------
-// HYPERPASS + QUEST SYSTEM (NEW OVERHAUL)
-// -----------------------------
-const HYPERPASS_COST = 1000;
+        const HYPERPASS_COST = 1000;
 
-// HyperPass progression tuning
-const HP_MAX_LEVEL = 20;
-const HP_XP_PER_LEVEL = 1000;
+        // HyperPass progression tuning
+        const HP_MAX_LEVEL = 20;
+        const HP_XP_PER_LEVEL = 1000;
 
-// HyperPass-exclusive reward track (skins)
-// NOTE: These skins are NOT purchasable in the normal shop.
-// You can swap the ids/draw functions to match your asset set.
-const HP_REWARDS = [
-    { level: 1,  skinId: 'hp_neon'   , name: 'Neon' },
-    { level: 4,  skinId: 'hp_prism'  , name: 'Prism' },
-    { level: 7,  skinId: 'hp_ion'    , name: 'Ion' },
-    { level: 10, skinId: 'hp_nova'   , name: 'Nova' },
-    { level: 13, skinId: 'hp_void'   , name: 'Void' },
-    { level: 16, skinId: 'hp_zenith' , name: 'Zenith' },
-    { level: 20, skinId: 'hp_omega'  , name: 'Omega' }
-];
+        // HyperPass-exclusive reward track (skins)
+        const HP_REWARDS = [
+            { level: 1,  skinId: 'hp_neon'   , name: 'Neon' },
+            { level: 4,  skinId: 'hp_prism'  , name: 'Prism' },
+            { level: 7,  skinId: 'hp_ion'    , name: 'Ion' },
+            { level: 10, skinId: 'hp_nova'   , name: 'Nova' },
+            { level: 13, skinId: 'hp_void'   , name: 'Void' },
+            { level: 16, skinId: 'hp_zenith' , name: 'Zenith' },
+            { level: 20, skinId: 'hp_omega'  , name: 'Omega' }
+        ];
 
-// Quest templates (daily + weekly)
-// - Quests only exist if the player owns the HyperPass.
-const HP_QUEST_POOL = {
-    daily: [
-        { key: "orbsTotal",    min: 30,  max: 120,  xp: (n)=> 200, label: (n)=>`Collect ${n} Orbs (Total)` },
-        { key: "portalsTotal", min: 8,   max: 30,   xp: (n)=> 220, label: (n)=>`Hit ${n} Portals (Total)` },
-        { key: "pctRun",       min: 35,  max: 90,   xp: (n)=> 240, label: (n)=>`Reach ${n}% in a Run` }
-    ],
-    weekly: [
-        { key: "orbsTotal",    min: 250, max: 800,  xp: (n)=> 900,  label: (n)=>`Collect ${n} Orbs (Total)` },
-        { key: "portalsTotal", min: 80,  max: 220,  xp: (n)=> 950,  label: (n)=>`Hit ${n} Portals (Total)` },
-        { key: "pctRun",       min: 70,  max: 120,  xp: (n)=> 1000, label: (n)=>`Reach ${n}% in a Run` }
-    ]
-};
+        const HP_QUEST_POOL = {
+            daily: [
+                { key: "orbsTotal",    min: 30,  max: 120,  xp: (n)=> 200, label: (n)=>`Collect ${n} Orbs (Total)` },
+                { key: "portalsTotal", min: 8,   max: 30,   xp: (n)=> 220, label: (n)=>`Hit ${n} Portals (Total)` },
+                { key: "pctRun",       min: 35,  max: 90,   xp: (n)=> 240, label: (n)=>`Reach ${n}% in a Run` }
+            ],
+            weekly: [
+                { key: "orbsTotal",    min: 250, max: 800,  xp: (n)=> 900,  label: (n)=>`Collect ${n} Orbs (Total)` },
+                { key: "portalsTotal", min: 80,  max: 220,  xp: (n)=> 950,  label: (n)=>`Hit ${n} Portals (Total)` },
+                { key: "pctRun",       min: 70,  max: 120,  xp: (n)=> 1000, label: (n)=>`Reach ${n}% in a Run` }
+            ]
+        };
 
-function hpRandInt(a,b){ return Math.floor(a + Math.random()*(b-a+1)); }
-function hpDateKey(d=new Date()){
-    const y=d.getFullYear();
-    const m=String(d.getMonth()+1).padStart(2,'0');
-    const day=String(d.getDate()).padStart(2,'0');
-    return `${y}-${m}-${day}`;
-}
-// ISO week key: YYYY-W##
-function hpWeekKey(d=new Date()){
-    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    const dayNum = date.getUTCDay() || 7;
-    date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-    const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
-    const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
-    return `${date.getUTCFullYear()}-W${String(weekNo).padStart(2,'0')}`;
-}
-
-function hpRollQuest(kind){
-    const pool = HP_QUEST_POOL[kind];
-    const q = pool[Math.floor(Math.random()*pool.length)];
-    const target = hpRandInt(q.min, q.max);
-    return {
-        kind,
-        key: q.key,
-        target,
-        xp: Number(q.xp(target)),
-        progress: 0,
-        text: q.label(target),
-        done: false
-    };
-}
-
-function hpGetProgress(q, currentPct){
-    if(q.key === "orbsTotal") return data.stats.orbsCollected || 0;
-    if(q.key === "portalsTotal") return data.stats.portalsHit || 0;
-    if(q.key === "pctRun") return currentPct || 0;
-    return q.progress || 0;
-}
-
-const HP = {
-    sync(){
-        // Data safety
-        if(!data.stats) data.stats = { orbsCollected: 0, portalsHit: 0 };
-        if(!data.hp) data.hp = { level: 0, xp: 0, lastDaily: "", lastWeekly: "" };
-        if(!data.quests || Array.isArray(data.quests)) data.quests = { daily: [], weekly: [] };
-        if(!Array.isArray(data.quests.daily)) data.quests.daily = [];
-        if(!Array.isArray(data.quests.weekly)) data.quests.weekly = [];
-
-        // Minimum starter orbs
-        data.orbs = Math.max(100, Number(data.orbs || 0));
-
-        // If they don't own the pass, hard-lock the quest log (no dailies/weeklies)
-        if(!data.hasHyperPass){
-            data.hp.level = 0;
-            data.hp.xp = 0;
-            data.quests.daily = [];
-            data.quests.weekly = [];
-            this.renderUI(0);
-            return;
+        function hpRandInt(a,b){ return Math.floor(a + Math.random()*(b-a+1)); }
+        function hpDateKey(d=new Date()){
+            const y=d.getFullYear();
+            const m=String(d.getMonth()+1).padStart(2,'0');
+            const day=String(d.getDate()).padStart(2,'0');
+            return `${y}-${m}-${day}`;
+        }
+        function hpWeekKey(d=new Date()){
+            const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            const dayNum = date.getUTCDay() || 7;
+            date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
+            const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+            return `${date.getUTCFullYear()}-W${String(weekNo).padStart(2,'0')}`;
         }
 
-        // Ensure quest refresh windows
-        const today = hpDateKey();
-        const week = hpWeekKey();
-
-        if(data.hp.lastDaily !== today){
-            data.hp.lastDaily = today;
-            data.quests.daily = [hpRollQuest('daily'), hpRollQuest('daily'), hpRollQuest('daily')];
-        }
-        if(data.hp.lastWeekly !== week){
-            data.hp.lastWeekly = week;
-            data.quests.weekly = [hpRollQuest('weekly'), hpRollQuest('weekly')];
-        }
-
-        // Ensure at least level 1 after purchase
-        if(data.hp.level < 1) data.hp.level = 1;
-
-        this.renderUI(0);
-        AccSys.saveData();
-    },
-
-    buy(){
-        if(data.hasHyperPass){ notify('HYPERPASS ALREADY OWNED'); return; }
-        if(data.orbs < HYPERPASS_COST){ notify('NEED 1000 ORBS'); MusicSys.playFX('miss'); return; }
-        if(!confirm('Buy HyperPass for 1000 Orbs?')) return;
-
-        data.orbs -= HYPERPASS_COST;
-        data.hasHyperPass = true;
-        data.hp = { level: 1, xp: 0, lastDaily: "", lastWeekly: "" };
-        data.quests = { daily: [], weekly: [] };
-
-        notify('HYPERPASS UNLOCKED');
-        MusicSys.playFX('coin');
-
-        this.sync();
-        updateMenu(); // refresh shop + status
-    },
-
-    addXP(xp){
-        if(!data.hasHyperPass) return;
-        data.hp.xp += Math.max(0, Math.floor(xp));
-
-        // Level up loop
-        while(data.hp.level < HP_MAX_LEVEL && data.hp.xp >= HP_XP_PER_LEVEL){
-            data.hp.xp -= HP_XP_PER_LEVEL;
-            data.hp.level += 1;
-            notify('HYPERPASS LEVEL UP: ' + data.hp.level);
-            MusicSys.playFX('coin');
-
-            // Reward unlocks at specific levels
-            const reward = HP_REWARDS.find(r => r.level === data.hp.level);
-            if(reward && !data.unlocks.includes(reward.skinId)){
-                data.unlocks.push(reward.skinId);
-                notify('REWARD UNLOCKED: ' + reward.name.toUpperCase());
-            }
-        }
-
-        AccSys.saveData();
-        this.renderUI(0);
-        updateMenu();
-    },
-
-    checkCompletions(currentPct=0){
-        if(!data.hasHyperPass) return;
-
-        let changed = false;
-        const all = [...data.quests.daily, ...data.quests.weekly];
-
-        all.forEach(q=>{
-            if(q.done) return;
-            const prog = hpGetProgress(q, currentPct);
-
-            if(q.key === "pctRun") q.progress = prog;
-
-            if(prog >= q.target){
-                q.done = true;
-                changed = true;
-
-                // XP is the primary HyperPass reward
-                this.addXP(q.xp);
-
-                notify(`QUEST COMPLETE +${q.xp}XP`);
-                MusicSys.playFX('coin');
-            }
-        });
-
-        if(changed){
-            // Replace completed quests (daily/weekly only refresh on their reset window)
-            data.quests.daily = data.quests.daily.map(q => q.done ? hpRollQuest('daily') : q);
-            data.quests.weekly = data.quests.weekly.map(q => q.done ? hpRollQuest('weekly') : q);
-
-            AccSys.saveData();
-            this.renderUI(currentPct);
-        }
-    },
-
-    renderUI(currentPct=0){
-        // Menu quest box + HUD quest
-        const menuList = document.getElementById('quest-menu-list');
-        const hud = document.getElementById('quest-hud');
-
-        // HyperPass panel widgets
-        const hpStatus = document.getElementById('hp-status');
-        const hpLevel = document.getElementById('hp-level');
-        const hpXp = document.getElementById('hp-xp');
-        const hpQuestList = document.getElementById('hp-quest-list');
-        const hpRewardGrid = document.getElementById('hp-reward-grid');
-        const hpBuyBtn = document.getElementById('hp-buy-btn');
-        const hpOrbBadge = document.getElementById('hp-orb-badge');
-        const hpBtnStatus = document.getElementById('hyperpass-status');
-
-        // Top-right badges
-        if(hpOrbBadge) hpOrbBadge.innerText = '🟡 ' + data.orbs;
-
-        if(!data.hasHyperPass){
-            if(menuList) menuList.innerHTML = '<div style="color:#aaa;">LOCKED — BUY HYPERPASS (🟡1000)</div>';
-            if(hud) hud.style.display = 'none';
-            if(hpStatus) hpStatus.innerText = 'LOCKED';
-            if(hpLevel) hpLevel.innerText = '0';
-            if(hpXp) hpXp.innerText = '0';
-            if(hpQuestList) hpQuestList.innerHTML = 'LOCKED — BUY THE HYPERPASS';
-            if(hpBuyBtn) hpBuyBtn.style.display = 'inline-flex';
-            if(hpBtnStatus) hpBtnStatus.innerText = 'LOCKED';
-        } else {
-            if(hpStatus) hpStatus.innerText = 'OWNED';
-            if(hpLevel) hpLevel.innerText = String(data.hp.level || 1);
-            if(hpXp) hpXp.innerText = String(data.hp.xp || 0);
-            if(hpQuestList) hpBuyBtn.style.display = 'none';
-            if(hpBtnStatus) hpBtnStatus.innerText = 'OWNED';
-
-            // Render quest list in menu + panel
-            const daily = data.quests.daily || [];
-            const weekly = data.quests.weekly || [];
-
-            const renderQuestRows = (arr, title) => {
-                const frag = document.createElement('div');
-                frag.innerHTML = `<div style="margin-top:8px; font-weight:900; color:#aaa; font-size:0.7rem; letter-spacing:1px;">${title}</div>`;
-                arr.forEach(q=>{
-                    const prog = hpGetProgress(q, currentPct);
-                    const row = document.createElement('div');
-                    row.className = 'quest-row';
-                    row.innerHTML = `
-                        <div class="qtext">${q.done ? '✅ ' : ''}${q.text}</div>
-                        <div class="qprog">(${Math.min(prog,q.target)}/${q.target})</div>
-                        <div class="qrew">+${q.xp}XP</div>
-                    `;
-                    frag.appendChild(row);
-                });
-                return frag;
+        function hpRollQuest(kind){
+            const pool = HP_QUEST_POOL[kind];
+            const q = pool[Math.floor(Math.random()*pool.length)];
+            const target = hpRandInt(q.min, q.max);
+            return {
+                kind,
+                key: q.key,
+                target,
+                xp: Number(q.xp(target)),
+                progress: 0,
+                text: q.label(target),
+                done: false
             };
+        }
 
-            if(menuList){
-                menuList.innerHTML = '';
-                menuList.appendChild(renderQuestRows(daily, 'DAILY'));
-                menuList.appendChild(renderQuestRows(weekly, 'WEEKLY'));
-            }
+        function hpGetProgress(q, currentPct){
+            if(q.key === "orbsTotal") return data.stats.orbsCollected || 0;
+            if(q.key === "portalsTotal") return data.stats.portalsHit || 0;
+            if(q.key === "pctRun") return currentPct || 0;
+            return q.progress || 0;
+        }
 
-            if(hpQuestList){
-                hpQuestList.innerHTML = '';
-                hpQuestList.appendChild(renderQuestRows(daily, 'DAILY'));
-                hpQuestList.appendChild(renderQuestRows(weekly, 'WEEKLY'));
-            }
+        const HP = {
+            sync(){
+                // Minimum starter orbs
+                data.orbs = Math.max(100, Number(data.orbs || 0));
 
-            // HUD: show first quest (daily preferred)
-            if(state === 'PLAY'){
-                const active = (daily.find(q=>!q.done) || weekly.find(q=>!q.done) || daily[0] || weekly[0]);
-                if(active){
-                    const prog = hpGetProgress(active, currentPct);
-                    hud.style.display = 'block';
-                    hud.innerHTML = `QUEST: <span>${active.text}</span> (${Math.min(prog,active.target)}/${active.target})`;
-                } else {
-                    hud.style.display = 'none';
+                if(!data.hasHyperPass){
+                    data.hp.level = 0;
+                    data.hp.xp = 0;
+                    data.quests.daily = [];
+                    data.quests.weekly = [];
+                    this.renderUI(0);
+                    return;
                 }
-            } else if(hud){
-                hud.style.display = 'none';
+
+                const today = hpDateKey();
+                const week = hpWeekKey();
+
+                if(data.hp.lastDaily !== today){
+                    data.hp.lastDaily = today;
+                    data.quests.daily = [hpRollQuest('daily'), hpRollQuest('daily'), hpRollQuest('daily')];
+                }
+                if(data.hp.lastWeekly !== week){
+                    data.hp.lastWeekly = week;
+                    data.quests.weekly = [hpRollQuest('weekly'), hpRollQuest('weekly')];
+                }
+
+                if(data.hp.level < 1) data.hp.level = 1;
+
+                this.renderUI(0);
+                saveData();
+            },
+
+            buy(){
+                if(data.hasHyperPass){ notify('HYPERPASS ALREADY OWNED'); return; }
+                if(data.orbs < HYPERPASS_COST){ notify('NEED 1000 ORBS'); MusicSys.playFX('miss'); return; }
+                if(!confirm('Buy HyperPass for 1000 Orbs?')) return;
+
+                data.orbs -= HYPERPASS_COST;
+                data.hasHyperPass = true;
+                data.hp = { level: 1, xp: 0, lastDaily: "", lastWeekly: "" };
+                data.quests = { daily: [], weekly: [] };
+
+                notify('HYPERPASS UNLOCKED');
+                MusicSys.playFX('coin');
+
+                this.sync();
+                updateMenu(); 
+            },
+
+            addXP(xp){
+                if(!data.hasHyperPass) return;
+                data.hp.xp += Math.max(0, Math.floor(xp));
+
+                while(data.hp.level < HP_MAX_LEVEL && data.hp.xp >= HP_XP_PER_LEVEL){
+                    data.hp.xp -= HP_XP_PER_LEVEL;
+                    data.hp.level += 1;
+                    notify('HYPERPASS LEVEL UP: ' + data.hp.level);
+                    MusicSys.playFX('coin');
+
+                    const reward = HP_REWARDS.find(r => r.level === data.hp.level);
+                    if(reward && !data.unlocks.includes(reward.skinId)){
+                        data.unlocks.push(reward.skinId);
+                        notify('REWARD UNLOCKED: ' + reward.name.toUpperCase());
+                    }
+                }
+
+                saveData();
+                this.renderUI(0);
+                updateMenu();
+            },
+
+            checkCompletions(currentPct=0){
+                if(!data.hasHyperPass) return;
+
+                let changed = false;
+                const all = [...data.quests.daily, ...data.quests.weekly];
+
+                all.forEach(q=>{
+                    if(q.done) return;
+                    const prog = hpGetProgress(q, currentPct);
+
+                    if(q.key === "pctRun") q.progress = prog;
+
+                    if(prog >= q.target){
+                        q.done = true;
+                        changed = true;
+
+                        this.addXP(q.xp);
+                        notify(`QUEST COMPLETE +${q.xp}XP`);
+                        MusicSys.playFX('coin');
+                    }
+                });
+
+                if(changed){
+                    data.quests.daily = data.quests.daily.map(q => q.done ? hpRollQuest('daily') : q);
+                    data.quests.weekly = data.quests.weekly.map(q => q.done ? hpRollQuest('weekly') : q);
+
+                    saveData();
+                    this.renderUI(currentPct);
+                }
+            },
+
+            renderUI(currentPct=0){
+                const menuList = document.getElementById('quest-menu-list');
+                const hud = document.getElementById('quest-hud');
+                const hpStatus = document.getElementById('hp-status');
+                const hpLevel = document.getElementById('hp-level');
+                const hpXp = document.getElementById('hp-xp');
+                const hpQuestList = document.getElementById('hp-quest-list');
+                const hpRewardGrid = document.getElementById('hp-reward-grid');
+                const hpBuyBtn = document.getElementById('hp-buy-btn');
+                const hpOrbBadge = document.getElementById('hp-orb-badge');
+                const hpBtnStatus = document.getElementById('hyperpass-status');
+
+                if(hpOrbBadge) hpOrbBadge.innerText = '🟡 ' + data.orbs;
+
+                if(!data.hasHyperPass){
+                    if(menuList) menuList.innerHTML = '<div style="color:#aaa;">LOCKED — BUY HYPERPASS (🟡1000)</div>';
+                    if(hud) hud.style.display = 'none';
+                    if(hpStatus) hpStatus.innerText = 'LOCKED';
+                    if(hpLevel) hpLevel.innerText = '0';
+                    if(hpXp) hpXp.innerText = '0';
+                    if(hpQuestList) hpQuestList.innerHTML = 'LOCKED — BUY THE HYPERPASS';
+                    if(hpBuyBtn) hpBuyBtn.style.display = 'inline-flex';
+                    if(hpBtnStatus) hpBtnStatus.innerText = 'LOCKED';
+                } else {
+                    if(hpStatus) hpStatus.innerText = 'OWNED';
+                    if(hpLevel) hpLevel.innerText = String(data.hp.level || 1);
+                    if(hpXp) hpXp.innerText = String(data.hp.xp || 0);
+                    if(hpQuestList) hpBuyBtn.style.display = 'none';
+                    if(hpBtnStatus) hpBtnStatus.innerText = 'OWNED';
+
+                    const daily = data.quests.daily || [];
+                    const weekly = data.quests.weekly || [];
+
+                    const renderQuestRows = (arr, title) => {
+                        const frag = document.createElement('div');
+                        frag.innerHTML = `<div style="margin-top:8px; font-weight:900; color:#aaa; font-size:0.7rem; letter-spacing:1px;">${title}</div>`;
+                        arr.forEach(q=>{
+                            const prog = hpGetProgress(q, currentPct);
+                            const row = document.createElement('div');
+                            row.className = 'quest-row';
+                            row.innerHTML = `
+                                <div class="qtext">${q.done ? '✅ ' : ''}${q.text}</div>
+                                <div class="qprog">(${Math.min(prog,q.target)}/${q.target})</div>
+                                <div class="qrew">+${q.xp}XP</div>
+                            `;
+                            frag.appendChild(row);
+                        });
+                        return frag;
+                    };
+
+                    if(menuList){
+                        menuList.innerHTML = '';
+                        menuList.appendChild(renderQuestRows(daily, 'DAILY'));
+                        menuList.appendChild(renderQuestRows(weekly, 'WEEKLY'));
+                    }
+
+                    if(hpQuestList){
+                        hpQuestList.innerHTML = '';
+                        hpQuestList.appendChild(renderQuestRows(daily, 'DAILY'));
+                        hpQuestList.appendChild(renderQuestRows(weekly, 'WEEKLY'));
+                    }
+
+                    if(state === 'PLAY'){
+                        const active = (daily.find(q=>!q.done) || weekly.find(q=>!q.done) || daily[0] || weekly[0]);
+                        if(active){
+                            const prog = hpGetProgress(active, currentPct);
+                            hud.style.display = 'block';
+                            hud.innerHTML = `QUEST: <span>${active.text}</span> (${Math.min(prog,active.target)}/${active.target})`;
+                        } else {
+                            hud.style.display = 'none';
+                        }
+                    } else if(hud){
+                        hud.style.display = 'none';
+                    }
+                }
+
+                if(hpRewardGrid){
+                    hpRewardGrid.innerHTML = '';
+                    HP_REWARDS.forEach(r=>{
+                        const owned = data.unlocks.includes(r.skinId);
+                        const lockedByLevel = !owned && (data.hp.level || 0) < r.level;
+
+                        const div = document.createElement('div');
+                        div.style.border = '1px solid rgba(255,255,255,0.15)';
+                        div.style.borderRadius = '10px';
+                        div.style.padding = '10px';
+                        div.style.background = 'rgba(255,255,255,0.04)';
+                        div.style.textAlign = 'center';
+                        div.style.cursor = 'pointer';
+                        div.innerHTML = `
+                            <div style="font-weight:900; font-size:0.8rem; color:${owned ? '#0f0' : '#aaa'};">
+                                LV ${r.level}
+                            </div>
+                            <div style="margin-top:6px; font-size:0.75rem;">${r.name}</div>
+                            <div style="margin-top:6px; font-size:0.65rem; color:${owned ? '#0f0' : '#666'};">
+                                ${owned ? 'OWNED' : (lockedByLevel ? 'LOCKED' : 'READY')}
+                            </div>
+                        `;
+                        div.onclick = ()=>{
+                            if(owned){ data.activeSkin = r.skinId; saveData(); updateMenu(); notify('EQUIPPED'); }
+                            else { notify('UNLOCK VIA HYPERPASS'); }
+                        };
+                        hpRewardGrid.appendChild(div);
+                    });
+                }
             }
+        };
+
+        function openHyperPass(){
+            const p = document.getElementById('hyperpass-panel');
+            const willOpen = (p.style.display !== 'flex');
+            p.style.display = willOpen ? 'flex' : 'none';
+
+            document.getElementById('settings-panel').style.display='none';
+            document.getElementById('help-panel').style.display='none';
+
+            if(willOpen) HP.renderUI(0);
         }
-
-        // Rewards grid (always show so they can see what's inside)
-        if(hpRewardGrid){
-            hpRewardGrid.innerHTML = '';
-            HP_REWARDS.forEach(r=>{
-                const owned = data.unlocks.includes(r.skinId);
-                const lockedByLevel = !owned && (data.hp.level || 0) < r.level;
-
-                const div = document.createElement('div');
-                div.style.border = '1px solid rgba(255,255,255,0.15)';
-                div.style.borderRadius = '10px';
-                div.style.padding = '10px';
-                div.style.background = 'rgba(255,255,255,0.04)';
-                div.style.textAlign = 'center';
-                div.style.cursor = 'pointer';
-                div.innerHTML = `
-                    <div style="font-weight:900; font-size:0.8rem; color:${owned ? '#0f0' : '#aaa'};">
-                        LV ${r.level}
-                    </div>
-                    <div style="margin-top:6px; font-size:0.75rem;">${r.name}</div>
-                    <div style="margin-top:6px; font-size:0.65rem; color:${owned ? '#0f0' : '#666'};">
-                        ${owned ? 'OWNED' : (lockedByLevel ? 'LOCKED' : 'READY')}
-                    </div>
-                `;
-                div.onclick = ()=>{
-                    if(owned){ data.activeSkin = r.skinId; AccSys.saveData(); updateMenu(); notify('EQUIPPED'); }
-                    else { notify('UNLOCK VIA HYPERPASS'); }
-                };
-                hpRewardGrid.appendChild(div);
-            });
-        }
-    }
-};
-
-function openHyperPass(){
-    const p = document.getElementById('hyperpass-panel');
-    const willOpen = (p.style.display !== 'flex');
-    p.style.display = willOpen ? 'flex' : 'none';
-
-    // close other overlays
-    document.getElementById('settings-panel').style.display='none';
-    document.getElementById('help-panel').style.display='none';
-    document.getElementById('friends-panel').style.display='none';
-
-    if(willOpen) HP.renderUI(0);
-}
-
 
         // --- SKINS & TRAILS ---
         const skins = [
@@ -1199,7 +899,6 @@ function openHyperPass(){
             { id:'god', name:'GOD', price:5000, type:'shop', desc:'5000 Orbs', draw:(c,s)=>{ c.arc(0,0,s/3,0,Math.PI*2); c.moveTo(0,-s); c.lineTo(0,s); c.moveTo(-s,0); c.lineTo(s,0); c.arc(0,0,s,0,Math.PI*2); } },
             { id:'cross', name:'Cross', price:2000, type:'shop', desc:'2000 Orbs', draw:(c,s)=>{ c.rotate(Math.PI/2); c.rect(-s/3,-s,s/1.5,s*2); c.rect(-s,-s/3,s*2,s/1.5); } },
         
-            // HyperPass-exclusive skins (NOT purchasable)
             { id:'hp_neon',   name:'Neon',   price:0, type:'hyperpass', desc:'HyperPass', draw:(c,s)=>{ c.moveTo(s,0); c.lineTo(0,s); c.lineTo(-s,0); c.lineTo(0,-s); c.closePath(); } },
             { id:'hp_prism',  name:'Prism',  price:0, type:'hyperpass', desc:'HyperPass', draw:(c,s)=>{ c.rect(-s/1.2,-s/1.2,s*1.1,s*1.1); c.moveTo(-s,0); c.lineTo(0,s); c.lineTo(s,0); c.lineTo(0,-s); } },
             { id:'hp_ion',    name:'Ion',    price:0, type:'hyperpass', desc:'HyperPass', draw:(c,s)=>{ c.arc(0,0,s/1.3,0,Math.PI*2); c.moveTo(-s,0); c.lineTo(s,0); } },
@@ -1207,7 +906,7 @@ function openHyperPass(){
             { id:'hp_void',   name:'Void',   price:0, type:'hyperpass', desc:'HyperPass', draw:(c,s)=>{ c.arc(0,0,s/1.2,0,Math.PI*2); c.arc(0,0,s/2,0,Math.PI*2); } },
             { id:'hp_zenith', name:'Zenith', price:0, type:'hyperpass', desc:'HyperPass', draw:(c,s)=>{ c.moveTo(0,-s); c.lineTo(s,0); c.lineTo(0,s); c.lineTo(-s,0); c.closePath(); c.moveTo(0,-s/2); c.lineTo(s/2,0); c.lineTo(0,s/2); c.lineTo(-s/2,0); c.closePath(); } },
             { id:'hp_omega',  name:'Omega',  price:0, type:'hyperpass', desc:'HyperPass', draw:(c,s)=>{ c.arc(0,0,s/1.5,0,Math.PI*2); c.moveTo(-s,0); c.lineTo(0,s); c.lineTo(s,0); c.lineTo(0,-s); } },
-];
+        ];
 
         const trails = [
             { id:'solid', name:'Solid', price:0, desc:'Free' },
@@ -1289,16 +988,14 @@ function openHyperPass(){
             }
         };
 
-        // Keep your file names or replace paths
         const tracks = { hard: new Audio('2-06. Power Trip.mp3'), demon: new Audio('5-03. Geometrical Dominator.mp3') };
         for(let k in tracks) tracks[k].loop=true;
         const deathSfx = new Audio('geometry-dash-death-sound-effect.mp3');
         let currentBgm = null;
 
         // --- UI & LOGIC ---
-        function toggleSettings(){ const p=document.getElementById('settings-panel'); p.style.display=p.style.display==='flex'?'none':'flex'; document.getElementById('help-panel').style.display='none'; document.getElementById('friends-panel').style.display='none'; document.getElementById('hyperpass-panel').style.display='none'; }
-        function toggleHelp(){ const p=document.getElementById('help-panel'); p.style.display=p.style.display==='flex'?'none':'flex'; document.getElementById('settings-panel').style.display='none'; document.getElementById('friends-panel').style.display='none'; document.getElementById('hyperpass-panel').style.display='none'; }
-        function toggleFriends(){ const p=document.getElementById('friends-panel'); p.style.display=p.style.display==='flex'?'none':'flex'; document.getElementById('settings-panel').style.display='none'; document.getElementById('help-panel').style.display='none'; document.getElementById('hyperpass-panel').style.display='none'; AccSys.renderFriends(); }
+        function toggleSettings(){ const p=document.getElementById('settings-panel'); p.style.display=p.style.display==='flex'?'none':'flex'; document.getElementById('help-panel').style.display='none'; document.getElementById('hyperpass-panel').style.display='none'; }
+        function toggleHelp(){ const p=document.getElementById('help-panel'); p.style.display=p.style.display==='flex'?'none':'flex'; document.getElementById('settings-panel').style.display='none'; document.getElementById('hyperpass-panel').style.display='none'; }
 
         function togglePause(){
             if(state==='PLAY') { state='PAUSE'; document.getElementById('paused-overlay').style.display='flex'; if(currentBgm) currentBgm.pause(); MusicSys.stop(); }
@@ -1363,7 +1060,7 @@ function openHyperPass(){
                     d.innerHTML=`<div style="font-size:1.5rem; opacity:0.3">🔒</div><div class="price-tag">🟡${s.price}</div>`;
                 }
                 d.onclick=()=>{
-                    if(unlk){ data.activeSkin=s.id; AccSys.saveData(); updateMenu(); }
+                    if(unlk){ data.activeSkin=s.id; saveData(); updateMenu(); }
                     else if(isHp){ openHyperPass(); notify('UNLOCK VIA HYPERPASS'); }
                     else { attemptBuy(s); }
                 };
@@ -1381,7 +1078,7 @@ function openHyperPass(){
                     d.innerHTML=`<span style="opacity:0.5">${t.name}</span><div class="price-tag">🟡${t.price}</div>`;
                 }
                 d.onclick=()=>{
-                    if(unlk){ data.activeTrail=t.id; AccSys.saveData(); updateMenu(); }
+                    if(unlk){ data.activeTrail=t.id; saveData(); updateMenu(); }
                     else { attemptBuy(t); }
                 };
                 tg.appendChild(d);
@@ -1393,7 +1090,7 @@ function openHyperPass(){
                 if(confirm(`Buy ${item.name} for ${item.price} Orbs?`)) {
                     data.orbs -= item.price;
                     data.unlocks.push(item.id);
-                    AccSys.saveData();
+                    saveData();
                     updateMenu();
                     notify("PURCHASE SUCCESSFUL");
                     MusicSys.playFX('coin');
@@ -1409,9 +1106,13 @@ function openHyperPass(){
             document.getElementById('notify-area').appendChild(n); setTimeout(()=>n.remove(),4000);
         }
 
+        document.getElementById('pColor').addEventListener('change', function() {
+            saveData();
+        });
+
         // --- GAME CORE ---
-        function initGame(d, multi=false, online=false) {
-            diff=d; isMulti=multi; isOnlineMulti=online;
+        function initGame(d, multi=false) {
+            diff=d; isMulti=multi; 
             MusicSys.init();
             MusicSys.stop();
             if(currentBgm) { currentBgm.pause(); currentBgm=null; }
@@ -1436,8 +1137,6 @@ function openHyperPass(){
             document.getElementById('hud').style.opacity=1;
             document.getElementById('settings-btn').style.display='none';
             document.getElementById('help-btn').style.display='none';
-            document.getElementById('logout-btn').style.display='none';
-            document.getElementById('friends-btn').style.display='none';
             document.getElementById('pause-btn').style.display='flex';
 
             state='PLAY';
@@ -1470,10 +1169,10 @@ function openHyperPass(){
             requestAnimationFrame(gameLoop);
         }
 
-        function restart(){ initGame(diff, isMulti, isOnlineMulti); }
+        function restart(){ initGame(diff, isMulti); }
 
         function showMenu(){
-            state='MENU'; activeMatchId = null; ghostData.active = false;
+            state='MENU'; 
             if(currentBgm)currentBgm.pause();
             MusicSys.stop();
             updateMenu();
@@ -1485,8 +1184,6 @@ function openHyperPass(){
             document.getElementById('hyperpass-panel').style.display='none';
             document.getElementById('settings-btn').style.display='flex';
             document.getElementById('help-btn').style.display='flex';
-            document.getElementById('logout-btn').style.display='flex';
-            document.getElementById('friends-btn').style.display='flex';
             document.getElementById('pause-btn').style.display='none';
             walls=[];
             HP.renderUI(0);
@@ -1499,14 +1196,13 @@ function openHyperPass(){
 
             if(x>2000) {
                 if(diff!=='easy' && Math.random()<0.012) {
-                    // 20% fewer SPEED portals (same total portal rate)
                     const r = Math.random();
                     const t = (diff==='medium')
-                        ? (r < 0.40 ? 'spd' : 'mini') // 0.5 -> 0.4
-                        : (r < 0.2667 ? 'spd' : (r < 0.6334 ? 'mini' : 'inv')); // 1/3 -> ~0.2667
+                        ? (r < 0.40 ? 'spd' : 'mini')
+                        : (r < 0.2667 ? 'spd' : (r < 0.6334 ? 'mini' : 'inv'));
                     portals.push({x:x, y:ny, type:t, active:true});
                 }
-                if(diff!=='easy' && SETTINGS.showOrbs && Math.random()<0.064) { // 20% fewer orbs
+                if(diff!=='easy' && SETTINGS.showOrbs && Math.random()<0.064) {
                     let oy = ny + (Math.random()-0.5)*(c.gap*0.6);
                     orbs.push({x:x, y:oy, c:false});
                 }
@@ -1532,7 +1228,7 @@ function openHyperPass(){
                 data.best[diff]=pct;
             }
 
-            AccSys.saveData();
+            saveData();
 
             if(SETTINGS.particles) {
                 players.forEach(p=>{ for(let i=0;i<30;i++) particles.push({x:p.x, y:p.y, vx:(Math.random()-0.5)*15, vy:(Math.random()-0.5)*15, l:1, c:p.color}); });
@@ -1543,7 +1239,6 @@ function openHyperPass(){
             document.getElementById('hud').style.opacity=0;
             document.getElementById('pause-btn').style.display='none';
 
-            // QUEST: refresh menu-side progress if needed
             HP.renderUI(pct);
 
             if(SETTINGS.autoRetry) setTimeout(restart, 800);
@@ -1635,21 +1330,18 @@ function openHyperPass(){
             portals.forEach(pt=>{
                 if(pt.active) {
                     players.forEach(p=>{
-                        // 20% smaller collision window for SPEED portals
                         const pxWin = (pt.type==='spd') ? 24 : 30;
                         const pyWin = (pt.type==='spd') ? 40 : 50;
                         if(Math.abs(p.x-pt.x)<pxWin && Math.abs(p.y-pt.y)<pyWin) {
                             pt.active=false; MusicSys.playFX('portal');
 
-                            // Track portal hits
                             runPortals++;
-                            // QUEST: persistent portal count
-                            if(!isMulti && !isOnlineMulti) {
+                            if(!isMulti) {
                                 data.stats.portalsHit = (data.stats.portalsHit||0) + 1;
                             }
 
                             if(pt.type==='inv') players.forEach(pl=>pl.inv=!pl.inv);
-                            if(pt.type==='spd') speedMult+=0.13; // nerfed by 35% (0.2 * 0.65)
+                            if(pt.type==='spd') speedMult+=0.13;
                             if(pt.type==='mini') players.forEach(pl=>{ pl.mini=!pl.mini; pl.size=pl.mini?12:20; });
                         }
                     });
@@ -1662,8 +1354,7 @@ function openHyperPass(){
                         if(Math.abs(p.x-o.x)<30 && Math.abs(p.y-o.y)<30) {
                             o.c=true; runOrbs++; document.getElementById('orb-hud').innerText='🟡 '+runOrbs; MusicSys.playFX('coin');
 
-                            // QUEST: persistent orb count
-                            if(!isMulti && !isOnlineMulti) {
+                            if(!isMulti) {
                                 data.stats.orbsCollected = (data.stats.orbsCollected||0) + 1;
                             }
                         }
@@ -1676,19 +1367,17 @@ function openHyperPass(){
             document.getElementById('p-bar').style.width=Math.min(100,pct)+'%';
             document.getElementById('score-display').innerText=pct+'%';
 
-            // QUEST: update UI + completion checks
             HP.renderUI(pct);
             HP.checkCompletions(pct);
 
             if(pct>=100){
                 state='WIN';
 
-                // Save orbs & PB
                 data.orbs += runOrbs;
                 const prevBest = data.best[diff] || 0;
                 if(100 >= prevBest) data.best[diff] = 100;
 
-                AccSys.saveData();
+                saveData();
 
                 document.getElementById('win').classList.remove('hidden');
                 document.getElementById('hud').style.opacity=0;
@@ -1790,7 +1479,6 @@ function openHyperPass(){
                 portals.forEach(pt=>{ if(!pt.active)return;
                     let c=pt.type==='inv'?'#fa0':pt.type==='spd'?'#0ff':'#f0f'; let sym=pt.type==='inv'?'↕':pt.type==='spd'?'»':'•';
                     ctx.save(); ctx.translate(pt.x,pt.y);
-                    // 20% smaller SPEED portal visuals
                     const spS = (pt.type==='spd') ? 0.8 : 1.0;
                     ctx.beginPath(); ctx.ellipse(-8*spS,0,20*spS,45*spS,0,0,Math.PI*2); ctx.lineWidth=2; ctx.strokeStyle=c; ctx.globalAlpha=0.5; ctx.stroke();
                     ctx.beginPath(); ctx.arc(20*spS,0,15*spS,0,Math.PI*2); ctx.fillStyle=c; ctx.fill();
@@ -1806,7 +1494,7 @@ function openHyperPass(){
             const drawPlayers = (focusIdx) => {
                 if(state!=='OVER') {
                     players.forEach((p, idx) => {
-                        if(isMulti && !isOnlineMulti && idx !== focusIdx) ctx.globalAlpha=0.3; else ctx.globalAlpha=1;
+                        if(isMulti && idx !== focusIdx) ctx.globalAlpha=0.3; else ctx.globalAlpha=1;
 
                         if(p.trailType==='solid'||p.trailType==='rainbow') {
                             ctx.beginPath(); ctx.lineWidth=p.mini?2:4;
@@ -1841,7 +1529,7 @@ function openHyperPass(){
                 }
             };
 
-            if(isMulti && !isOnlineMulti) {
+            if(isMulti) {
                 // Top Screen (P1)
                 ctx.save(); ctx.beginPath(); ctx.rect(0,0,canvas.width,canvas.height/2); ctx.clip();
                 ctx.translate(-Math.floor(players[0].x-200), 0);
@@ -1860,19 +1548,6 @@ function openHyperPass(){
                 ctx.restore();
             } else {
                 drawWorld();
-
-                // ONLINE ghost opponent still supported
-                if(ghostData.active) {
-                    ctx.save();
-                    ctx.translate(players[0].x, ghostData.y);
-                    ctx.rotate(ghostData.rot * Math.PI/180);
-                    ctx.globalAlpha = 0.65;
-                    let sDraw = skins.find(s=>s.id===ghostData.skin) || skins[0];
-                    ctx.beginPath(); sDraw.draw(ctx, 20);
-                    ctx.fillStyle = ghostData.dead ? '#f00' : ghostData.color;
-                    ctx.fill(); ctx.restore();
-                }
-
                 drawPlayers(0);
             }
 
@@ -1903,7 +1578,7 @@ function openHyperPass(){
             requestAnimationFrame(gameLoop);
         }
 
-        requestAnimationFrame(gameLoop);
+        startSession(); // Auto-load local data and start the game menu
         requestAnimationFrame(draw);
     </script>
 </body>
