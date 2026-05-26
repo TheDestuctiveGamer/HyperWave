@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,8 +14,8 @@
             --p2-color: #ffaa00;
             --danger: #ff0055;
             --gold: #ffd700;
-            --glass: rgba(10, 15, 25, 0.96);
-            --border: rgba(255, 255, 255, 0.15);
+            --dark-bg: rgba(5, 10, 15, 0.95);
+            --border: rgba(0, 242, 255, 0.4);
             --font-main: 'Exo 2', sans-serif;
         }
 
@@ -31,8 +32,8 @@
             justify-content: center; align-items: center; flex-direction: column;
         }
         .spinner {
-            width: 50px; height: 50px; border: 5px solid var(--border);
-            border-top: 5px solid var(--primary); border-radius: 50%;
+            width: 50px; height: 50px; border: 2px solid transparent;
+            border-top: 2px solid var(--primary); border-right: 2px solid var(--primary);
             animation: spin 1s linear infinite; margin-bottom: 20px;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -60,32 +61,38 @@
             z-index: 10; display: flex; justify-content: center; align-items: center;
             pointer-events: none;
         }
-        .glass-panel, button, input, .tab-btn, .skin-card, .trail-card, .setting-toggle, .icon-btn, .btn-accept { pointer-events: auto; }
+        .cyber-panel, button, input, .tab-btn, .skin-card, .trail-card, .setting-toggle, .icon-btn { pointer-events: auto; }
 
-        .glass-panel {
-            background: var(--glass);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+        /* --- FUTURISTIC SHARP PANELS --- */
+        .cyber-panel {
+            background: var(--dark-bg);
             border: 1px solid var(--border);
-            border-top: 1px solid rgba(255,255,255,0.4);
-            border-radius: 20px; padding: 25px; text-align: center;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+            padding: 25px; text-align: center;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1), inset 0 0 20px rgba(0, 242, 255, 0.05);
             transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-width: 800px; width: 95%;
-            display: flex; flex-direction: column; gap: 12px;
+            max-width: 900px; width: 95%;
+            display: flex; flex-direction: column; gap: 15px;
             position: relative;
+            clip-path: polygon(0 15px, 15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
         }
-        .hidden { transform: scale(0.9); opacity: 0; pointer-events: none; display: none; }
+        .cyber-panel::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+        
+        .hidden { transform: scale(0.95); opacity: 0; pointer-events: none; display: none; }
 
         /* ICONS & BUTTONS */
         .icon-btn {
             position: absolute; top: 20px;
-            font-size: 20px; cursor: pointer; color: #aaa;
+            font-size: 20px; cursor: pointer; color: var(--primary);
             transition: 0.2s; z-index: 100;
-            background: rgba(0,0,0,0.6); padding: 0; border-radius: 12px;
+            background: rgba(0,242,255,0.05); padding: 0; 
             width: 45px; height: 45px; display: flex; justify-content: center; align-items: center;
             border: 1px solid var(--border);
+            clip-path: polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
         }
-        .icon-btn:hover { color: var(--primary); border-color: var(--primary); background: rgba(0,242,255,0.1); }
+        .icon-btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
 
         #settings-btn { right: 20px; }
         #help-btn { left: 20px; font-weight: bold; }
@@ -106,114 +113,158 @@
         }
         .setting-item {
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 8px;
-            border: 1px solid transparent;
+            background: rgba(0,242,255,0.05); padding: 12px 15px; 
+            border: 1px solid rgba(0,242,255,0.2);
+            clip-path: polygon(0 8px, 8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
         }
-        .setting-item:hover { border-color: rgba(255,255,255,0.2); }
-        .setting-label { font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; }
+        .setting-label { font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; color: #fff;}
         .setting-toggle {
-            width: 40px; height: 20px; background: #333; border-radius: 10px;
+            width: 40px; height: 16px; background: #222; border: 1px solid #444;
             position: relative; cursor: pointer; transition: 0.3s;
         }
         .setting-toggle::after {
-            content:''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
-            background: #fff; border-radius: 50%; transition: 0.3s;
+            content:''; position: absolute; top: 1px; left: 1px; width: 12px; height: 12px;
+            background: #aaa; transition: 0.3s;
         }
-        .setting-toggle.on { background: var(--primary); }
-        .setting-toggle.on::after { left: 22px; }
+        .setting-toggle.on { background: rgba(0,242,255,0.2); border-color: var(--primary); }
+        .setting-toggle.on::after { left: 25px; background: var(--primary); box-shadow: 0 0 5px var(--primary); }
 
         /* HELP CONTENT */
         .help-content { max-width: 600px; width: 90%; text-align: left; display: grid; gap: 15px; }
         .help-section {
-            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px;
-            border-left: 3px solid var(--primary);
+            background: rgba(0,242,255,0.05); padding: 15px; 
+            border-left: 3px solid var(--primary); border-right: 1px solid rgba(0,242,255,0.2);
         }
-        .help-title { font-weight: 900; color: var(--primary); margin-bottom: 5px; font-size: 0.9rem; }
+        .help-title { font-weight: 900; color: var(--primary); margin-bottom: 5px; font-size: 0.9rem; text-transform: uppercase;}
         .help-text { font-size: 0.8rem; color: #ccc; line-height: 1.4; }
         .key-badge {
-            background: #222; padding: 2px 6px; border-radius: 4px; font-family: monospace;
-            border: 1px solid #444; color: #fff; display: inline-block; font-size: 0.7rem;
+            background: #111; padding: 2px 6px; font-family: monospace;
+            border: 1px solid var(--primary); color: var(--primary); display: inline-block; font-size: 0.7rem;
         }
 
         /* PREVIEW BOX */
         .preview-wrapper {
-            background: #000; border-radius: 12px;
+            background: #000; 
             border: 1px solid var(--primary);
             box-shadow: inset 0 0 40px rgba(0, 242, 255, 0.15);
             margin: 0 auto; width: 100%; height: 110px;
             display: flex; justify-content: center; align-items: center;
             overflow: hidden; position: relative;
+            clip-path: polygon(0 15px, 15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
         }
         #preview-canvas { width: 100%; height: 100%; }
 
-        /* GARAGE/SHOP */
-        .garage-container {
-            background: rgba(255,255,255,0.02); border-radius: 12px;
-            border: 1px solid var(--border); overflow: hidden;
-            display: flex; flex-direction: column; height: 240px;
+        /* LAYOUT: BETTER USE OF SPACE */
+        .dashboard-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%;
         }
-        .tabs { display: flex; background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--border); }
+        @media (max-width: 700px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+        /* GARAGE/SHOP & MODES CONTAINER */
+        .cyber-container {
+            background: rgba(0,0,0,0.4); 
+            border: 1px solid rgba(0,242,255,0.2); 
+            display: flex; flex-direction: column; height: 260px;
+        }
+        .tabs { display: flex; background: rgba(0,242,255,0.05); border-bottom: 1px solid rgba(0,242,255,0.2); }
         .tab-btn {
             flex: 1; padding: 10px; cursor: pointer; font-weight: 800; color: #666; font-size: 0.8rem;
             transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;
         }
-        .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
-        .tab-btn.active { color: var(--primary); background: rgba(0, 242, 255, 0.1); box-shadow: inset 0 -2px 0 var(--primary); }
+        .tab-btn:hover { color: var(--primary); background: rgba(0,242,255,0.1); }
+        .tab-btn.active { color: #000; background: var(--primary); }
 
-        .garage-content { padding: 8px; overflow-y: auto; height: 100%; }
+        .garage-content { padding: 10px; overflow-y: auto; height: 100%; }
         .garage-content::-webkit-scrollbar { width: 4px; }
-        .garage-content::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+        .garage-content::-webkit-scrollbar-thumb { background: var(--primary); }
 
         .skin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; }
-        .trail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .trail-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 
         .skin-card, .trail-card {
-            background: rgba(255,255,255,0.05); border-radius: 6px; border: 1px solid transparent;
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(0,242,255,0.2);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             cursor: pointer; transition: 0.2s; position: relative; padding: 8px;
+            clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
         }
         .skin-card { aspect-ratio: 1; }
         .trail-card { height: 50px; font-size: 0.7rem; font-weight: 700; }
 
-        .skin-card:hover, .trail-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); border-color: #fff; }
-        .active-item { border-color: var(--primary) !important; background: rgba(0,242,255,0.1); box-shadow: 0 0 10px rgba(0,242,255,0.3); }
+        .skin-card:hover, .trail-card:hover { border-color: var(--primary); background: rgba(0,242,255,0.1); }
+        .active-item { border-color: var(--primary) !important; background: rgba(0,242,255,0.2); box-shadow: inset 0 0 10px rgba(0,242,255,0.5); }
+
+
+
+        /* --- HYPEX CAMPAIGN: LIGHTWEIGHT WAVE LEVEL SELECT --- */
+        .campaign-shell {
+            width: 100%; height: 100%; overflow-y: auto; padding-right: 4px;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .campaign-header {
+            display: flex; justify-content: space-between; align-items: center; gap: 8px;
+            border: 1px solid rgba(0,242,255,0.18); background: rgba(0,0,0,0.38);
+            padding: 8px 10px; font-size: 0.68rem; letter-spacing: 1px; color: #bffcff;
+            clip-path: polygon(0 7px,7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%);
+        }
+        .campaign-list { display: grid; grid-template-columns: 1fr; gap: 8px; }
+        .campaign-card {
+            position: relative; min-height: 66px; cursor: pointer; overflow: hidden;
+            border: 1px solid rgba(0,242,255,0.22); background: linear-gradient(135deg, rgba(0,242,255,0.08), rgba(255,255,255,0.02));
+            padding: 9px 10px; text-align: left; transition: 0.16s ease;
+            clip-path: polygon(0 10px,10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%);
+        }
+        .campaign-card:hover { transform: translateY(-1px); border-color: var(--primary); background: rgba(0,242,255,0.14); }
+        .campaign-card::before {
+            content:''; position:absolute; inset:0; pointer-events:none; opacity:0.35;
+            background: repeating-linear-gradient(90deg, transparent 0 14px, rgba(255,255,255,0.06) 15px, transparent 17px);
+        }
+        .campaign-title { position:relative; font-weight:900; font-size:0.92rem; letter-spacing:1px; color:#fff; text-transform:uppercase; }
+        .campaign-song { position:relative; margin-top:2px; font-size:0.62rem; color:#a9eef8; font-weight:800; letter-spacing:1px; }
+        .campaign-meta { position:relative; margin-top:7px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+        .campaign-chip {
+            font-size:0.55rem; letter-spacing:1px; font-weight:900; padding:2px 6px; color:#020408;
+            background: var(--primary); border:1px solid rgba(255,255,255,0.2);
+        }
+        .campaign-chip.dark { color:#cdefff; background: rgba(0,0,0,0.55); border-color:rgba(0,242,255,0.25); }
+        .campaign-best { position:absolute; top:8px; right:10px; font-size:0.7rem; font-weight:900; color:var(--gold); }
+        .campaign-help { font-size:0.56rem; color:#788; text-align:left; line-height:1.35; padding: 0 2px 4px; }
 
         /* SHOP STYLES */
         .price-tag {
-            position: absolute; bottom: 2px; width: 100%; text-align: center;
-            font-size: 0.6rem; color: #ffd700; background: rgba(0,0,0,0.8);
-            border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;
+            position: absolute; bottom: 0; width: 100%; text-align: center;
+            font-size: 0.6rem; color: #000; background: var(--gold);
+            font-weight: 900; letter-spacing: 1px;
         }
-        .owned-tag { color: #0f0; font-size: 0.6rem; margin-top: 5px; }
+        .owned-tag { color: var(--primary); font-size: 0.6rem; margin-top: 5px; font-weight: 900; }
 
         /* CONTROLS ROW */
-        .meta-row { display: flex; justify-content: space-between; align-items: center; padding: 0 5px; }
-        .color-picker-wrap { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 4px 12px; border-radius: 20px; }
-        input[type="color"] { border: none; width: 24px; height: 24px; background: none; cursor: pointer; }
-        .stat-badge { font-size: 0.75rem; color: #ffd700; font-weight: bold; letter-spacing: 0.5px; }
+        .meta-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(0,242,255,0.05); border: 1px solid rgba(0,242,255,0.2); }
+        .color-picker-wrap { display: flex; align-items: center; gap: 8px; }
+        input[type="color"] { border: 1px solid var(--primary); width: 24px; height: 24px; background: #000; cursor: pointer; padding: 0; }
+        .stat-badge { font-size: 0.75rem; color: var(--gold); font-weight: 900; letter-spacing: 1px; display: flex; gap: 5px; align-items: center;}
 
         /* PLAY BUTTONS */
-        .btn-row { display: flex; gap: 8px; width: 100%; margin-top: 5px; }
+        .btn-row { display: flex; gap: 8px; width: 100%; margin-top: 8px; }
         button {
-            flex: 1; background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff; padding: 12px; font-weight: 800; cursor: pointer;
-            text-transform: uppercase; border-radius: 8px; transition: 0.2s; font-size: 0.9rem;
+            flex: 1; background: rgba(0,242,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--primary); padding: 12px; font-weight: 900; cursor: pointer;
+            text-transform: uppercase; transition: 0.2s; font-size: 0.9rem; letter-spacing: 1px;
+            clip-path: polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
         }
-        button:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); border-color: var(--primary); }
+        button:hover { background: var(--primary); color: #000; box-shadow: 0 0 15px var(--primary); }
         .btn-demon { border-color: var(--danger); color: var(--danger); background: rgba(255, 0, 85, 0.05); }
-        .btn-demon:hover { background: var(--danger); color: white; box-shadow: 0 0 25px var(--danger); }
-        .btn-2p { border-color: #ffaa00; color: #ffaa00; flex: 100%; margin-top: 5px; background: rgba(255, 170, 0, 0.05); }
-        .btn-2p:hover { background: #ffaa00; color: black; box-shadow: 0 0 20px #ffaa00; }
+        .btn-demon:hover { background: var(--danger); color: #000; box-shadow: 0 0 25px var(--danger); }
 
-        .mode-sub { display: block; font-size: 0.55rem; opacity: 0.7; font-weight: 400; text-transform: none; margin-top: 2px; }
-        .close-btn { margin-top: 20px; width: 150px; background: var(--primary); color: #000; border: none; font-weight: 900; }
+        .mode-sub { display: block; font-size: 0.55rem; opacity: 0.8; font-weight: 700; color: #fff; margin-top: 2px; }
+        .close-btn { margin-top: 20px; width: 200px; background: var(--primary); color: #000; border: none; font-weight: 900; }
 
         /* HUD */
         #hud { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: 0.3s; }
         .progress-container {
             position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            width: 30%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;
+            width: 30%; height: 4px; background: rgba(255,255,255,0.2); overflow: hidden;
+            border: 1px solid rgba(0,242,255,0.5);
         }
         #p-bar { height: 100%; width: 0%; background: var(--primary); box-shadow: 0 0 10px var(--primary); }
         #score-display { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; font-weight: 900; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
@@ -222,32 +273,21 @@
 
         /* QUEST HUD (NEW) */
         #quest-hud {
-            position: absolute;
-            top: 62px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.65rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            color: #aaa;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-            background: rgba(0,0,0,0.35);
-            border: 1px solid rgba(255,255,255,0.12);
-            padding: 6px 10px;
-            border-radius: 12px;
-            max-width: 85%;
-            text-align: center;
-            display: none;
+            position: absolute; top: 62px; left: 50%; transform: translateX(-50%);
+            font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; color: #aaa;
+            background: rgba(0,0,0,0.8); border: 1px solid var(--border);
+            padding: 6px 15px; text-align: center; display: none;
+            clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
         }
         #quest-hud span { color: var(--primary); }
 
         /* PAUSE MENU */
         #paused-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
             z-index: 150; display: none; flex-direction: column; justify-content: center; align-items: center;
         }
-        .pause-title { font-size: 3rem; font-weight: 900; color: white; letter-spacing: 5px; margin-bottom: 20px; }
+        .pause-title { font-size: 3rem; font-weight: 900; color: var(--primary); letter-spacing: 10px; margin-bottom: 20px; text-shadow: 0 0 20px var(--primary);}
 
         /* NOTIFICATIONS */
         #notify-area {
@@ -255,52 +295,49 @@
             display: flex; flex-direction: column; gap: 10px; align-items: center; z-index: 300; pointer-events: none;
         }
         .notify-box {
-            background: rgba(0, 30, 60, 0.95); border: 1px solid #00ff88;
-            padding: 10px 25px; border-radius: 30px; color: #fff; font-weight: bold;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4); text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;
-            animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-in 3s forwards;
+            background: rgba(0, 20, 30, 0.95); border: 1px solid var(--primary);
+            padding: 10px 25px; color: var(--primary); font-weight: 900;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem;
+            animation: slideIn 0.2s ease-out, fadeOut 0.3s ease-in 3s forwards;
+            clip-path: polygon(0 10px, 10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
         }
         @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }
 
         .pulse-bg { animation: pulse 0.4s ease-out; }
-        @keyframes pulse { 0% { background-color: #1a1a2e; } 100% { background-color: #050508; } }
+        @keyframes pulse { 0% { background-color: #112233; } 100% { background-color: #050508; } }
 
         /* CUSTOM FILE INPUT */
-        .file-input-wrapper {
-            position: relative; overflow: hidden; display: inline-block;
-        }
+        .file-input-wrapper { position: relative; overflow: hidden; display: inline-block; }
         .file-input-wrapper input[type=file] {
             font-size: 100px; position: absolute; left: 0; top: 0; opacity: 0; cursor: pointer;
         }
         .btn-upload {
-            background: rgba(255,255,255,0.1); border: 1px solid #aaa; color: #fff;
-            padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; cursor: pointer; display: inline-block;
+            background: rgba(0,242,255,0.1); border: 1px solid var(--border); color: var(--primary);
+            padding: 5px 10px; font-size: 0.7rem; cursor: pointer; display: inline-block; font-weight: 900;
+            clip-path: polygon(0 5px, 5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
         }
-        .btn-upload:hover { background: var(--primary); color: #000; border-color: var(--primary); }
+        .btn-upload:hover { background: var(--primary); color: #000; }
 
         /* QUEST PANEL (NEW) */
         .quest-box {
-            background: rgba(0,242,255,0.06);
-            border: 1px dashed rgba(0,242,255,0.45);
-            border-radius: 12px;
-            padding: 10px 12px;
-            text-align: left;
-            font-size: 0.75rem;
-            color: #ccc;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(0,242,255,0.3);
+            padding: 10px 12px; text-align: left; font-size: 0.75rem; color: #ccc;
+            margin-top: 10px;
         }
-        .quest-title { color: var(--primary); font-weight: 900; letter-spacing: 1px; font-size: 0.75rem; }
-        .quest-row { margin-top: 6px; display: flex; justify-content: space-between; gap: 10px; }
-        .quest-row .qtext { flex: 1; color: #ddd; }
-        .quest-row .qprog { color: #aaa; white-space: nowrap; }
-        .quest-row .qrew  { color: #ffd700; white-space: nowrap; font-weight: 900; }
+        .quest-title { color: var(--primary); font-weight: 900; letter-spacing: 1px; font-size: 0.75rem; border-bottom: 1px solid rgba(0,242,255,0.3); padding-bottom: 5px; margin-bottom: 5px;}
+        .quest-row { margin-top: 6px; display: flex; justify-content: space-between; gap: 10px; align-items: center;}
+        .quest-row .qtext { flex: 1; color: #ddd; font-weight: 700;}
+        .quest-row .qprog { color: #aaa; white-space: nowrap; font-family: monospace;}
+        .quest-row .qrew  { color: #000; background: var(--gold); padding: 2px 6px; white-space: nowrap; font-weight: 900; font-size: 0.6rem;}
     </style>
 </head>
 <body>
 
     <div id="loading-overlay">
         <div class="spinner"></div>
-        <div style="font-weight:bold; letter-spacing:2px;">LOADING...</div>
+        <div style="font-weight:900; letter-spacing:4px; color: var(--primary);">INITIALIZING...</div>
     </div>
 
     <div id="error-log"></div>
@@ -308,97 +345,92 @@
 
     <div id="paused-overlay">
         <div class="pause-title">PAUSED</div>
-        <div style="display:flex; gap:10px;">
-            <button onclick="togglePause()" style="width:120px; border-color:var(--primary)">RESUME</button>
-            <button onclick="showMenu()" style="width:120px; background:rgba(255,0,0,0.1); border-color:#f55; color:#f55">QUIT</button>
+        <div style="display:flex; gap:15px;">
+            <button onclick="togglePause()" style="width:140px;">RESUME</button>
+            <button onclick="showMenu()" style="width:140px;" class="btn-demon">ABORT</button>
         </div>
     </div>
 
     <div id="help-panel" class="overlay-panel">
-        <h1 style="margin-bottom:20px;">HOW TO PLAY</h1>
+        <h1 style="margin-bottom:20px; color: var(--primary);">DATABASE: CONTROLS</h1>
         <div class="help-content">
             <div class="help-section">
-                <div class="help-title">Controls</div>
-                <div class="help-text"><span class="key-badge">SPACE</span> / <span class="key-badge">CLICK</span> to fly.</div>
+                <div class="help-title">Navigation</div>
+                <div class="help-text"><span class="key-badge">SPACE</span> or <span class="key-badge">LMB</span> to ascend. Release to descend.</div>
             </div>
             <div class="help-section">
-                <div class="help-title">Portals</div>
-                <div class="help-text">Blue: Speed, Pink: Mini, Orange: Gravity</div>
+                <div class="help-title">Anomalies (Portals)</div>
+                <div class="help-text">Blue: Speed | Pink: Miniaturize | Orange: Invert Gravity</div>
             </div>
         </div>
-        <button class="close-btn" onclick="toggleHelp()">GOT IT</button>
+        <button class="close-btn" onclick="toggleHelp()">ACKNOWLEDGE</button>
     </div>
 
     <div id="settings-panel" class="overlay-panel">
-        <h1 style="margin-bottom:20px;">SETTINGS</h1>
+        <h1 style="margin-bottom:20px; color: var(--primary);">SYSTEM CONFIG</h1>
         <div class="settings-grid">
-            <div class="setting-item"><span class="setting-label" style="color:var(--primary)">FPS OPTIMIZER</span><div class="setting-toggle" onclick="toggleSet(this, 'optimize')"></div></div>
-            <div class="setting-item"><span class="setting-label">MUSIC</span><div class="setting-toggle on" onclick="toggleSet(this, 'music')"></div></div>
-            <div class="setting-item"><span class="setting-label">SFX</span><div class="setting-toggle on" onclick="toggleSet(this, 'sfx')"></div></div>
-            <div class="setting-item"><span class="setting-label">SHOW ORBS</span><div class="setting-toggle on" onclick="toggleSet(this, 'showOrbs')"></div></div>
-            <div class="setting-item"><span class="setting-label">AUTO-RETRY</span><div class="setting-toggle" onclick="toggleSet(this, 'autoRetry')"></div></div>
-            <div class="setting-item"><span class="setting-label">PARTICLES</span><div class="setting-toggle on" id="tog-particles" onclick="toggleSet(this, 'particles')"></div></div>
-            <div class="setting-item"><span class="setting-label">SHAKE EFFECTS</span><div class="setting-toggle on" onclick="toggleSet(this, 'shake')"></div></div>
-            <div class="setting-item"><span class="setting-label">PULSE EFFECTS</span><div class="setting-toggle on" id="tog-pulse" onclick="toggleSet(this, 'pulse')"></div></div>
-            <div class="setting-item"><span class="setting-label">BACKGROUND STARS</span><div class="setting-toggle on" id="tog-bgStars" onclick="toggleSet(this, 'bgStars')"></div></div>
-            <div class="setting-item"><span class="setting-label">FPS COUNTER</span><div class="setting-toggle" onclick="toggleSet(this, 'fps')"></div></div>
+            <div class="setting-item"><span class="setting-label">PERFORMANCE MODE</span><div class="setting-toggle" onclick="toggleSet(this, 'optimize')"></div></div>
+            <div class="setting-item"><span class="setting-label">AUDIO: MUSIC</span><div class="setting-toggle on" onclick="toggleSet(this, 'music')"></div></div>
+            <div class="setting-item"><span class="setting-label">AUDIO: SFX</span><div class="setting-toggle on" onclick="toggleSet(this, 'sfx')"></div></div>
+            <div class="setting-item"><span class="setting-label">RENDER ORBS</span><div class="setting-toggle on" onclick="toggleSet(this, 'showOrbs')"></div></div>
+            <div class="setting-item"><span class="setting-label">AUTO-REDEPLOY</span><div class="setting-toggle" onclick="toggleSet(this, 'autoRetry')"></div></div>
+            <div class="setting-item"><span class="setting-label">FX: PARTICLES</span><div class="setting-toggle on" id="tog-particles" onclick="toggleSet(this, 'particles')"></div></div>
+            <div class="setting-item"><span class="setting-label">FX: CAMERA SHAKE</span><div class="setting-toggle on" onclick="toggleSet(this, 'shake')"></div></div>
+            <div class="setting-item"><span class="setting-label">FX: BEAT PULSE</span><div class="setting-toggle on" id="tog-pulse" onclick="toggleSet(this, 'pulse')"></div></div>
+            <div class="setting-item"><span class="setting-label">FX: STARFIELD</span><div class="setting-toggle on" id="tog-bgStars" onclick="toggleSet(this, 'bgStars')"></div></div>
+            <div class="setting-item"><span class="setting-label">HUD: FPS</span><div class="setting-toggle" onclick="toggleSet(this, 'fps')"></div></div>
 
-            <div class="setting-item" style="grid-column: span 2; display: flex; justify-content: center; background: rgba(0,242,255,0.05); border: 1px dashed var(--primary);">
+            <div class="setting-item" style="grid-column: span 2; display: flex; justify-content: center; background: rgba(0,0,0,0.5); border: 1px dashed var(--primary);">
                 <div class="file-input-wrapper">
-                    <button class="btn-upload">📂 LOAD MP3 FILE</button>
+                    <button class="btn-upload">IMPORT MP3 DATA</button>
                     <input type="file" id="custom-music-input" accept="audio/mp3,audio/wav,audio/mpeg">
                 </div>
-                <div id="music-status" style="margin-left:10px; font-size:0.7rem; color:#aaa; align-self:center;">NO FILE LOADED</div>
+                <div id="music-status" style="margin-left:15px; font-size:0.7rem; color:var(--primary); align-self:center; font-weight:bold;">AWAITING FILE...</div>
             </div>
 
         </div>
-        <button class="close-btn" onclick="toggleSettings()">CLOSE</button>
+        <button class="close-btn" onclick="toggleSettings()">APPLY</button>
     </div>
 
-
     <div id="hyperpass-panel" class="overlay-panel">
-        <h1 style="margin-bottom:10px; color:var(--primary)">HYPERPASS</h1>
-        <div class="glass-panel" style="max-width:700px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; gap:10px; flex-wrap:wrap;">
+        <h1 style="margin-bottom:10px; color:var(--primary); text-shadow: 0 0 10px var(--primary);">HYPERPASS SECURE TERMINAL</h1>
+        <div class="cyber-panel" style="max-width:700px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; gap:10px; flex-wrap:wrap; border-bottom: 1px solid rgba(0,242,255,0.2); padding-bottom: 15px;">
                 <div style="text-align:left;">
-                    <div style="font-weight:900; letter-spacing:2px;">BATTLE-PASS STYLE PROGRESSION</div>
+                    <div style="font-weight:900; letter-spacing:2px; color: var(--primary);">TIERED PROGRESSION SYSTEM</div>
                     <div style="font-size:0.7rem; color:#aaa; margin-top:4px;">
-                        Unlock quests + exclusive rewards by owning the HyperPass.
+                        Unlock classified quests and exclusive tech.
                     </div>
                 </div>
-                <div style="display:flex; gap:8px; align-items:center;">
-                    <div class="stat-badge" id="hp-orb-badge">🟡 0</div>
-                    <button id="hp-buy-btn" onclick="HP.buy()" style="flex:0; min-width:180px; border-color:var(--gold); color:var(--gold);">
-                        BUY HYPERPASS (🟡1000)
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div class="stat-badge" id="hp-orb-badge" style="background: rgba(0,0,0,0.5); padding: 5px 10px;">🟡 0</div>
+                    <button id="hp-buy-btn" onclick="HP.buy()" style="flex:0; min-width:180px; border-color:var(--gold); color:#000; background: var(--gold);">
+                        AUTHORIZE (🟡1000)
                     </button>
                 </div>
             </div>
 
-            <div style="display:flex; gap:10px; width:100%; margin-top:10px; flex-wrap:wrap; justify-content:space-between;">
-                <div style="text-align:left; font-size:0.8rem;">
-                    <div><b>STATUS:</b> <span id="hp-status">LOCKED</span></div>
-                    <div style="margin-top:4px;"><b>LEVEL:</b> <span id="hp-level">0</span> <span style="color:#666;">(XP: <span id="hp-xp">0</span>)</span></div>
+            <div style="display:flex; gap:10px; width:100%; flex-wrap:wrap; justify-content:space-between; text-align: left;">
+                <div style="font-size:0.8rem; background: rgba(0,242,255,0.05); padding: 10px; border: 1px solid rgba(0,242,255,0.2);">
+                    <div><b>CLEARANCE:</b> <span id="hp-status" style="color: var(--danger);">DENIED</span></div>
+                    <div style="margin-top:4px;"><b>SECURITY TIER:</b> <span id="hp-level" style="color: var(--primary);">0</span> <span style="color:#666;">(DATA: <span id="hp-xp">0</span>)</span></div>
                 </div>
-                <div style="text-align:right; font-size:0.7rem; color:#aaa; max-width:280px;">
-                    Daily + Weekly quests appear only after purchase.
+                <div style="font-size:0.7rem; color:#888; max-width:280px; text-align: right;">
+                    Directives (Daily/Weekly) will populate upon authorization.
                 </div>
             </div>
 
-            <div style="width:100%; margin-top:12px; text-align:left;">
-                <div style="font-weight:900; letter-spacing:1px; color:var(--primary);">QUEST LOG</div>
-                <div id="hp-quest-list" style="margin-top:6px; font-size:0.75rem; color:#ccc;">LOCKED — BUY THE HYPERPASS</div>
+            <div style="width:100%; text-align:left;">
+                <div style="font-weight:900; letter-spacing:1px; color:var(--primary); border-bottom: 1px solid rgba(0,242,255,0.3); padding-bottom: 5px;">DIRECTIVE LOG</div>
+                <div id="hp-quest-list" style="margin-top:10px; font-size:0.75rem; color:#ccc;">AUTHORIZATION REQUIRED</div>
             </div>
 
-            <div style="width:100%; margin-top:14px; text-align:left;">
-                <div style="font-weight:900; letter-spacing:1px; color:var(--primary);">REWARDS</div>
-                <div id="hp-reward-grid" style="margin-top:8px; display:grid; grid-template-columns:repeat(auto-fill, minmax(110px, 1fr)); gap:8px;"></div>
-                <div style="margin-top:8px; font-size:0.7rem; color:#777;">
-                    HyperPass reward skins are exclusive and cannot be bought in the normal shop.
-                </div>
+            <div style="width:100%; text-align:left;">
+                <div style="font-weight:900; letter-spacing:1px; color:var(--primary); border-bottom: 1px solid rgba(0,242,255,0.3); padding-bottom: 5px;">TECH UNLOCKS</div>
+                <div id="hp-reward-grid" style="margin-top:10px; display:grid; grid-template-columns:repeat(auto-fill, minmax(110px, 1fr)); gap:10px;"></div>
             </div>
         </div>
-
-        <button class="close-btn" onclick="openHyperPass()">CLOSE</button>
+        <button class="close-btn" onclick="openHyperPass()">EXIT TERMINAL</button>
     </div>
 
     <div id="ui-layer">
@@ -406,75 +438,110 @@
         <div id="help-btn" class="icon-btn" onclick="toggleHelp()">?</div>
         <div id="pause-btn" class="icon-btn" onclick="togglePause()">||</div>
 
-        <div id="menu" class="glass-panel hidden">
+        <div id="menu" class="cyber-panel hidden">
+            <!-- HEADER / PREVIEW -->
             <div class="preview-wrapper">
                 <canvas id="preview-canvas"></canvas>
-                <div style="position:absolute; bottom:5px; left:10px; font-size:0.6rem; color:#666; font-weight:bold;">LIVE PREVIEW</div>
+                <div style="position:absolute; bottom:5px; left:10px; font-size:0.6rem; color:var(--primary); font-weight:bold; letter-spacing: 2px;">LIVE TELEMETRY</div>
                 <div style="position:absolute; top:10px; right:15px; text-align:right;">
-                    <h1 style="margin:0; font-size:2.2rem; line-height:1; font-style:italic;">HYPER WAVE</h1>
-                    <div style="font-size:0.6rem; letter-spacing:3px; color:#888; font-weight:bold;">AERO EDITION</div>
-                    <div id="user-display" style="font-size:0.8rem; color:var(--primary); margin-top:2px;"></div>
+                    <h1 style="margin:0; font-size:2.2rem; line-height:1; font-style:italic; text-shadow: 2px 2px 0px rgba(0,242,255,0.3);">HYPER WAVE</h1>
+                    <div style="font-size:0.6rem; letter-spacing:4px; color:#fff; font-weight:bold;">AERO EDITION</div>
+                    <div id="user-display" style="font-size:0.7rem; color:var(--primary); margin-top:4px; font-family: monospace;">STATUS: ONLINE</div>
                 </div>
             </div>
 
-            <div class="quest-box">
-                <div class="quest-title">QUEST BOARD</div>
-                <div id="quest-menu-list" style="margin-top:6px;">LOADING...</div>
-            </div>
-
-            <div class="garage-container">
-                <div class="tabs">
-                    <div class="tab-btn active" onclick="setTab('icons', this)">SHOP: ICONS</div>
-                    <div class="tab-btn" onclick="setTab('trails', this)">SHOP: TRAILS</div>
+            <!-- 2-COLUMN DASHBOARD LAYOUT -->
+            <div class="dashboard-grid">
+                
+                <!-- COLUMN 1: GARAGE (SHIPS / TRAILS) -->
+                <div class="cyber-container">
+                    <div class="tabs">
+                        <div class="tab-btn active" onclick="setTab('icons', this)">SHIPS</div>
+                        <div class="tab-btn" onclick="setTab('trails', this)">TRAILS</div>
+                    </div>
+                    <div class="garage-content" id="tab-icons"><div class="skin-grid" id="skin-list"></div></div>
+                    <div class="garage-content" id="tab-trails" style="display:none;"><div class="trail-grid" id="trail-list"></div></div>
                 </div>
-                <div class="garage-content" id="tab-icons"><div class="skin-grid" id="skin-list"></div></div>
-                <div class="garage-content" id="tab-trails" style="display:none;"><div class="trail-grid" id="trail-list"></div></div>
+
+                <!-- COLUMN 2: PLAY MODES & QUESTS -->
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    
+                    <div class="cyber-container" style="height: auto;">
+                        <div class="tabs">
+                            <div class="tab-btn active" onclick="setModeTab('infinite', this)">ENDLESS</div>
+                            <div class="tab-btn" onclick="setModeTab('levels', this)">CAMPAIGN</div>
+                        </div>
+                        
+                        <div class="garage-content" id="mode-infinite" style="display: flex; flex-direction: column; justify-content: center; overflow: hidden;">
+                            <div class="btn-row">
+                                <button onclick="initGame('easy')">EASY<span class="mode-sub" id="score-easy">0%</span></button>
+                                <button onclick="initGame('medium')">NORMAL<span class="mode-sub" id="score-medium">0%</span></button>
+                            </div>
+                            <div class="btn-row">
+                                <button onclick="initGame('hard')">HARD<span class="mode-sub" id="score-hard">0%</span></button>
+                                <button class="btn-demon" onclick="initGame('demon')">DEMON<span class="mode-sub" id="score-demon">0%</span></button>
+                            </div>
+                        </div>
+
+                        <div class="garage-content" id="mode-levels" style="display: none; overflow: hidden;">
+                            <div class="campaign-shell">
+                                <div class="campaign-header">
+                                    <span>HYPEX PACK // WAVE CAMPAIGN</span>
+                                    <span style="color:var(--gold); font-weight:900;">AUDIO-SYNC</span>
+                                </div>
+                                <div class="campaign-list" id="campaign-level-list"></div>
+                                <div class="campaign-help">
+                                    Put the matching MP3s in <b>assets/music/</b>. The campaign locks movement and visual pulses to <b>audio.currentTime</b>. Use <b>[</b>/<b>]</b> during a level to adjust offset by 10ms.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quest-box" style="margin-top: 0;">
+                        <div class="quest-title">ACTIVE DIRECTIVES</div>
+                        <div id="quest-menu-list">FETCHING DATA...</div>
+                    </div>
+
+                </div>
             </div>
 
+            <!-- FOOTER META ROW -->
             <div class="meta-row">
-                <div class="color-picker-wrap">
-                    <span style="font-size:0.7rem; font-weight:bold; color:#aaa;">COLOR</span>
-                    <input type="color" id="pColor" value="#00f2ff">
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div class="color-picker-wrap">
+                        <span style="font-size:0.7rem; font-weight:900; color:var(--primary);">HUE</span>
+                        <input type="color" id="pColor" value="#00f2ff">
+                    </div>
+                    <div class="stat-badge" id="orb-total">🟡 0</div>
+                    <div class="stat-badge" id="unlock-total" style="color:#aaa"></div>
                 </div>
-                <div class="stat-badge" id="orb-total">🟡 0</div>
-                <div class="stat-badge" id="unlock-total" style="color:#aaa"></div>
+                
+                <button id="hyperpass-btn" onclick="openHyperPass()" style="margin: 0; padding: 10px 20px; border-color: var(--gold); color: #000; background: var(--gold); width: auto;">
+                    HYPERPASS<span class="mode-sub" id="hyperpass-status" style="color: #000; opacity: 1;">LOCKED</span>
+                </button>
             </div>
-
-            <div class="btn-row">
-                <button onclick="initGame('easy')">EASY<span class="mode-sub" id="score-easy">0%</span></button>
-                <button onclick="initGame('medium')">NORMAL<span class="mode-sub" id="score-medium">0%</span></button>
-                <button onclick="initGame('hard')">HARD<span class="mode-sub" id="score-hard">0%</span></button>
-                <button class="btn-demon" onclick="initGame('demon')">DEMON<span class="mode-sub" id="score-demon">0%</span></button>
-            </div>
-            <div class="btn-row">
-                <button onclick="initGame('easy', true)">2P EASY<span class="mode-sub">LOCAL CO-OP</span></button>
-                <button onclick="initGame('medium', true)">2P NORMAL<span class="mode-sub">LOCAL CO-OP</span></button>
-            </div>
-            <button class="btn-2p" id="hyperpass-btn" onclick="openHyperPass()">
-                HYPERPASS<span class="mode-sub" id="hyperpass-status">LOCKED</span>
-            </button>
         </div>
 
-        <div id="dead" class="glass-panel hidden">
-            <h1 style="color:var(--danger); font-size:3rem; margin:0; -webkit-text-fill-color:var(--danger);">CRASHED</h1>
+        <div id="dead" class="cyber-panel hidden" style="max-width: 400px; border-color: var(--danger); box-shadow: 0 0 20px rgba(255,0,85,0.2);">
+            <h1 style="color:var(--danger); font-size:2.5rem; margin:0; letter-spacing: 5px;">HULL BREACH</h1>
             <h2 id="death-pct" style="font-size:4rem; margin:10px 0;">0%</h2>
-            <div style="color:#aaa; font-size:0.8rem; margin-bottom:15px; letter-spacing:1px;">PRESS SPACE TO RESTART</div>
+            <div style="color:#aaa; font-size:0.8rem; margin-bottom:15px; letter-spacing:2px; font-weight: bold;">PRESS SPACE TO RETRY</div>
             <div class="btn-row">
-                <button onclick="showMenu()">MENU</button>
-                <button onclick="restart()" style="border-color:var(--primary); background:rgba(0,242,255,0.1);">RETRY</button>
+                <button onclick="showMenu()" style="border-color: #666; color: #aaa;">ABORT</button>
+                <button onclick="restart()" style="border-color:var(--primary); background:rgba(0,242,255,0.1);">REDEPLOY</button>
             </div>
         </div>
 
-        <div id="win" class="glass-panel hidden">
-            <h1 style="color:#0f0; font-size:3rem; margin:0; -webkit-text-fill-color:#0f0;">LEVEL COMPLETE</h1>
-            <div class="btn-row"><button onclick="showMenu()">CONTINUE</button></div>
+        <div id="win" class="cyber-panel hidden" style="max-width: 400px; border-color: #0f0; box-shadow: 0 0 20px rgba(0,255,0,0.2);">
+            <h1 style="color:#0f0; font-size:2.5rem; margin:0; letter-spacing: 5px;">SECTOR SECURED</h1>
+            <div class="btn-row" style="margin-top: 20px;"><button onclick="showMenu()" style="border-color: #0f0; color: #0f0;">PROCEED</button></div>
         </div>
     </div>
 
     <div id="hud">
         <div class="progress-container"><div id="p-bar"></div></div>
         <div id="score-display">0%</div>
-        <div id="quest-hud">QUEST: <span>...</span></div>
+        <div id="quest-hud">DIRECTIVE: <span>...</span></div>
         <div id="orb-hud">🟡 0</div>
         <div id="fps-hud"></div>
     </div>
@@ -492,32 +559,22 @@
         const ctx = canvas.getContext('2d');
         const pCvs = document.getElementById('preview-canvas');
         const pCtx = pCvs.getContext('2d');
-        const loader = document.getElementById('loading-overlay');
 
         // --- GLOBALS ---
         let frames = 0;
-        let customTrack = null; // HOLDS CUSTOM MP3
+        let customTrack = null; 
 
         // Local Data 
         let data = {
-            // Economy
-            orbs: 100, // Everyone starts with at least 100 Orbs
-
-            // Cosmetics
+            orbs: 100, 
             unlocks: ['wave','box','solid'],
             best: { easy:0, medium:0, hard:0, demon:0 },
             activeSkin: 'wave',
             activeTrail: 'solid',
             color: '#00f2ff',
-
-            // HyperPass (NEW)
             hasHyperPass: false,
             hp: { level: 0, xp: 0, lastDaily: "", lastWeekly: "" },
-
-            // Quest Log (HyperPass-gated) (NEW)
             quests: { daily: [], weekly: [] },
-
-            // Persistent counters used by quests
             stats: { orbsCollected: 0, portalsHit: 0 }
         };
 
@@ -531,7 +588,6 @@
             if(saved) {
                 try {
                     let parsed = JSON.parse(saved);
-                    // Merging arrays properly
                     let unlocks = parsed.unlocks || data.unlocks;
                     let quests = parsed.quests || data.quests;
                     data = { ...data, ...parsed };
@@ -539,7 +595,6 @@
                     data.quests = quests;
                 } catch(e) {}
             }
-            // Fallbacks
             if(typeof data.orbs !== 'number') data.orbs = 100;
             if(!data.best) data.best = { easy:0, medium:0, hard:0, demon:0 };
             if(!data.hp) data.hp = { level: 0, xp: 0, lastDaily: "", lastWeekly: "" };
@@ -547,6 +602,8 @@
             if(!Array.isArray(data.quests.daily)) data.quests.daily = [];
             if(!Array.isArray(data.quests.weekly)) data.quests.weekly = [];
             if(!data.stats) data.stats = { orbsCollected: 0, portalsHit: 0 };
+            if(!data.campaignBest) data.campaignBest = {};
+            if(!data.campaignOffsets) data.campaignOffsets = {};
         }
 
         function startSession() {
@@ -555,10 +612,9 @@
             document.getElementById('menu').classList.remove('hidden');
             document.getElementById('settings-btn').style.display='flex';
             document.getElementById('help-btn').style.display='flex';
-            document.getElementById('user-display').innerText = 'PILOT: OFFLINE';
             document.getElementById('pColor').value = data.color || '#00f2ff';
 
-            HP.sync(); // HyperPass quest + progression refresh
+            HP.sync(); 
             updateMenu();
         }
 
@@ -578,7 +634,7 @@
             customTrack.loop = true;
             document.getElementById('music-status').innerText = file.name.toUpperCase().substring(0, 15) + "...";
             document.getElementById('music-status').style.color = "#00ff00";
-            notify('CUSTOM TRACK LOADED');
+            notify('DATA STREAM LINKED');
         });
 
         const CFG = {
@@ -592,12 +648,9 @@
         // HYPERPASS + QUEST SYSTEM
         // -----------------------------
         const HYPERPASS_COST = 1000;
-
-        // HyperPass progression tuning
         const HP_MAX_LEVEL = 20;
         const HP_XP_PER_LEVEL = 1000;
 
-        // HyperPass-exclusive reward track (skins)
         const HP_REWARDS = [
             { level: 1,  skinId: 'hp_neon'   , name: 'Neon' },
             { level: 4,  skinId: 'hp_prism'  , name: 'Prism' },
@@ -610,14 +663,14 @@
 
         const HP_QUEST_POOL = {
             daily: [
-                { key: "orbsTotal",    min: 30,  max: 120,  xp: (n)=> 200, label: (n)=>`Collect ${n} Orbs (Total)` },
-                { key: "portalsTotal", min: 8,   max: 30,   xp: (n)=> 220, label: (n)=>`Hit ${n} Portals (Total)` },
-                { key: "pctRun",       min: 35,  max: 90,   xp: (n)=> 240, label: (n)=>`Reach ${n}% in a Run` }
+                { key: "orbsTotal",    min: 30,  max: 120,  xp: (n)=> 200, label: (n)=>`Acquire ${n} Orbs` },
+                { key: "portalsTotal", min: 8,   max: 30,   xp: (n)=> 220, label: (n)=>`Enter ${n} Portals` },
+                { key: "pctRun",       min: 35,  max: 90,   xp: (n)=> 240, label: (n)=>`Reach ${n}% in one run` }
             ],
             weekly: [
-                { key: "orbsTotal",    min: 250, max: 800,  xp: (n)=> 900,  label: (n)=>`Collect ${n} Orbs (Total)` },
-                { key: "portalsTotal", min: 80,  max: 220,  xp: (n)=> 950,  label: (n)=>`Hit ${n} Portals (Total)` },
-                { key: "pctRun",       min: 70,  max: 120,  xp: (n)=> 1000, label: (n)=>`Reach ${n}% in a Run` }
+                { key: "orbsTotal",    min: 250, max: 800,  xp: (n)=> 900,  label: (n)=>`Acquire ${n} Orbs` },
+                { key: "portalsTotal", min: 80,  max: 220,  xp: (n)=> 950,  label: (n)=>`Enter ${n} Portals` },
+                { key: "pctRun",       min: 70,  max: 120,  xp: (n)=> 1000, label: (n)=>`Reach ${n}% in one run` }
             ]
         };
 
@@ -642,13 +695,8 @@
             const q = pool[Math.floor(Math.random()*pool.length)];
             const target = hpRandInt(q.min, q.max);
             return {
-                kind,
-                key: q.key,
-                target,
-                xp: Number(q.xp(target)),
-                progress: 0,
-                text: q.label(target),
-                done: false
+                kind, key: q.key, target, xp: Number(q.xp(target)),
+                progress: 0, text: q.label(target), done: false
             };
         }
 
@@ -661,20 +709,15 @@
 
         const HP = {
             sync(){
-                // Minimum starter orbs
                 data.orbs = Math.max(100, Number(data.orbs || 0));
 
                 if(!data.hasHyperPass){
-                    data.hp.level = 0;
-                    data.hp.xp = 0;
-                    data.quests.daily = [];
-                    data.quests.weekly = [];
-                    this.renderUI(0);
-                    return;
+                    data.hp.level = 0; data.hp.xp = 0;
+                    data.quests.daily = []; data.quests.weekly = [];
+                    this.renderUI(0); return;
                 }
 
-                const today = hpDateKey();
-                const week = hpWeekKey();
+                const today = hpDateKey(); const week = hpWeekKey();
 
                 if(data.hp.lastDaily !== today){
                     data.hp.lastDaily = today;
@@ -687,25 +730,20 @@
 
                 if(data.hp.level < 1) data.hp.level = 1;
 
-                this.renderUI(0);
-                saveData();
+                this.renderUI(0); saveData();
             },
 
             buy(){
-                if(data.hasHyperPass){ notify('HYPERPASS ALREADY OWNED'); return; }
-                if(data.orbs < HYPERPASS_COST){ notify('NEED 1000 ORBS'); MusicSys.playFX('miss'); return; }
-                if(!confirm('Buy HyperPass for 1000 Orbs?')) return;
+                if(data.hasHyperPass){ notify('ALREADY AUTHORIZED'); return; }
+                if(data.orbs < HYPERPASS_COST){ notify('INSUFFICIENT ORBS'); MusicSys.playFX('miss'); return; }
+                if(!confirm('Authorize HyperPass for 1000 Orbs?')) return;
 
-                data.orbs -= HYPERPASS_COST;
-                data.hasHyperPass = true;
+                data.orbs -= HYPERPASS_COST; data.hasHyperPass = true;
                 data.hp = { level: 1, xp: 0, lastDaily: "", lastWeekly: "" };
                 data.quests = { daily: [], weekly: [] };
 
-                notify('HYPERPASS UNLOCKED');
-                MusicSys.playFX('coin');
-
-                this.sync();
-                updateMenu(); 
+                notify('CLEARANCE GRANTED'); MusicSys.playFX('coin');
+                this.sync(); updateMenu(); 
             },
 
             addXP(xp){
@@ -713,21 +751,17 @@
                 data.hp.xp += Math.max(0, Math.floor(xp));
 
                 while(data.hp.level < HP_MAX_LEVEL && data.hp.xp >= HP_XP_PER_LEVEL){
-                    data.hp.xp -= HP_XP_PER_LEVEL;
-                    data.hp.level += 1;
-                    notify('HYPERPASS LEVEL UP: ' + data.hp.level);
-                    MusicSys.playFX('coin');
+                    data.hp.xp -= HP_XP_PER_LEVEL; data.hp.level += 1;
+                    notify('TIER UPGRADED: ' + data.hp.level); MusicSys.playFX('coin');
 
                     const reward = HP_REWARDS.find(r => r.level === data.hp.level);
                     if(reward && !data.unlocks.includes(reward.skinId)){
                         data.unlocks.push(reward.skinId);
-                        notify('REWARD UNLOCKED: ' + reward.name.toUpperCase());
+                        notify('TECH ACQUIRED: ' + reward.name.toUpperCase());
                     }
                 }
 
-                saveData();
-                this.renderUI(0);
-                updateMenu();
+                saveData(); this.renderUI(0); updateMenu();
             },
 
             checkCompletions(currentPct=0){
@@ -739,25 +773,18 @@
                 all.forEach(q=>{
                     if(q.done) return;
                     const prog = hpGetProgress(q, currentPct);
-
                     if(q.key === "pctRun") q.progress = prog;
 
                     if(prog >= q.target){
-                        q.done = true;
-                        changed = true;
-
-                        this.addXP(q.xp);
-                        notify(`QUEST COMPLETE +${q.xp}XP`);
-                        MusicSys.playFX('coin');
+                        q.done = true; changed = true;
+                        this.addXP(q.xp); notify(`DIRECTIVE MET +${q.xp}XP`); MusicSys.playFX('coin');
                     }
                 });
 
                 if(changed){
                     data.quests.daily = data.quests.daily.map(q => q.done ? hpRollQuest('daily') : q);
                     data.quests.weekly = data.quests.weekly.map(q => q.done ? hpRollQuest('weekly') : q);
-
-                    saveData();
-                    this.renderUI(currentPct);
+                    saveData(); this.renderUI(currentPct);
                 }
             },
 
@@ -776,27 +803,27 @@
                 if(hpOrbBadge) hpOrbBadge.innerText = '🟡 ' + data.orbs;
 
                 if(!data.hasHyperPass){
-                    if(menuList) menuList.innerHTML = '<div style="color:#aaa;">LOCKED — BUY HYPERPASS (🟡1000)</div>';
+                    if(menuList) menuList.innerHTML = '<div style="color:#666; font-weight: bold; margin-top: 10px;">LOCKED — REQUIRE CLEARANCE (🟡1000)</div>';
                     if(hud) hud.style.display = 'none';
-                    if(hpStatus) hpStatus.innerText = 'LOCKED';
+                    if(hpStatus) { hpStatus.innerText = 'DENIED'; hpStatus.style.color = 'var(--danger)'; }
                     if(hpLevel) hpLevel.innerText = '0';
                     if(hpXp) hpXp.innerText = '0';
-                    if(hpQuestList) hpQuestList.innerHTML = 'LOCKED — BUY THE HYPERPASS';
+                    if(hpQuestList) hpQuestList.innerHTML = 'AUTHORIZATION REQUIRED';
                     if(hpBuyBtn) hpBuyBtn.style.display = 'inline-flex';
-                    if(hpBtnStatus) hpBtnStatus.innerText = 'LOCKED';
+                    if(hpBtnStatus) { hpBtnStatus.innerText = 'LOCKED'; hpBtnStatus.style.color = '#000'; }
                 } else {
-                    if(hpStatus) hpStatus.innerText = 'OWNED';
+                    if(hpStatus) { hpStatus.innerText = 'GRANTED'; hpStatus.style.color = '#0f0'; }
                     if(hpLevel) hpLevel.innerText = String(data.hp.level || 1);
                     if(hpXp) hpXp.innerText = String(data.hp.xp || 0);
                     if(hpQuestList) hpBuyBtn.style.display = 'none';
-                    if(hpBtnStatus) hpBtnStatus.innerText = 'OWNED';
+                    if(hpBtnStatus) { hpBtnStatus.innerText = 'ACTIVE'; hpBtnStatus.style.color = '#000'; }
 
                     const daily = data.quests.daily || [];
                     const weekly = data.quests.weekly || [];
 
                     const renderQuestRows = (arr, title) => {
                         const frag = document.createElement('div');
-                        frag.innerHTML = `<div style="margin-top:8px; font-weight:900; color:#aaa; font-size:0.7rem; letter-spacing:1px;">${title}</div>`;
+                        frag.innerHTML = `<div style="margin-top:8px; font-weight:900; color:var(--primary); font-size:0.65rem; letter-spacing:1px;">[ ${title} ]</div>`;
                         arr.forEach(q=>{
                             const prog = hpGetProgress(q, currentPct);
                             const row = document.createElement('div');
@@ -828,7 +855,7 @@
                         if(active){
                             const prog = hpGetProgress(active, currentPct);
                             hud.style.display = 'block';
-                            hud.innerHTML = `QUEST: <span>${active.text}</span> (${Math.min(prog,active.target)}/${active.target})`;
+                            hud.innerHTML = `DIRECTIVE: <span>${active.text}</span> (${Math.min(prog,active.target)}/${active.target})`;
                         } else {
                             hud.style.display = 'none';
                         }
@@ -844,24 +871,23 @@
                         const lockedByLevel = !owned && (data.hp.level || 0) < r.level;
 
                         const div = document.createElement('div');
-                        div.style.border = '1px solid rgba(255,255,255,0.15)';
-                        div.style.borderRadius = '10px';
+                        div.style.border = '1px solid ' + (owned ? '#0f0' : (lockedByLevel ? '#333' : 'var(--primary)'));
                         div.style.padding = '10px';
-                        div.style.background = 'rgba(255,255,255,0.04)';
+                        div.style.background = owned ? 'rgba(0,255,0,0.05)' : 'rgba(0,0,0,0.5)';
                         div.style.textAlign = 'center';
                         div.style.cursor = 'pointer';
                         div.innerHTML = `
-                            <div style="font-weight:900; font-size:0.8rem; color:${owned ? '#0f0' : '#aaa'};">
-                                LV ${r.level}
+                            <div style="font-weight:900; font-size:0.8rem; color:${owned ? '#0f0' : (lockedByLevel ? '#555' : 'var(--primary)')};">
+                                TIER ${r.level}
                             </div>
                             <div style="margin-top:6px; font-size:0.75rem;">${r.name}</div>
-                            <div style="margin-top:6px; font-size:0.65rem; color:${owned ? '#0f0' : '#666'};">
+                            <div style="margin-top:6px; font-size:0.65rem; color:${owned ? '#0f0' : '#888'};">
                                 ${owned ? 'OWNED' : (lockedByLevel ? 'LOCKED' : 'READY')}
                             </div>
                         `;
                         div.onclick = ()=>{
-                            if(owned){ data.activeSkin = r.skinId; saveData(); updateMenu(); notify('EQUIPPED'); }
-                            else { notify('UNLOCK VIA HYPERPASS'); }
+                            if(owned){ data.activeSkin = r.skinId; saveData(); updateMenu(); notify('TECH EQUIPPED'); }
+                            else { notify('REQUIRE HIGHER TIER'); }
                         };
                         hpRewardGrid.appendChild(div);
                     });
@@ -880,7 +906,7 @@
             if(willOpen) HP.renderUI(0);
         }
 
-        // --- SKINS & TRAILS ---
+        // --- SKINS & TRAILS (Original untouched arrays) ---
         const skins = [
             { id:'wave', name:'Classic', price:0, type:'free', desc:'Default', draw:(c,s)=>{ c.moveTo(s,0); c.lineTo(-s,s); c.lineTo(-s/2,0); c.lineTo(-s,-s); } },
             { id:'box', name:'Cube', price:0, type:'free', desc:'Default', draw:(c,s)=>{ c.rect(-s/1.5,-s/1.5, s*1.3, s*1.3); } },
@@ -917,18 +943,16 @@
             { id:'rainbow', name:'Rainbow', price:2500, desc:'2500 Orbs' }
         ];
 
-        // --- GAME OBJECTS ---
-        let players=[]; let isMulti=false;
+        // --- GAME OBJECTS (1P Version) ---
+        let player = null;
         let walls=[], portals=[], particles=[], orbs=[], edgeFlashes=[];
         let state='MENU', diff='medium', camX=0, speedMult=1, godMode=0, runOrbs=0;
         let beatTimer=0, previewTick=0, fpsTime=0;
         let bgStars = []; for(let i=0;i<60;i++) bgStars.push({x:Math.random()*2000, y:Math.random()*1000, s:Math.random()*2, sp:Math.random()*2});
         let previewTrailPts = [];
-
-        // --- RUN TRACKERS ---
         let runPortals = 0;
 
-        // --- UNIFIED AUDIO SYSTEM ---
+        // --- AUDIO SYSTEM ---
         const MusicSys = {
             ctx: null, isPlaying: false, timer: null,
             init(){
@@ -952,8 +976,7 @@
             },
             playNote(mode){
                 if(!this.ctx || !SETTINGS.music) return;
-                const osc = this.ctx.createOscillator();
-                const g = this.ctx.createGain();
+                const osc = this.ctx.createOscillator(); const g = this.ctx.createGain();
                 const C_Maj = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
                 const C_Min = [261.63, 293.66, 311.13, 349.23, 392.00, 415.30, 466.16, 523.25];
                 const Chaos = [130.81, 146.83, 155.56, 164.81, 196.00, 220.00];
@@ -982,7 +1005,6 @@
                 } else if(type==='miss') {
                     o.type='sawtooth'; o.frequency.value=150;
                     g.gain.setValueAtTime(0.05, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime+0.1);
-                    o.connect(g); g.connect(this.ctx.currentTime?this.ctx.destination:this.ctx.destination);
                     o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime+0.1);
                 }
             }
@@ -993,14 +1015,450 @@
         const deathSfx = new Audio('geometry-dash-death-sound-effect.mp3');
         let currentBgm = null;
 
-        // --- UI & LOGIC ---
+        // ---------------------------------------------------------
+        // HYPEX PACK: INTEGRATED CAMPAIGN WAVE MODE
+        // Keeps the original Endless mode, garage, quests, settings, and UI.
+        // Campaign uses audio.currentTime as the authoritative clock when MP3s exist.
+        // ---------------------------------------------------------
+        let gameMode = 'endless';
+        let currentLevel = null;
+        let campaignStartedAt = 0;
+        let campaignSectionText = '';
+        let campaignNotice = '';
+        let campaignNoticeTimer = 0;
+        let campaignBeatFlash = 0;
+        let campaignLastBeat = -1;
+        let campaignWinPaid = false;
+
+        const HYPEX_LEVELS = [
+            {
+                id:'fun_games', name:'Fun and Games', artist:'TheFatRat', song:'Unity',
+                audio:'assets/music/thefatrat-unity.mp3', bpm:105, duration:250, pxps:265, gap:240, waveStep:8.0,
+                difficulty:'HARDER', theme:'Prism arcade city', colors:['#00f2ff','#8a5cff','#23ff9d'], bg:['#040718','#0b1538'],
+                sections:[[0,'BOOT SEQUENCE'],[16,'ARCADE LANES'],[45,'PRISM DROP'],[78,'SKYBRIDGE'],[118,'SYNC WAVE'],[168,'UNITY FINALE'],[220,'LAST FLIGHT']],
+                portals:[[31.8,'spd','FLOW BOOST'],[62.4,'mini','MINI PRISM'],[94.8,'inv','MIRROR LANE'],[132.4,'spd','DROP RUSH'],[181.2,'mini','PIXEL TUNNEL']]
+            },
+            {
+                id:'good_times', name:'Good Times', artist:'TheFatRat', song:'Elegy',
+                audio:'assets/music/thefatrat-elegy.mp3', bpm:128, duration:194, pxps:270, gap:250, waveStep:7.7,
+                difficulty:'HARD', theme:'Sunset glass gardens', colors:['#ffd36a','#ff6b9a','#9cf6ff'], bg:['#170a21','#41204e'],
+                sections:[[0,'WARM INTRO'],[15,'SUNSET GLIDE'],[39,'GLASS GARDEN'],[68,'CHOIR LIFT'],[105,'GOLDEN WAVE'],[146,'ELEGY BLOOM'],[176,'SOFT EXIT']],
+                portals:[[28.2,'mini','SOFT MINI'],[54.8,'spd','GOLD RUSH'],[84.0,'inv','SKY FLIP'],[121.0,'mini','LANTERN CUT'],[159.4,'spd','FINAL LIFT']]
+            },
+            {
+                id:'inclined', name:'Inclined', artist:'Creo', song:'Dark Tides',
+                audio:'assets/music/creo-dark-tides.mp3', bpm:85, duration:212, pxps:258, gap:220, waveStep:8.2,
+                difficulty:'INSANE', theme:'Moonlit ocean cliffs', colors:['#3cc8ff','#111d58','#66ffd9'], bg:['#02040b','#081b32'],
+                sections:[[0,'LOW TIDE'],[22,'REEF SLOPE'],[52,'DARK CURRENT'],[88,'MOON BREAK'],[124,'ABYSS WAVE'],[166,'CLIFF RUN'],[198,'SURFACE']],
+                portals:[[34.0,'spd','RIP CURRENT'],[66.7,'mini','REEF MINI'],[99.0,'inv','UNDERTOW'],[139.3,'spd','ABYSS SURGE'],[178.8,'mini','CAVE CUT']]
+            },
+            {
+                id:'vortex', name:'The Vortex', artist:'Slash', song:'Inferno',
+                audio:'assets/music/slash-inferno.mp3', bpm:140, duration:232, pxps:282, gap:205, waveStep:8.7,
+                difficulty:'DEMON', theme:'Inferno spiral core', colors:['#ff4b1f','#ffd166','#9d00ff'], bg:['#100006','#2b0900'],
+                sections:[[0,'IGNITION'],[18,'RING SPIRAL'],[44,'LAVA GEARS'],[74,'INFERNO DROP'],[112,'VORTEX CORE'],[158,'FURNACE WAVE'],[204,'ESCAPE RIFT']],
+                portals:[[24.0,'spd','IGNITE'],[50.8,'mini','CORE MINI'],[80.6,'inv','GRAVITY SPIN'],[118.2,'spd','VORTEX ACCEL'],[151.8,'mini','SAW CAGE'],[190.0,'inv','FINAL FLIP']]
+            },
+            {
+                id:'rage', name:'Rage', artist:'Unknown / Newgrounds', song:'Thunder',
+                audio:'assets/music/thunder.mp3', bpm:150, duration:180, pxps:286, gap:198, waveStep:8.9,
+                difficulty:'DEMON', theme:'Red storm citadel', colors:['#ff0055','#ffd000','#7df9ff'], bg:['#06000b','#260010'],
+                sections:[[0,'STATIC'],[12,'STORM WALL'],[36,'REDLINE'],[62,'THUNDER DROP'],[96,'BLACKOUT'],[130,'RAGE WAVE'],[160,'FINAL STRIKE']],
+                portals:[[18.0,'spd','STATIC BOOST'],[42.4,'mini','SPARK MINI'],[69.0,'inv','LIGHTNING FLIP'],[101.2,'spd','BLACKOUT RUSH'],[136.0,'mini','RED CAGE'],[154.0,'inv','LAST VOLT']]
+            }
+        ];
+
+        function ensureCampaignData(){
+            if(!data.campaignBest) data.campaignBest = {};
+            if(!data.campaignOffsets) data.campaignOffsets = {};
+        }
+
+        function campaignLevel(id){ return HYPEX_LEVELS.find(l => l.id === id) || HYPEX_LEVELS[0]; }
+
+        function renderCampaignList(){
+            ensureCampaignData();
+            const list = document.getElementById('campaign-level-list');
+            if(!list) return;
+            list.innerHTML = '';
+            HYPEX_LEVELS.forEach((lvl, idx)=>{
+                const card = document.createElement('div');
+                card.className = 'campaign-card';
+                const c0 = lvl.colors[0], c1 = lvl.colors[1];
+                card.style.borderColor = c0 + '66';
+                card.style.background = `linear-gradient(135deg, ${c0}20, ${c1}14 55%, rgba(0,0,0,0.48))`;
+                const best = data.campaignBest[lvl.id] || 0;
+                const off = Math.round((data.campaignOffsets[lvl.id] || 0) * 1000);
+                card.innerHTML = `
+                    <div class="campaign-best">${best}%</div>
+                    <div class="campaign-title">${String(idx+1).padStart(2,'0')} // ${lvl.name}</div>
+                    <div class="campaign-song">${lvl.artist} - ${lvl.song}</div>
+                    <div class="campaign-meta">
+                        <span class="campaign-chip" style="background:${c0};">${lvl.difficulty}</span>
+                        <span class="campaign-chip dark">${lvl.theme}</span>
+                        <span class="campaign-chip dark">${lvl.bpm} BPM</span>
+                        <span class="campaign-chip dark">OFFSET ${off}ms</span>
+                    </div>`;
+                card.onclick = () => initCampaign(lvl.id);
+                list.appendChild(card);
+            });
+        }
+
+        function beatLen(lvl){ return 60 / lvl.bpm; }
+        function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+        function lerp(a,b,t){ return a + (b-a)*t; }
+        function easeInOut(t){ return t<0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; }
+        function sectionIndex(lvl, t){
+            let idx = 0;
+            for(let i=0;i<lvl.sections.length;i++) if(t >= lvl.sections[i][0]) idx = i;
+            return idx;
+        }
+        function campaignCenter(lvl, t){
+            const h = Math.max(360, canvas.height || window.innerHeight);
+            const mid = h * 0.5;
+            const b = beatLen(lvl);
+            const beat = t / b;
+            const phrase = Math.floor(beat / 8);
+            const local = (beat % 8) / 8;
+            const sec = sectionIndex(lvl, t);
+            const ampBase = [0.17,0.22,0.25,0.29,0.31,0.26,0.18][sec % 7] * h;
+            let shape = Math.sin(beat * Math.PI * 0.25) * ampBase * 0.52;
+            shape += Math.sin(beat * Math.PI * 0.5 + sec) * ampBase * 0.26;
+            if(sec % 3 === 1) shape += (local < 0.5 ? lerp(-ampBase*0.55, ampBase*0.55, easeInOut(local*2)) : lerp(ampBase*0.55, -ampBase*0.35, easeInOut((local-0.5)*2)));
+            if(sec % 3 === 2) shape += Math.sin(local * Math.PI * 4) * ampBase * 0.25 + (phrase % 2 ? ampBase*0.16 : -ampBase*0.16);
+            if(lvl.id === 'inclined') shape += Math.sin(t*0.18) * h*0.08;
+            if(lvl.id === 'vortex') shape += Math.sin(t*0.72) * h*0.06;
+            if(lvl.id === 'rage') shape += Math.sign(Math.sin(beat*Math.PI*0.5)) * h*0.045;
+            return clamp(mid + shape, lvl.gap/2 + 58, h - lvl.gap/2 - 58);
+        }
+        function campaignGap(lvl, t){
+            const sec = sectionIndex(lvl, t);
+            const b = beatLen(lvl);
+            const beat = t / b;
+            let g = lvl.gap - (sec * 5);
+            if(sec >= 3) g -= 8;
+            if(Math.floor(beat/16)%2) g -= 6;
+            return clamp(g, 182, 268);
+        }
+
+        function buildCampaign(lvl){
+            const px = lvl.pxps;
+            walls = []; portals = []; orbs = []; particles = []; edgeFlashes = [];
+            lvl._beatLines = [];
+            lvl._decor = [];
+            lvl._labels = [];
+            campaignWinPaid = false;
+
+            const step = 0.105;
+            for(let t=-1; t<=lvl.duration+2.5; t+=step){
+                const x = 200 + t*px;
+                walls.push({x, y:campaignCenter(lvl, t), w:Math.max(18, px*step*1.12), gap:campaignGap(lvl, t)});
+            }
+            const b = beatLen(lvl);
+            for(let bi=0; bi<=Math.ceil(lvl.duration/b); bi++){
+                const t = bi*b;
+                lvl._beatLines.push({x:200+t*px, t, major:bi%4===0, phrase:bi%16===0});
+                if(bi%4===0){
+                    const yy = campaignCenter(lvl,t);
+                    orbs.push({x:200+t*px + px*b*0.5, y:clamp(yy + ((bi/4)%2 ? -1:1) * Math.min(80, campaignGap(lvl,t)*0.34), 40, canvas.height-40), c:false});
+                }
+                if(bi%8===0){
+                    lvl._decor.push({x:200+t*px, y:campaignCenter(lvl,t), kind:(bi/8)%5, pulse:bi%16===0});
+                }
+            }
+            lvl.sections.forEach((s,i)=> lvl._labels.push({x:200+s[0]*px, text:s[1], idx:i}));
+            lvl.portals.forEach((p,i)=>{
+                const x = 200 + p[0]*px;
+                portals.push({x, y:campaignCenter(lvl,p[0]), type:p[1], label:p[2], active:true, campaign:true, t:p[0], idx:i});
+                lvl._decor.push({x:x-px*0.45, y:campaignCenter(lvl,p[0]), kind:9, pulse:true, portal:p[1]});
+            });
+        }
+
+        function initCampaign(id){
+            ensureCampaignData();
+            gameMode = 'campaign';
+            currentLevel = campaignLevel(id);
+            currentLevel.offset = data.campaignOffsets[currentLevel.id] || 0;
+            diff = 'medium';
+            MusicSys.init();
+            MusicSys.stop();
+            if(currentBgm) { currentBgm.pause(); currentBgm = null; }
+            runPortals = 0; runOrbs = 0; speedMult = 1; godMode = 75;
+            campaignStartedAt = performance.now();
+            campaignNotice = currentLevel.name.toUpperCase();
+            campaignNoticeTimer = 150;
+            campaignLastBeat = -1;
+            campaignBeatFlash = 0;
+
+            buildCampaign(currentLevel);
+
+            if(SETTINGS.music) {
+                currentBgm = new Audio(currentLevel.audio);
+                currentBgm.preload = 'auto';
+                currentBgm.currentTime = Math.max(0, -currentLevel.offset);
+                currentBgm.play().catch(()=>{ notify('ADD MP3 FOR TRUE SYNC'); });
+            }
+
+            document.getElementById('menu').classList.add('hidden');
+            document.getElementById('dead').classList.add('hidden');
+            document.getElementById('win').classList.add('hidden');
+            document.getElementById('hud').style.opacity=1;
+            document.getElementById('settings-btn').style.display='none';
+            document.getElementById('help-btn').style.display='none';
+            document.getElementById('pause-btn').style.display='flex';
+            document.getElementById('orb-hud').innerText='🟡 0';
+            state = 'PLAY';
+            player = {
+                x:200, y:canvas.height/2, vy:currentLevel.waveStep, size:20,
+                inv:false, mini:false, trail:[], rotation:0,
+                skin:data.activeSkin, trailType:data.activeTrail,
+                color:document.getElementById('pColor').value, holding:false
+            };
+            camX = 0; lastTime = 0; accumulator = 0;
+            HP.renderUI(0);
+            requestAnimationFrame(gameLoop);
+        }
+
+        function campaignTime(){
+            if(!currentLevel) return 0;
+            if(currentBgm && currentBgm.readyState >= 2 && !currentBgm.paused) return clamp(currentBgm.currentTime + (currentLevel.offset || 0), 0, currentLevel.duration + 1);
+            return clamp((performance.now() - campaignStartedAt)/1000 + (currentLevel.offset || 0), 0, currentLevel.duration + 1);
+        }
+        function campaignPct(){
+            if(!currentLevel) return 0;
+            return clamp(Math.floor((campaignTime()/currentLevel.duration)*100), 0, 100);
+        }
+
+        function updateCampaignPhysics(){
+            const lvl = currentLevel; if(!lvl || !player) return;
+            const t = campaignTime();
+            const b = beatLen(lvl);
+            const beat = Math.floor(t / b);
+            if(beat !== campaignLastBeat){
+                campaignLastBeat = beat;
+                campaignBeatFlash = (beat % 4 === 0) ? 18 : 8;
+                if(SETTINGS.pulse && beat % 4 === 0){ document.body.classList.remove('pulse-bg'); void document.body.offsetWidth; document.body.classList.add('pulse-bg'); }
+            }
+            if(campaignBeatFlash>0) campaignBeatFlash--;
+            if(campaignNoticeTimer>0) campaignNoticeTimer--;
+            if(godMode>0) godMode--;
+
+            player.x = 200 + t * lvl.pxps;
+            camX = player.x - 200;
+            let dir = player.holding ? -1 : 1; if(player.inv) dir *= -1;
+            const step = (player.mini ? lvl.waveStep*0.88 : lvl.waveStep);
+            player.vy = step * dir;
+            player.y += player.vy;
+            player.y = clamp(player.y, 8, canvas.height-8);
+            let tr = player.holding ? -45 : 45; if(player.inv) tr *= -1;
+            player.rotation += (tr-player.rotation)*0.18;
+            player.trail.push({x:player.x, y:player.y, r:player.rotation});
+            if(player.trail.length>34) player.trail.shift();
+
+            if(player.y < 12 || player.y > canvas.height-12) crash();
+            const hSize = (player.size||20)*0.5;
+            for(let w of walls){
+                if(w.x > player.x + 46) break;
+                if(w.x < player.x - 70) continue;
+                const top=w.y-w.gap/2, bot=w.y+w.gap/2;
+                if(player.x+hSize > w.x && player.x-hSize < w.x+w.w) {
+                    if(player.y-hSize < top || player.y+hSize > bot) crash();
+                    else if(SETTINGS.shake && (Math.abs((player.y-hSize)-top)<24 || Math.abs((player.y+hSize)-bot)<24)) {
+                        if(Math.random()<0.08) edgeFlashes.push({x:w.x, y:Math.abs((player.y-hSize)-top)<24 ? top : bot, t:8});
+                    }
+                }
+            }
+            portals.forEach(pt=>{
+                if(!pt.active) return;
+                if(Math.abs(player.x-pt.x)<lvl.pxps*0.13 && Math.abs(player.y-pt.y)<82) {
+                    pt.active=false; runPortals++; data.stats.portalsHit = (data.stats.portalsHit||0) + 1;
+                    MusicSys.playFX('portal');
+                    campaignNotice = (pt.label || pt.type).toUpperCase(); campaignNoticeTimer = 96;
+                    if(pt.type==='inv') player.inv = !player.inv;
+                    if(pt.type==='mini') { player.mini=!player.mini; player.size=player.mini?12:20; }
+                    if(pt.type==='spd') { campaignBeatFlash = 22; }
+                }
+            });
+            orbs.forEach(o=>{
+                if(o.c) return;
+                if(Math.abs(player.x-o.x)<lvl.pxps*0.12 && Math.abs(player.y-o.y)<38) {
+                    o.c=true; runOrbs++; document.getElementById('orb-hud').innerText='🟡 '+runOrbs;
+                    data.stats.orbsCollected = (data.stats.orbsCollected||0) + 1; MusicSys.playFX('coin');
+                }
+            });
+
+            const pct = campaignPct();
+            document.getElementById('p-bar').style.width=pct+'%';
+            document.getElementById('score-display').innerText=pct+'%';
+            HP.renderUI(pct); HP.checkCompletions(pct);
+            if(pct>=100 && state==='PLAY'){
+                state='WIN'; if(currentBgm) currentBgm.pause(); MusicSys.stop();
+                data.orbs += runOrbs;
+                data.campaignBest[lvl.id] = 100;
+                saveData(); renderCampaignList();
+                document.getElementById('win').classList.remove('hidden');
+                document.getElementById('hud').style.opacity=0;
+                document.getElementById('pause-btn').style.display='none';
+                HP.renderUI(100);
+            }
+        }
+
+        function adjustCampaignOffset(delta){
+            if(gameMode !== 'campaign' || !currentLevel) return;
+            ensureCampaignData();
+            currentLevel.offset = clamp((currentLevel.offset || 0) + delta, -2, 2);
+            data.campaignOffsets[currentLevel.id] = currentLevel.offset;
+            saveData();
+            campaignNotice = `OFFSET ${Math.round(currentLevel.offset*1000)}MS`;
+            campaignNoticeTimer = 90;
+            renderCampaignList();
+        }
+
+        function drawCampaignBackground(lvl, t){
+            const bg = ctx.createLinearGradient(0,0,0,canvas.height);
+            bg.addColorStop(0, lvl.bg[0]); bg.addColorStop(1, lvl.bg[1]);
+            ctx.fillStyle = bg; ctx.fillRect(0,0,canvas.width,canvas.height);
+            const flash = campaignBeatFlash/28;
+            if(flash>0){ ctx.fillStyle = lvl.colors[0] + Math.floor(flash*35).toString(16).padStart(2,'0'); ctx.fillRect(0,0,canvas.width,canvas.height); }
+
+            ctx.save();
+            const par = (camX*0.08) % 180;
+            if(lvl.id === 'good_times'){
+                ctx.fillStyle='rgba(255,210,120,0.12)'; ctx.beginPath(); ctx.arc(canvas.width*0.78, canvas.height*0.24, 70+Math.sin(t)*4, 0, Math.PI*2); ctx.fill();
+                for(let k=0;k<3;k++){ ctx.fillStyle=`rgba(255,180,120,${0.10-k*0.025})`; ctx.beginPath(); ctx.moveTo(-50,canvas.height*(0.72+k*0.08)); for(let x=-50;x<canvas.width+80;x+=80){ ctx.quadraticCurveTo(x+40-par*(k+1)*0.25, canvas.height*(0.64+k*0.07)+Math.sin(x*0.01+t)*16, x+80, canvas.height*(0.72+k*0.08)); } ctx.lineTo(canvas.width+100,canvas.height); ctx.lineTo(-50,canvas.height); ctx.fill(); }
+            } else if(lvl.id === 'inclined'){
+                ctx.fillStyle='rgba(160,220,255,0.16)'; ctx.beginPath(); ctx.arc(canvas.width*0.78, canvas.height*0.2, 42, 0, Math.PI*2); ctx.fill();
+                for(let k=0;k<4;k++){ ctx.strokeStyle=`rgba(60,200,255,${0.11-k*0.018})`; ctx.lineWidth=2; ctx.beginPath(); for(let x=-40;x<canvas.width+60;x+=24){ const y=canvas.height*(0.70+k*0.06)+Math.sin((x+camX*0.08)*0.025+t*1.4+k)*8; if(x<0)ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.stroke(); }
+            } else if(lvl.id === 'vortex'){
+                ctx.translate(canvas.width*0.63, canvas.height*0.5); ctx.rotate(t*0.12);
+                for(let r=70;r<Math.max(canvas.width,canvas.height);r+=58){ ctx.strokeStyle = r%116===0 ? 'rgba(255,80,30,0.18)' : 'rgba(157,0,255,0.14)'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.stroke(); }
+            } else if(lvl.id === 'rage'){
+                for(let i=0;i<7;i++){ ctx.fillStyle=`rgba(255,0,85,${0.05+i*0.006})`; const x=(i*170 - par*2)%(canvas.width+180)-90; ctx.fillRect(x,0,80,canvas.height); }
+                if(Math.floor(t*2)%5===0){ ctx.strokeStyle='rgba(255,230,80,0.33)'; ctx.lineWidth=2; ctx.beginPath(); const lx=canvas.width*(0.25+0.5*((Math.sin(t*9)+1)/2)); ctx.moveTo(lx,0); ctx.lineTo(lx-30,canvas.height*.25); ctx.lineTo(lx+25,canvas.height*.44); ctx.lineTo(lx-15,canvas.height*.78); ctx.stroke(); }
+            } else {
+                ctx.strokeStyle='rgba(0,242,255,0.11)'; ctx.lineWidth=1;
+                for(let x=-180;x<canvas.width+180;x+=45){ ctx.beginPath(); ctx.moveTo(x-par,0); ctx.lineTo(x-par+canvas.height*0.35,canvas.height); ctx.stroke(); }
+                ctx.fillStyle='rgba(0,0,0,0.20)';
+                for(let x=-80;x<canvas.width+100;x+=65){ const h=80+((x+Math.floor(camX*0.04))%120); ctx.fillRect(x-par*0.6,canvas.height-h,42,h); }
+            }
+            ctx.restore();
+        }
+
+        function drawCampaign(){
+            const lvl = currentLevel; if(!lvl){ return; }
+            const t = campaignTime();
+            drawCampaignBackground(lvl, t);
+            ctx.save();
+            if(state==='OVER' && SETTINGS.shake) ctx.translate((Math.random()-0.5)*8, (Math.random()-0.5)*8);
+            ctx.translate(-Math.floor(camX), 0);
+            const minX = camX-160, maxX = camX+canvas.width+260;
+            const visibleWalls = walls.filter(w => w.x > minX-80 && w.x < maxX+80);
+            const c0=lvl.colors[0], c1=lvl.colors[1], c2=lvl.colors[2];
+
+            // beat grid
+            lvl._beatLines.forEach(bl=>{
+                if(bl.x<minX || bl.x>maxX) return;
+                ctx.globalAlpha = bl.phrase ? 0.42 : (bl.major ? 0.25 : 0.10);
+                ctx.strokeStyle = bl.phrase ? c2 : c0; ctx.lineWidth = bl.phrase ? 3 : (bl.major ? 2 : 1);
+                ctx.beginPath(); ctx.moveTo(bl.x, 0); ctx.lineTo(bl.x, canvas.height); ctx.stroke();
+            });
+            ctx.globalAlpha=1;
+
+            // deco: visible, low-cost vector props
+            lvl._decor.forEach(d=>{
+                if(d.x<minX-120 || d.x>maxX+120) return;
+                ctx.save(); ctx.translate(d.x,d.y); ctx.globalAlpha = d.pulse ? 0.75 : 0.45;
+                ctx.strokeStyle = d.kind===9 ? c2 : (d.kind%2 ? c1 : c0); ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth=2;
+                if(d.kind===9){
+                    for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(-80+i*18,-42+i*6); ctx.lineTo(-32+i*18,-10+i*6); ctx.lineTo(-80+i*18,22+i*6); ctx.stroke(); }
+                } else if(lvl.id==='vortex'){
+                    ctx.rotate((d.x*0.002+t)*0.9); for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(0,0,34+i*14,0.3*i,Math.PI*1.45+0.3*i); ctx.stroke(); }
+                } else if(lvl.id==='inclined'){
+                    ctx.beginPath(); ctx.moveTo(-48,48); ctx.lineTo(-16,-36); ctx.lineTo(18,38); ctx.lineTo(48,-28); ctx.stroke();
+                } else if(lvl.id==='good_times'){
+                    ctx.beginPath(); ctx.arc(0,0,22,0,Math.PI*2); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-42,0); ctx.lineTo(42,0); ctx.moveTo(0,-42); ctx.lineTo(0,42); ctx.stroke();
+                } else if(lvl.id==='rage'){
+                    ctx.beginPath(); ctx.moveTo(-30,-38); ctx.lineTo(4,-4); ctx.lineTo(-10,0); ctx.lineTo(30,38); ctx.stroke();
+                } else {
+                    ctx.strokeRect(-26,-26,52,52); ctx.beginPath(); ctx.moveTo(0,-42); ctx.lineTo(42,0); ctx.lineTo(0,42); ctx.lineTo(-42,0); ctx.closePath(); ctx.stroke();
+                }
+                ctx.restore();
+            });
+
+            // corridor fills and outlines
+            if(visibleWalls.length>1){
+                ctx.shadowBlur = 0;
+                ctx.beginPath(); visibleWalls.forEach((w,i)=>{ const y=w.y-w.gap/2; if(i===0)ctx.moveTo(w.x,y); else ctx.lineTo(w.x,y); });
+                ctx.lineTo(visibleWalls[visibleWalls.length-1].x,-260); ctx.lineTo(visibleWalls[0].x,-260); ctx.closePath();
+                ctx.fillStyle='rgba(3,5,12,0.92)'; ctx.fill(); ctx.strokeStyle=c0; ctx.lineWidth=3; ctx.stroke();
+                ctx.beginPath(); visibleWalls.forEach((w,i)=>{ const y=w.y+w.gap/2; if(i===0)ctx.moveTo(w.x,y); else ctx.lineTo(w.x,y); });
+                ctx.lineTo(visibleWalls[visibleWalls.length-1].x,canvas.height+260); ctx.lineTo(visibleWalls[0].x,canvas.height+260); ctx.closePath();
+                ctx.fillStyle='rgba(3,5,12,0.92)'; ctx.fill(); ctx.strokeStyle=c1; ctx.lineWidth=3; ctx.stroke();
+                ctx.globalAlpha=0.55; ctx.fillStyle=c2;
+                for(let i=2;i<visibleWalls.length;i+=7){
+                    const w=visibleWalls[i], top=w.y-w.gap/2, bot=w.y+w.gap/2;
+                    ctx.beginPath(); ctx.moveTo(w.x-14,top); ctx.lineTo(w.x,top+24); ctx.lineTo(w.x+14,top); ctx.fill();
+                    ctx.beginPath(); ctx.moveTo(w.x-14,bot); ctx.lineTo(w.x,bot-24); ctx.lineTo(w.x+14,bot); ctx.fill();
+                }
+                ctx.globalAlpha=1;
+            }
+
+            // section names
+            lvl._labels.forEach(l=>{
+                if(l.x<minX || l.x>maxX) return;
+                ctx.save(); ctx.globalAlpha=0.92; ctx.fillStyle='rgba(0,0,0,0.55)'; ctx.fillRect(l.x+10,72,230,30);
+                ctx.strokeStyle=c0; ctx.strokeRect(l.x+10,72,230,30); ctx.fillStyle='#fff'; ctx.font='900 16px Exo 2, Arial'; ctx.fillText(l.text, l.x+22, 93); ctx.restore();
+            });
+
+            // portals: big, obvious, labeled, with approach arrow
+            portals.forEach(pt=>{
+                if(pt.x<minX-120 || pt.x>maxX+120 || !pt.active) return;
+                const pc = pt.type==='inv' ? '#ffaa00' : pt.type==='mini' ? '#ff4dff' : '#00f2ff';
+                ctx.save(); ctx.translate(pt.x,pt.y); ctx.globalAlpha=0.95;
+                ctx.strokeStyle=pc; ctx.lineWidth=5; ctx.beginPath(); ctx.ellipse(0,0,38,68,0,0,Math.PI*2); ctx.stroke();
+                ctx.lineWidth=2; ctx.globalAlpha=0.45; ctx.beginPath(); ctx.ellipse(0,0,54,86,0,0,Math.PI*2); ctx.stroke();
+                ctx.globalAlpha=1; ctx.fillStyle='rgba(0,0,0,0.72)'; ctx.fillRect(-76,-96,152,24); ctx.strokeStyle=pc; ctx.strokeRect(-76,-96,152,24);
+                ctx.fillStyle='#fff'; ctx.font='900 12px Exo 2, Arial'; ctx.textAlign='center'; ctx.fillText(pt.label || pt.type.toUpperCase(),0,-79);
+                ctx.fillStyle=pc; ctx.font='900 30px Arial'; ctx.fillText(pt.type==='inv'?'↕':pt.type==='mini'?'MINI':'»',0,10);
+                ctx.restore();
+            });
+
+            if(SETTINGS.showOrbs){
+                orbs.forEach(o=>{ if(o.c || o.x<minX || o.x>maxX) return; ctx.save(); ctx.translate(o.x,o.y); ctx.globalAlpha=0.95; ctx.fillStyle='rgba(255,215,0,0.20)'; ctx.beginPath(); ctx.arc(0,0,22,0,Math.PI*2); ctx.fill(); ctx.strokeStyle='gold'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(0,0,12,0,Math.PI*2); ctx.stroke(); ctx.restore(); });
+            }
+
+            edgeFlashes.forEach((f,i)=>{ if(f.x>minX && f.x<maxX){ ctx.globalAlpha=f.t/8; ctx.fillStyle='#fff'; ctx.fillRect(f.x-2,f.y-18,4,36); } f.t--; if(f.t<=0)edgeFlashes.splice(i,1); });
+            ctx.globalAlpha=1;
+
+            // player/trail
+            if(player && state!=='OVER'){
+                const pCol = player.color;
+                if(player.trailType==='solid'||player.trailType==='rainbow') {
+                    ctx.beginPath(); ctx.lineWidth=player.mini?2:4; ctx.strokeStyle = player.trailType==='rainbow' ? `hsl(${frames*10},100%,55%)` : pCol;
+                    if(player.trail.length) { ctx.moveTo(player.trail[0].x, player.trail[0].y); player.trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); }
+                } else { ctx.fillStyle=pCol; player.trail.forEach(t=>{ ctx.beginPath(); ctx.arc(t.x,t.y,3,0,Math.PI*2); ctx.fill(); }); }
+                ctx.save(); ctx.translate(player.x,player.y); if(player.inv)ctx.scale(1,-1); ctx.rotate(player.rotation*Math.PI/180);
+                if(godMode>0 && Math.floor(godMode/5)%2===0)ctx.globalAlpha=0.5;
+                const sDraw=skins.find(s=>s.id===player.skin)||skins[0]; ctx.beginPath(); sDraw.draw(ctx, player.mini?12:20); ctx.fillStyle=pCol; ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle='white'; ctx.stroke(); ctx.restore();
+            }
+            ctx.restore();
+
+            // HUD callout on top of screen-space
+            if(campaignNoticeTimer>0){
+                ctx.save(); ctx.globalAlpha=Math.min(1,campaignNoticeTimer/18); ctx.fillStyle='rgba(0,0,0,0.70)'; ctx.fillRect(canvas.width/2-160, 104, 320, 36);
+                ctx.strokeStyle=lvl.colors[0]; ctx.strokeRect(canvas.width/2-160,104,320,36); ctx.fillStyle='#fff'; ctx.font='900 16px Exo 2, Arial'; ctx.textAlign='center'; ctx.fillText(campaignNotice, canvas.width/2, 128); ctx.restore();
+            }
+            frames++;
+        }
+
+
+        // --- UI & TABS ---
         function toggleSettings(){ const p=document.getElementById('settings-panel'); p.style.display=p.style.display==='flex'?'none':'flex'; document.getElementById('help-panel').style.display='none'; document.getElementById('hyperpass-panel').style.display='none'; }
         function toggleHelp(){ const p=document.getElementById('help-panel'); p.style.display=p.style.display==='flex'?'none':'flex'; document.getElementById('settings-panel').style.display='none'; document.getElementById('hyperpass-panel').style.display='none'; }
 
         function togglePause(){
             if(state==='PLAY') { state='PAUSE'; document.getElementById('paused-overlay').style.display='flex'; if(currentBgm) currentBgm.pause(); MusicSys.stop(); }
             else if(state==='PAUSE') { state='PLAY'; document.getElementById('paused-overlay').style.display='none';
-            document.getElementById('hyperpass-panel').style.display='none'; if(SETTINGS.music){ if(currentBgm) currentBgm.play(); else MusicSys.start(diff); } }
+            document.getElementById('hyperpass-panel').style.display='none'; if(SETTINGS.music){ if(currentBgm) currentBgm.play(); else if(gameMode!=='campaign') MusicSys.start(diff); } }
         }
 
         function toggleSet(el, k) {
@@ -1020,12 +1478,24 @@
         }
 
         function setTab(t, el){
-            document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-            document.querySelectorAll('.garage-content').forEach(c=>c.style.display='none');
+            const parent = el.parentElement;
+            parent.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+            document.getElementById('tab-icons').style.display='none';
+            document.getElementById('tab-trails').style.display='none';
             document.getElementById('tab-'+t).style.display='block'; el.classList.add('active');
         }
 
-        // --- SHOP LOGIC ---
+        function setModeTab(t, el){
+            const parent = el.parentElement;
+            parent.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+            document.getElementById('mode-infinite').style.display='none';
+            document.getElementById('mode-levels').style.display='none';
+            if(t === 'infinite') document.getElementById('mode-infinite').style.display='flex';
+            if(t === 'levels') document.getElementById('mode-levels').style.display='flex';
+            el.classList.add('active');
+        }
+
+        // --- SHOP/MENU UPDATE ---
         function updateMenu() {
             document.getElementById('score-easy').innerText=data.best.easy+'%';
             document.getElementById('score-medium').innerText=data.best.medium+'%';
@@ -1036,6 +1506,7 @@
 
             HP.sync();
             HP.renderUI(0);
+            renderCampaignList();
 
             const sg=document.getElementById('skin-list'); sg.innerHTML='';
             skins.forEach(s=>{
@@ -1044,7 +1515,7 @@
                 const d=document.createElement('div');
                 d.className='skin-card '+(data.activeSkin===s.id?'active-item':'');
                 if(unlk){
-                    d.innerHTML = `<div class="owned-tag">OWNED</div>`;
+                    d.innerHTML = `<div class="owned-tag">EQUIPPED</div>`;
                     const c=document.createElement('canvas'); c.width=28; c.height=28;
                     const x=c.getContext('2d'); x.translate(14,14); x.fillStyle='white'; x.beginPath(); s.draw(x,8); x.fill();
                     d.appendChild(c);
@@ -1053,15 +1524,14 @@
                     const req = r ? r.level : '?';
                     d.innerHTML = `
                         <div style="font-size:1.4rem; opacity:0.65">🎟️</div>
-                        <div style="font-size:0.6rem; color:#aaa; font-weight:900; letter-spacing:1px;">HYPERPASS</div>
-                        <div class="price-tag">LV ${req}</div>
+                        <div class="price-tag">TIER ${req}</div>
                     `;
                 } else {
                     d.innerHTML=`<div style="font-size:1.5rem; opacity:0.3">🔒</div><div class="price-tag">🟡${s.price}</div>`;
                 }
                 d.onclick=()=>{
                     if(unlk){ data.activeSkin=s.id; saveData(); updateMenu(); }
-                    else if(isHp){ openHyperPass(); notify('UNLOCK VIA HYPERPASS'); }
+                    else if(isHp){ openHyperPass(); notify('UNLOCK IN TERMINAL'); }
                     else { attemptBuy(s); }
                 };
                 sg.appendChild(d);
@@ -1073,7 +1543,7 @@
                 const d=document.createElement('div');
                 d.className='trail-card '+(data.activeTrail===t.id?'active-item':'');
                 if(unlk) {
-                    d.innerHTML=`<span>${t.name}</span><div class="owned-tag">OWNED</div>`;
+                    d.innerHTML=`<span>${t.name}</span><div class="owned-tag">EQUIPPED</div>`;
                 } else {
                     d.innerHTML=`<span style="opacity:0.5">${t.name}</span><div class="price-tag">🟡${t.price}</div>`;
                 }
@@ -1087,16 +1557,16 @@
 
         function attemptBuy(item) {
             if(data.orbs >= item.price) {
-                if(confirm(`Buy ${item.name} for ${item.price} Orbs?`)) {
+                if(confirm(`Acquire ${item.name} for ${item.price} Orbs?`)) {
                     data.orbs -= item.price;
                     data.unlocks.push(item.id);
                     saveData();
                     updateMenu();
-                    notify("PURCHASE SUCCESSFUL");
+                    notify("TRANSACTION COMPLETE");
                     MusicSys.playFX('coin');
                 }
             } else {
-                notify("INSUFFICIENT ORBS");
+                notify("INSUFFICIENT FUNDS");
                 MusicSys.playFX('miss');
             }
         }
@@ -1106,18 +1576,16 @@
             document.getElementById('notify-area').appendChild(n); setTimeout(()=>n.remove(),4000);
         }
 
-        document.getElementById('pColor').addEventListener('change', function() {
-            saveData();
-        });
+        document.getElementById('pColor').addEventListener('change', function() { saveData(); });
 
-        // --- GAME CORE ---
-        function initGame(d, multi=false) {
-            diff=d; isMulti=multi; 
+        // --- GAME CORE (Reverted to 1P exact logic) ---
+        function initGame(d) {
+            gameMode='endless'; currentLevel=null;
+            diff=d; 
             MusicSys.init();
             MusicSys.stop();
             if(currentBgm) { currentBgm.pause(); currentBgm=null; }
 
-            // RUN RESET
             runPortals = 0;
 
             if(SETTINGS.music) {
@@ -1141,35 +1609,25 @@
 
             state='PLAY';
 
-            players=[{
+            player = {
                 x:200, y:canvas.height/2, vy:CFG[d].spd, size:20,
                 inv:false, mini:false, trail:[], rotation:0,
                 skin:data.activeSkin, trailType:data.activeTrail,
                 color:document.getElementById('pColor').value, holding:false
-            }];
-            if(isMulti) {
-                players.push({
-                    x:200, y:canvas.height/2+40, vy:CFG[d].spd, size:20,
-                    inv:false, mini:false, trail:[], rotation:0,
-                    skin:data.activeSkin, trailType:data.activeTrail,
-                    color:'#ffaa00', holding:false
-                });
-            }
+            };
 
             walls=[]; portals=[]; particles=[]; orbs=[]; edgeFlashes=[];
             camX=0; speedMult=1; godMode=60; runOrbs=0;
 
             let cy=canvas.height/2; for(let i=0; i<60; i++) cy=addWall(i*20, cy);
 
-            // RESET LOOP TIME
             lastTime = 0; accumulator = 0;
 
-            // QUEST UI refresh (NEW)
             HP.renderUI(0);
             requestAnimationFrame(gameLoop);
         }
 
-        function restart(){ initGame(diff, isMulti); }
+        function restart(){ if(gameMode==='campaign' && currentLevel) initCampaign(currentLevel.id); else initGame(diff); }
 
         function showMenu(){
             state='MENU'; 
@@ -1222,16 +1680,20 @@
             setTimeout(()=>document.body.classList.remove('glitch-effect'), 200);
 
             data.orbs+=runOrbs;
-            let pct=Math.floor(players[0].x/500);
+            let pct = (gameMode==='campaign' && currentLevel) ? campaignPct() : Math.floor(player.x/500);
 
-            if(!isMulti && pct>data.best[diff]) {
-                data.best[diff]=pct;
+            if(gameMode==='campaign' && currentLevel) {
+                ensureCampaignData();
+                if(pct > (data.campaignBest[currentLevel.id] || 0)) data.campaignBest[currentLevel.id] = pct;
+                renderCampaignList();
+            } else {
+                if(pct>data.best[diff]) data.best[diff]=pct;
             }
 
             saveData();
 
             if(SETTINGS.particles) {
-                players.forEach(p=>{ for(let i=0;i<30;i++) particles.push({x:p.x, y:p.y, vx:(Math.random()-0.5)*15, vy:(Math.random()-0.5)*15, l:1, c:p.color}); });
+                for(let i=0;i<30;i++) particles.push({x:player.x, y:player.y, vx:(Math.random()-0.5)*15, vy:(Math.random()-0.5)*15, l:1, c:player.color});
             }
 
             document.getElementById('death-pct').innerText=pct+'%';
@@ -1240,48 +1702,40 @@
             document.getElementById('pause-btn').style.display='none';
 
             HP.renderUI(pct);
-
             if(SETTINGS.autoRetry) setTimeout(restart, 800);
         }
 
         // --- INPUT ---
-        const handleDown = (pId) => { if(state==='OVER')restart(); if(players[pId]) players[pId].holding=true; };
-        const handleUp = (pId) => { if(players[pId]) players[pId].holding=false; };
+        const handleDown = () => { if(state==='OVER')restart(); if(player) player.holding=true; };
+        const handleUp = () => { if(player) player.holding=false; };
 
-        window.addEventListener('mousedown', ()=>{ if(state==='PLAY') handleDown(0); });
-        window.addEventListener('mouseup', ()=>{ handleUp(0); });
+        window.addEventListener('mousedown', ()=>{ if(state==='PLAY') handleDown(); });
+        window.addEventListener('mouseup', handleUp);
 
         window.addEventListener('touchstart', (e)=>{
-            if(e.target.tagName!=='BUTTON' && e.target.tagName!=='INPUT' && !e.target.classList.contains('skin-card') && !e.target.classList.contains('trail-card')) {
+            if(e.target.tagName!=='BUTTON' && e.target.tagName!=='INPUT' && !e.target.classList.contains('skin-card') && !e.target.classList.contains('trail-card') && !e.target.classList.contains('tab-btn')) {
                 e.preventDefault();
                 if(state==='OVER') restart();
-                if(state==='PLAY') {
-                    for(let i=0; i<e.touches.length; i++){
-                        if(isMulti) {
-                            if(e.touches[i].clientY > window.innerHeight/2) handleDown(1);
-                            else handleDown(0);
-                        } else handleDown(0);
-                    }
-                }
+                if(state==='PLAY') handleDown();
             }
         }, {passive:false});
 
-        window.addEventListener('touchend', ()=>{ handleUp(0); handleUp(1); });
+        window.addEventListener('touchend', handleUp);
 
         window.addEventListener('keydown', (e)=>{
-            if(e.code==='Space') handleDown(0);
-            if(isMulti && (e.code==='ArrowUp'||e.code==='KeyW')) handleDown(1);
+            if(e.code==='Space') handleDown();
             if(e.code==='Escape') togglePause();
+            if(e.code==='BracketLeft') adjustCampaignOffset(-0.01);
+            if(e.code==='BracketRight') adjustCampaignOffset(0.01);
         });
         window.addEventListener('keyup', (e)=>{
-            if(e.code==='Space') handleUp(0);
-            if(isMulti && (e.code==='ArrowUp'||e.code==='KeyW')) handleUp(1);
+            if(e.code==='Space') handleUp();
         });
 
         window.onresize=()=>{ canvas.width=window.innerWidth; canvas.height=window.innerHeight; pCvs.width=pCvs.offsetWidth; pCvs.height=pCvs.offsetHeight; };
         window.onresize();
 
-        // --- FIXED TIMESTEP LOOP ---
+        // --- FIXED TIMESTEP LOOP (Original Physics) ---
         const TIME_STEP = 1000/60;
         let lastTime = 0;
         let accumulator = 0;
@@ -1296,74 +1750,63 @@
 
             if(state!=='PLAY') return;
 
+            if(gameMode==='campaign' && currentLevel) { updateCampaignPhysics(); return; }
+
             if(godMode>0) godMode--;
-            speedMult+=0.0002; const spd=CFG[diff].spd*speedMult; camX=players[0].x-200;
+            speedMult+=0.0002; const spd=CFG[diff].spd*speedMult; camX=player.x-200;
 
             // Player Physics
-            players.forEach(p=>{
-                p.x+=spd;
-                let dir=p.holding?-1:1; if(p.inv)dir*=-1;
-                p.vy=(spd*0.9)*dir; p.y+=p.vy;
-                let tr=p.holding?-45:45; if(p.inv)tr*=-1; p.rotation+=(tr-p.rotation)*0.15;
-                if(Math.floor(p.x)%2===0) { p.trail.push({x:p.x, y:p.y, r:p.rotation}); if(p.trail.length>(isMulti?15:30))p.trail.shift(); }
-            });
+            player.x+=spd;
+            let dir=player.holding?-1:1; if(player.inv)dir*=-1;
+            player.vy=(spd*0.9)*dir; player.y+=player.vy;
+            let tr=player.holding?-45:45; if(player.inv)tr*=-1; player.rotation+=(tr-player.rotation)*0.15;
+            if(Math.floor(player.x)%2===0) { player.trail.push({x:player.x, y:player.y, r:player.rotation}); if(player.trail.length>30)player.trail.shift(); }
 
             // Gen
-            let last=walls[walls.length-1]; if(players[0].x+canvas.width>last.x) addWall(last.x+20, last.y);
+            let last=walls[walls.length-1]; if(player.x+canvas.width>last.x) addWall(last.x+20, last.y);
             if(walls[0].x<camX-100)walls.shift(); if(portals.length>0&&portals[0].x<camX-100)portals.shift();
 
             // Collision
             for(let w of walls) {
                 let top=w.y-w.gap/2, bot=w.y+w.gap/2;
-                players.forEach(p=>{
-                    const hSize = (p.size||20)*0.5;
-                    if(p.x+hSize > w.x && p.x-hSize < w.x+w.w) {
-                        if(p.y-hSize < top || p.y+hSize > bot) crash();
-                        else if(SETTINGS.shake && (Math.abs((p.y-hSize)-top)<30 || Math.abs((p.y+hSize)-bot)<30)) {
-                            if(Math.random()<0.15) { MusicSys.playFX('miss'); edgeFlashes.push({x:w.x, y:top, t:10}); }
-                        }
+                const hSize = (player.size||20)*0.5;
+                if(player.x+hSize > w.x && player.x-hSize < w.x+w.w) {
+                    if(player.y-hSize < top || player.y+hSize > bot) crash();
+                    else if(SETTINGS.shake && (Math.abs((player.y-hSize)-top)<30 || Math.abs((player.y+hSize)-bot)<30)) {
+                        if(Math.random()<0.15) { MusicSys.playFX('miss'); edgeFlashes.push({x:w.x, y:top, t:10}); }
                     }
-                });
+                }
             }
 
             // Portals & Orbs
             portals.forEach(pt=>{
                 if(pt.active) {
-                    players.forEach(p=>{
-                        const pxWin = (pt.type==='spd') ? 24 : 30;
-                        const pyWin = (pt.type==='spd') ? 40 : 50;
-                        if(Math.abs(p.x-pt.x)<pxWin && Math.abs(p.y-pt.y)<pyWin) {
-                            pt.active=false; MusicSys.playFX('portal');
+                    const pxWin = (pt.type==='spd') ? 24 : 30;
+                    const pyWin = (pt.type==='spd') ? 40 : 50;
+                    if(Math.abs(player.x-pt.x)<pxWin && Math.abs(player.y-pt.y)<pyWin) {
+                        pt.active=false; MusicSys.playFX('portal');
 
-                            runPortals++;
-                            if(!isMulti) {
-                                data.stats.portalsHit = (data.stats.portalsHit||0) + 1;
-                            }
+                        runPortals++;
+                        data.stats.portalsHit = (data.stats.portalsHit||0) + 1;
 
-                            if(pt.type==='inv') players.forEach(pl=>pl.inv=!pl.inv);
-                            if(pt.type==='spd') speedMult+=0.13;
-                            if(pt.type==='mini') players.forEach(pl=>{ pl.mini=!pl.mini; pl.size=pl.mini?12:20; });
-                        }
-                    });
+                        if(pt.type==='inv') player.inv = !player.inv;
+                        if(pt.type==='spd') speedMult+=0.13;
+                        if(pt.type==='mini') { player.mini=!player.mini; player.size=player.mini?12:20; }
+                    }
                 }
             });
 
             orbs.forEach(o=>{
                 if(!o.c) {
-                    players.forEach(p=>{
-                        if(Math.abs(p.x-o.x)<30 && Math.abs(p.y-o.y)<30) {
-                            o.c=true; runOrbs++; document.getElementById('orb-hud').innerText='🟡 '+runOrbs; MusicSys.playFX('coin');
-
-                            if(!isMulti) {
-                                data.stats.orbsCollected = (data.stats.orbsCollected||0) + 1;
-                            }
-                        }
-                    });
+                    if(Math.abs(player.x-o.x)<30 && Math.abs(player.y-o.y)<30) {
+                        o.c=true; runOrbs++; document.getElementById('orb-hud').innerText='🟡 '+runOrbs; MusicSys.playFX('coin');
+                        data.stats.orbsCollected = (data.stats.orbsCollected||0) + 1;
+                    }
                 }
             });
 
             // Completion + %
-            let pct=Math.floor(players[0].x/500);
+            let pct=Math.floor(player.x/500);
             document.getElementById('p-bar').style.width=Math.min(100,pct)+'%';
             document.getElementById('score-display').innerText=pct+'%';
 
@@ -1372,17 +1815,13 @@
 
             if(pct>=100){
                 state='WIN';
-
                 data.orbs += runOrbs;
                 const prevBest = data.best[diff] || 0;
                 if(100 >= prevBest) data.best[diff] = 100;
-
                 saveData();
-
                 document.getElementById('win').classList.remove('hidden');
                 document.getElementById('hud').style.opacity=0;
                 document.getElementById('pause-btn').style.display='none';
-
                 HP.renderUI(100);
             }
         }
@@ -1434,12 +1873,14 @@
             pCtx.strokeStyle='white'; pCtx.lineWidth=2; pCtx.stroke(); pCtx.restore();
         }
 
+        // --- ORIGINAL RENDER LOGIC ---
         function draw() {
             if(state==='MENU') { previewLoop(); requestAnimationFrame(draw); return; }
 
             ctx.fillStyle="#050508"; ctx.fillRect(0,0,canvas.width,canvas.height);
 
-            // Stars
+            if(gameMode==='campaign' && currentLevel) { drawCampaign(); requestAnimationFrame(draw); return; }
+
             if(SETTINGS.bgStars) {
                 bgStars.forEach(s=>{
                     s.x -= s.sp*speedMult*1.5; if(s.x<0)s.x=canvas.width;
@@ -1451,7 +1892,7 @@
             ctx.save();
             if(state==='OVER'&&SETTINGS.shake) ctx.translate((Math.random()-0.5)*10, (Math.random()-0.5)*10);
 
-            if(!isMulti) ctx.translate(-Math.floor(camX), 0);
+            ctx.translate(-Math.floor(camX), 0);
 
             const drawWorld = () => {
                 let wc = CFG[diff].color;
@@ -1491,74 +1932,52 @@
                 }
             };
 
-            const drawPlayers = (focusIdx) => {
+            const drawPlayer = () => {
                 if(state!=='OVER') {
-                    players.forEach((p, idx) => {
-                        if(isMulti && idx !== focusIdx) ctx.globalAlpha=0.3; else ctx.globalAlpha=1;
+                    ctx.globalAlpha=1;
 
-                        if(p.trailType==='solid'||p.trailType==='rainbow') {
-                            ctx.beginPath(); ctx.lineWidth=p.mini?2:4;
-                            ctx.strokeStyle = p.trailType==='rainbow' ? `hsl(${frames*10},100%,50%)` : p.color;
-                            if(p.trail.length) { ctx.moveTo(p.trail[0].x, p.trail[0].y); p.trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); }
-                        } else if(p.trailType==='plasma') {
-                            ctx.shadowBlur=15; ctx.shadowColor=p.color; ctx.strokeStyle="white"; ctx.lineWidth=p.mini?3:5;
-                            ctx.beginPath(); if(p.trail.length){ ctx.moveTo(p.trail[0].x, p.trail[0].y); p.trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); }
-                            ctx.shadowBlur=0;
-                        } else if(p.trailType==='ghost') {
-                             let sDraw=skins.find(s=>s.id===p.skin)||skins[0];
-                             for(let i=0; i<p.trail.length; i+=2) {
-                                 let t = p.trail[i];
-                                 ctx.save(); ctx.translate(t.x, t.y);
-                                 if(p.inv) ctx.scale(1,-1);
-                                 ctx.rotate((t.r||0)*Math.PI/180);
-                                 ctx.globalAlpha = 0.3 * (i/p.trail.length);
-                                 ctx.beginPath(); sDraw.draw(ctx, p.mini?12:20);
-                                 ctx.fillStyle = p.color; ctx.fill();
-                                 ctx.restore();
-                             }
-                        } else { ctx.fillStyle=p.color; p.trail.forEach(t=>{ ctx.beginPath(); ctx.arc(t.x,t.y,3,0,Math.PI*2); ctx.fill(); }); }
+                    if(player.trailType==='solid'||player.trailType==='rainbow') {
+                        ctx.beginPath(); ctx.lineWidth=player.mini?2:4;
+                        ctx.strokeStyle = player.trailType==='rainbow' ? `hsl(${frames*10},100%,50%)` : player.color;
+                        if(player.trail.length) { ctx.moveTo(player.trail[0].x, player.trail[0].y); player.trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); }
+                    } else if(player.trailType==='plasma') {
+                        ctx.shadowBlur=15; ctx.shadowColor=player.color; ctx.strokeStyle="white"; ctx.lineWidth=player.mini?3:5;
+                        ctx.beginPath(); if(player.trail.length){ ctx.moveTo(player.trail[0].x, player.trail[0].y); player.trail.forEach(t=>ctx.lineTo(t.x,t.y)); ctx.stroke(); }
+                        ctx.shadowBlur=0;
+                    } else if(player.trailType==='ghost') {
+                         let sDraw=skins.find(s=>s.id===player.skin)||skins[0];
+                         for(let i=0; i<player.trail.length; i+=2) {
+                             let t = player.trail[i];
+                             ctx.save(); ctx.translate(t.x, t.y);
+                             if(player.inv) ctx.scale(1,-1);
+                             ctx.rotate((t.r||0)*Math.PI/180);
+                             ctx.globalAlpha = 0.3 * (i/player.trail.length);
+                             ctx.beginPath(); sDraw.draw(ctx, player.mini?12:20);
+                             ctx.fillStyle = player.color; ctx.fill();
+                             ctx.restore();
+                         }
+                    } else { ctx.fillStyle=player.color; player.trail.forEach(t=>{ ctx.beginPath(); ctx.arc(t.x,t.y,3,0,Math.PI*2); ctx.fill(); }); }
 
-                        ctx.globalAlpha = 1;
-                        ctx.save(); ctx.translate(p.x,p.y); if(p.inv)ctx.scale(1,-1); ctx.rotate(p.rotation*Math.PI/180);
-                        if(godMode>0 && Math.floor(godMode/5)%2===0)ctx.globalAlpha=0.5;
-                        ctx.beginPath();
-                        let sDraw=skins.find(s=>s.id===p.skin)||skins[0]; sDraw.draw(ctx, p.mini?12:20);
-                        ctx.fillStyle=p.color; ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle='white'; ctx.stroke();
-                        ctx.restore();
-                    });
+                    ctx.globalAlpha = 1;
+                    ctx.save(); ctx.translate(player.x,player.y); if(player.inv)ctx.scale(1,-1); ctx.rotate(player.rotation*Math.PI/180);
+                    if(godMode>0 && Math.floor(godMode/5)%2===0)ctx.globalAlpha=0.5;
+                    ctx.beginPath();
+                    let sDraw=skins.find(s=>s.id===player.skin)||skins[0]; sDraw.draw(ctx, player.mini?12:20);
+                    ctx.fillStyle=player.color; ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle='white'; ctx.stroke();
+                    ctx.restore();
                 }
             };
 
-            if(isMulti) {
-                // Top Screen (P1)
-                ctx.save(); ctx.beginPath(); ctx.rect(0,0,canvas.width,canvas.height/2); ctx.clip();
-                ctx.translate(-Math.floor(players[0].x-200), 0);
-                drawWorld();
-                drawPlayers(0);
-                ctx.restore();
-
-                ctx.fillStyle='white'; ctx.fillRect(0,canvas.height/2-1,canvas.width,2);
-
-                // Bottom Screen (P2)
-                ctx.save(); ctx.beginPath(); ctx.rect(0,canvas.height/2,canvas.width,canvas.height/2); ctx.clip();
-                ctx.translate(0, canvas.height/2);
-                ctx.translate(-Math.floor(players[1].x-200), -canvas.height/2);
-                drawWorld();
-                drawPlayers(1);
-                ctx.restore();
-            } else {
-                drawWorld();
-                drawPlayers(0);
-            }
+            drawWorld();
+            drawPlayer();
 
             if(SETTINGS.particles) {
-                if(!isMulti) {
-                    particles.forEach((pa,i)=>{
-                        ctx.fillStyle=pa.c; ctx.globalAlpha=pa.l;
-                        ctx.fillRect(pa.x,pa.y,5,5); pa.x+=pa.vx; pa.y+=pa.vy; pa.l-=0.05; if(pa.l<=0)particles.splice(i,1);
-                    });
-                }
+                particles.forEach((pa,i)=>{
+                    ctx.fillStyle=pa.c; ctx.globalAlpha=pa.l;
+                    ctx.fillRect(pa.x,pa.y,5,5); pa.x+=pa.vx; pa.y+=pa.vy; pa.l-=0.05; if(pa.l<=0)particles.splice(i,1);
+                });
             }
+            
             ctx.globalAlpha=1; ctx.restore(); frames++; requestAnimationFrame(draw);
         }
 
@@ -1578,8 +1997,9 @@
             requestAnimationFrame(gameLoop);
         }
 
-        startSession(); // Auto-load local data and start the game menu
+        startSession(); 
         requestAnimationFrame(draw);
     </script>
 </body>
 </html>
+
